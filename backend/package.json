@@ -1,7 +1,7 @@
 {
-  "name": "line-and-grace-backend",
+  "name": "aml-assistant-backend",
   "version": "1.0.0",
-  "description": "Backend API for Line & Grace e-commerce",
+  "description": "Backend API for AML Compliance Assistant",
   "type": "module",
   "main": "server.js",
   "scripts": {
