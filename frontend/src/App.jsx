@@ -17,13 +17,14 @@ function App() {
     }
   }, [])
 
+  const goHome = (u) => setView(u?.premium ? 'chat' : 'training')
+
   const handleSignIn = (userData) => {
     setUser(userData)
-    // Skip role select if they already have a saved role
     const saved = localStorage.getItem('aml_user')
     const parsed = saved ? JSON.parse(saved) : {}
     if (parsed.role) {
-      setView('chat')
+      goHome(userData)
     } else {
       setView('roleselect')
     }
@@ -33,7 +34,7 @@ function App() {
     const updated = { ...user, role }
     setUser(updated)
     localStorage.setItem('aml_user', JSON.stringify(updated))
-    setView('chat')
+    goHome(updated)
   }
 
   const handleSignOut = async () => {
@@ -87,6 +88,7 @@ function App() {
         user={user}
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
+        onOpenChat={() => setView('chat')}
       />
     )
   }
@@ -105,10 +107,10 @@ function App() {
   return (
     <LandingPage
       user={user}
-      onStart={() => user ? setView('chat') : setView('signup')}
+      onStart={() => user ? goHome(user) : setView('signup')}
       onSignIn={() => setView('signin')}
       onSignUp={() => setView('signup')}
-      onOpenChat={() => setView('chat')}
+      onOpenChat={() => goHome(user)}
       onOpenTraining={() => setView('training')}
       onSignOut={handleSignOut}
     />

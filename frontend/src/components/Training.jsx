@@ -266,7 +266,7 @@ const TAG_STYLE = {
   Completed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
 }
 
-export default function Training({ user, onBack, onSignOut }) {
+export default function Training({ user, onBack, onSignOut, onOpenChat }) {
   const role = user?.role || 'analyst'
   const isPremium = user?.premium || false
   const cases = role === 'mlro' ? MLRO_CASES : ANALYST_CASES
@@ -433,6 +433,17 @@ export default function Training({ user, onBack, onSignOut }) {
               </div>
               <span className="text-sm text-slate-500 hidden sm:block">{user.name}</span>
             </div>
+          )}
+          {onOpenChat && (
+            <button
+              onClick={onOpenChat}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              AI Assistant
+            </button>
           )}
           {onSignOut && (
             <button onClick={onSignOut} className="text-xs text-slate-400 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
