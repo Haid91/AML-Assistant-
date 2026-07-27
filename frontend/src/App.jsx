@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import LandingPage from './components/LandingPage'
 import AMLAssistant from './components/AMLAssistant'
 import Training from './components/Training'
+import RoleSelect from './components/RoleSelect'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 
@@ -18,6 +19,20 @@ function App() {
 
   const handleSignIn = (userData) => {
     setUser(userData)
+    // Skip role select if they already have a saved role
+    const saved = localStorage.getItem('aml_user')
+    const parsed = saved ? JSON.parse(saved) : {}
+    if (parsed.role) {
+      setView('chat')
+    } else {
+      setView('roleselect')
+    }
+  }
+
+  const handleRoleSelect = (role) => {
+    const updated = { ...user, role }
+    setUser(updated)
+    localStorage.setItem('aml_user', JSON.stringify(updated))
     setView('chat')
   }
 
@@ -53,6 +68,15 @@ function App() {
         onSignUp={handleSignIn}
         onGoSignIn={() => setView('signin')}
         onGoHome={() => setView('landing')}
+      />
+    )
+  }
+
+  if (view === 'roleselect') {
+    return (
+      <RoleSelect
+        user={user}
+        onSelectRole={handleRoleSelect}
       />
     )
   }
