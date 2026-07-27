@@ -58,12 +58,66 @@ Ask me anything or select a topic from the sidebar.
 Disclaimer: For educational purposes only. Always consult a qualified compliance professional for legal advice.`,
 }
 
+function PremiumGate({ onBack, onSignOut, user }) {
+  return (
+    <div className="flex h-screen bg-slate-950 text-slate-100 font-sans items-center justify-center">
+      <div className="max-w-md w-full mx-auto px-8 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-600/30 flex items-center justify-center mx-auto mb-6">
+          <svg className="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <h2 className="text-2xl font-bold mb-2">AI Assistant is Premium</h2>
+        <p className="text-slate-400 text-sm leading-relaxed mb-8">
+          The AI-powered AML compliance assistant is available on the Premium plan. Upgrade to get instant, regulation-backed answers on KYC, SARs, FATF, sanctions, and AUSTRAC guidance — with no daily cap.
+        </p>
+        <ul className="text-left space-y-3 mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          {[
+            'AI Co-Pilot trained on FATF, AUSTRAC & global regulations',
+            'Live transaction monitoring guidance',
+            'Full SMR/SAR investigation workflow',
+            'Unlimited questions — no daily cap',
+            'Access to all CDD scenarios across industries',
+          ].map((f) => (
+            <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
+              <svg className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+              {f}
+            </li>
+          ))}
+        </ul>
+        <button className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-sm transition-colors mb-3">
+          Upgrade to Premium — $49.99/mo
+        </button>
+        <p className="text-xs text-slate-500 mb-6">7-day free trial · cancel anytime</p>
+        <div className="flex items-center justify-center gap-4">
+          {onBack && (
+            <button onClick={onBack} className="text-sm text-slate-400 hover:text-slate-200 transition-colors">
+              ← Back to home
+            </button>
+          )}
+          {onSignOut && (
+            <button onClick={onSignOut} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
+              Sign out
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining }) {
   const [messages, setMessages] = useState([WELCOME])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const bottomRef = useRef(null)
+
+  if (!user?.premium) {
+    return <PremiumGate onBack={onBack} onSignOut={onSignOut} user={user} />
+  }
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
