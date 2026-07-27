@@ -186,7 +186,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
           <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">A</div>
-              <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">AML Co-Pilot</span>
+              <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">AML Intelligence</span>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -292,7 +292,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3l1.5 1.5M12 2v2M19 3l-1.5 1.5M2 12h2M20 12h2M5 21l1.5-1.5M12 20v2M19 21l-1.5-1.5M12 8a4 4 0 100 8 4 4 0 000-8z" />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">AML Co-Pilot</h1>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">AML Intelligence</h1>
               <p className="text-[10px] text-slate-400 mb-3 tracking-wide">Powered by Anthropic</p>
               <p className="text-slate-500 dark:text-slate-400 text-center text-base leading-relaxed mb-10 max-w-sm">
                 Specialised in FATF, FIU and global regulatory requirements. Ask anything AML, KYC or sanctions related.

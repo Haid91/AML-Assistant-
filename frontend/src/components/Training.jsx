@@ -259,10 +259,290 @@ Work through each section to understand what the Board expects and what AUSTRAC 
   },
 ]
 
+const CAMS_MODULES = [
+  {
+    id: 'cams1', number: 'Chapter 1', isExam: true,
+    title: 'Risks and Methods of ML & Terrorist Financing',
+    tags: ['CAMS Prep'], sector: 'CAMS', premium: true,
+    shortDesc: 'The three-stage ML cycle, key typologies, terrorist financing distinctions, predicate offences, and detection indicators.',
+    fullScenario: `CAMS EXAM PREP — Chapter 1\n\nRisks and Methods of Money Laundering & Terrorist Financing\n\nThis chapter covers:\n• The three-stage ML cycle: placement, layering, integration\n• Key ML typologies (trade-based ML, real estate, shell companies)\n• Terrorist financing vs. money laundering\n• Predicate offences\n• Red flags and detection indicators`,
+    steps: [
+      {
+        id: 1, title: 'The Three Stages',
+        question: "Which of the following BEST describes the placement stage of money laundering?",
+        options: [
+          { text: 'Introducing illegal proceeds into the financial system for the first time — e.g., depositing drug-sale cash into a bank account', correct: true, feedback: 'Correct. Placement is the first and most vulnerable stage — physically moving cash into the financial system carries the highest detection risk. Common methods include cash deposits, currency exchanges, and smurfing.' },
+          { text: 'Converting illegal funds into other instruments to create a complex audit trail', correct: false, feedback: 'This describes layering — the second stage, where criminals distance funds from their source through multiple transactions, wire transfers, or asset conversions.' },
+          { text: 'Reinvesting laundered funds into the legitimate economy through property or investments', correct: false, feedback: 'This describes integration — the final stage where laundered funds re-enter the economy and are indistinguishable from legitimate wealth.' },
+          { text: 'Using shell companies to obscure the beneficial owner of criminal proceeds', correct: false, feedback: 'Shell companies are primarily a layering technique used to create corporate distance between the criminal and the funds.' },
+        ],
+      },
+      {
+        id: 2, title: 'Layering Techniques',
+        question: "A drug trafficker deposits $500,000 into a café account, then wires it through five shell company accounts across three jurisdictions before converting the balance to gold bullion. The wire transfer phase is an example of:",
+        options: [
+          { text: 'Layering — creating complex, cross-jurisdictional transaction chains to distance funds from their criminal origin', correct: true, feedback: 'Correct. Layering is designed to obscure the audit trail. Multiple wire transfers through multiple jurisdictions and entities are among the most common layering techniques because they exploit correspondent banking relationships and jurisdictional complexity.' },
+          { text: 'Placement — the first entry of funds into the financial system', correct: false, feedback: 'Placement already occurred when the funds entered the café account. The wire transfer phase comes after initial placement.' },
+          { text: 'Integration — re-entering the legitimate economy', correct: false, feedback: 'Integration would occur when the gold bullion is sold and proceeds used for legitimate purchases. The wire transfer phase is still separating funds from their criminal source.' },
+          { text: 'Trade-based money laundering (TBML)', correct: false, feedback: 'TBML involves manipulating trade documents (invoices, letters of credit). Wire transfers through shell companies are a different layering technique.' },
+        ],
+      },
+      {
+        id: 3, title: 'ML vs. Terrorist Financing',
+        question: "Which statement MOST accurately describes the PRIMARY distinction between money laundering and terrorist financing?",
+        options: [
+          { text: 'Money laundering generates proceeds from crime and seeks to legitimise them; terrorist financing may use legitimately sourced funds directed toward illegal activity', correct: true, feedback: 'Correct. This is the fundamental distinction. ML is always proceeds-driven (funds come FROM crime). TF can use clean money directed TO illegal purposes — making it harder to detect through traditional financial profiling.' },
+          { text: 'Terrorist financing always involves larger sums than money laundering', correct: false, feedback: 'Incorrect. TF operations are often low-cost — the 9/11 attacks cost approximately $400,000–$500,000. Transaction size is not a reliable distinguisher.' },
+          { text: 'Money laundering requires an international element; terrorist financing is purely domestic', correct: false, feedback: 'Both ML and TF can be domestic or international. The cross-border element is not what distinguishes them.' },
+          { text: 'Terrorist financing is only conducted through informal value transfer systems like hawala', correct: false, feedback: 'TF uses many channels including formal banking, charities, cash couriers, and digital assets — not exclusively hawala.' },
+        ],
+      },
+      {
+        id: 4, title: 'Trade-Based ML',
+        question: "A company consistently over-invoices imports from a related foreign supplier by 40%, pays the inflated amounts through the banking system, and the surplus is refunded to an offshore account. This is BEST described as:",
+        options: [
+          { text: 'Trade-based money laundering (TBML) — using the international trade system to transfer value and obscure its origin', correct: true, feedback: 'Correct. TBML is one of the most difficult typologies to detect because it exploits the complexity of international trade. Over-invoicing, under-invoicing, multiple invoicing, and falsely described goods are all TBML techniques.' },
+          { text: 'Real estate laundering — using property to convert and clean criminal proceeds', correct: false, feedback: 'Real estate laundering involves purchasing property with criminal proceeds. This scenario involves trade transactions, not property.' },
+          { text: 'Loan-back scheme — using criminal funds disguised as a loan repayment', correct: false, feedback: 'Loan-back schemes involve criminals lending themselves their own criminal proceeds through a shell company, then "repaying" the loan to create legitimate-looking income.' },
+          { text: 'Structuring — breaking transactions into smaller amounts to avoid reporting thresholds', correct: false, feedback: 'Structuring involves splitting cash transactions below reporting thresholds. This scenario involves inflated trade invoices — a different method.' },
+        ],
+      },
+      {
+        id: 5, title: 'Structuring / Smurfing',
+        question: "An individual makes 11 cash deposits of $9,100 over three weeks across four branches, totalling $100,100. This practice is BEST described as:",
+        options: [
+          { text: 'Structuring (smurfing) — deliberately splitting transactions to stay below reporting thresholds', correct: true, feedback: 'Correct. Structuring is illegal in most jurisdictions regardless of whether the underlying funds are criminal. Deliberately fragmenting transactions to avoid regulatory reporting is itself a criminal offence (31 USC §5324 in the US; s.140 of the AML/CTF Act in Australia).' },
+          { text: 'Integration — using the deposits to fund legitimate purchases', correct: false, feedback: 'Integration occurs when laundered funds re-enter the economy. The deposits described suggest placement/layering, not the final integration stage.' },
+          { text: 'Layering — moving funds through complex transaction chains', correct: false, feedback: 'Layering typically involves converting funds through multiple institutions or jurisdictions. The pattern here is specifically about avoiding a reporting threshold — the defining characteristic of structuring.' },
+          { text: 'Normal business activity — small businesses often deposit daily takings across branches', correct: false, feedback: 'While possible, 11 deposits across four branches each just below the reporting threshold, totalling $100,100, creates reasonable grounds for suspicion and warrants investigation.' },
+        ],
+      },
+      {
+        id: 6, title: 'Predicate Offences',
+        question: "Under the FATF Recommendations, which of the following is classified as a predicate offence for money laundering?",
+        options: [
+          { text: 'All serious offences — including drug trafficking, corruption, fraud, tax crimes, and human trafficking. FATF recommends a broad approach covering all serious crimes', correct: true, feedback: 'Correct. FATF Recommendation 3 requires ML to apply to all serious offences. FATF specifically designates categories including drug trafficking, organised crime, terrorism, human trafficking, corruption, fraud, tax crimes, counterfeiting, cybercrime, and environmental crime.' },
+          { text: 'Only drug trafficking — the original focus of AML frameworks at their establishment', correct: false, feedback: 'While AML frameworks originally focused on drug proceeds (the 1988 Vienna Convention), FATF has progressively expanded the predicate offence scope. Tax crimes and corruption were not added until 2012.' },
+          { text: 'Only offences that cross international borders', correct: false, feedback: 'FATF does not require an international element. Domestic predicate offences are equally covered.' },
+          { text: 'Only offences punishable by more than 10 years imprisonment', correct: false, feedback: 'FATF allows jurisdictions to define serious offences by penalty thresholds or designated category lists. The 10-year threshold is one permitted option, not the only one.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'cams2', number: 'Chapter 2', isExam: true,
+    title: 'International AML/CFT Standards',
+    tags: ['CAMS Prep'], sector: 'CAMS', premium: true,
+    shortDesc: 'FATF 40 Recommendations, grey/black lists, Basel Committee guidance, Wolfsberg Principles, and the Egmont Group.',
+    fullScenario: `CAMS EXAM PREP — Chapter 2\n\nInternational AML/CFT Standards\n\nThis chapter covers:\n• FATF's 40 Recommendations and their structure\n• FATF grey list / black list\n• Basel Committee on Banking Supervision AML guidance\n• Wolfsberg Group — private banking and correspondent banking principles\n• Egmont Group — FIU intelligence exchange\n• Key international conventions (Vienna, Palermo, UN Security Council Resolutions)`,
+    steps: [
+      {
+        id: 1, title: 'FATF Mandate',
+        question: "The Financial Action Task Force (FATF) was established in 1989 with which PRIMARY mandate?",
+        options: [
+          { text: 'To set global standards and promote effective implementation of legal, regulatory, and operational measures to combat ML, TF, and proliferation financing', correct: true, feedback: 'Correct. FATF is an intergovernmental policy-making body — it does not prosecute. It develops standards (the 40 Recommendations) and assesses compliance through mutual evaluations. Its 2012 mandate was expanded to include proliferation financing.' },
+          { text: 'To prosecute money launderers across member jurisdictions', correct: false, feedback: 'FATF does not prosecute individuals. Prosecution remains the exclusive domain of national law enforcement and judiciary.' },
+          { text: 'To fund national financial intelligence units (FIUs)', correct: false, feedback: 'FATF does not fund FIUs. The Egmont Group, not FATF, provides the international network for FIU cooperation.' },
+          { text: 'To manage the global list of sanctioned individuals and entities', correct: false, feedback: 'Sanctions lists are maintained by national authorities (OFAC, OFSI) and international bodies (UN Security Council). FATF manages grey/black lists for jurisdictions, not individual sanctions.' },
+        ],
+      },
+      {
+        id: 2, title: 'FATF Grey List',
+        question: "A country placed on the FATF 'grey list' (Jurisdictions Under Increased Monitoring) indicates that:",
+        options: [
+          { text: 'The country has identified strategic AML/CFT deficiencies and has committed to an action plan to address them under FATF oversight', correct: true, feedback: 'Correct. Grey-listed countries work WITH FATF on remediation. Financial institutions must apply enhanced due diligence to these jurisdictions but are not required to terminate relationships.' },
+          { text: 'All transactions with that country must be terminated immediately', correct: false, feedback: 'Grey listing requires EDD — not prohibition. FATF Recommendation 19 requires EDD for relationships with grey-listed jurisdictions, not blanket prohibition.' },
+          { text: 'The country has no functional AML laws or FIU in place', correct: false, feedback: 'Grey listing can apply to jurisdictions that have AML frameworks but face deficiencies in specific areas. A total absence of AML framework is more characteristic of black-listed jurisdictions.' },
+          { text: 'The country poses no elevated risk — grey listing is a routine assessment category', correct: false, feedback: 'Grey listing does indicate elevated risk and triggers EDD obligations. It is not a neutral category.' },
+        ],
+      },
+      {
+        id: 3, title: 'FATF Recommendation 10: CDD',
+        question: "According to FATF Recommendation 10, financial institutions must apply Customer Due Diligence (CDD) in which circumstances?",
+        options: [
+          { text: 'When establishing business relationships, conducting occasional transactions at or above thresholds, when suspecting ML/TF, or when doubting previously obtained identification information', correct: true, feedback: 'Correct. FATF R.10 specifies these four CDD trigger events. The occasional transaction threshold is €15,000 (approximately USD 15,000) or above. Simplified CDD may apply in low-risk situations; enhanced CDD applies to high-risk situations.' },
+          { text: 'Only when establishing new customer relationships — ongoing monitoring is voluntary', correct: false, feedback: 'Ongoing monitoring (including periodic CDD refresh) is mandatory under FATF R.10. The obligation includes ensuring transactions are consistent with the institution\'s knowledge of the customer.' },
+          { text: 'Only for high-risk customers, PEPs, and those involving cross-border transactions', correct: false, feedback: 'CDD applies to all customers. The level of CDD (simplified, standard, enhanced) varies by risk, but the obligation applies universally.' },
+          { text: 'Only when instructed by the national supervisor following an audit finding', correct: false, feedback: 'CDD is a proactive legal obligation — not a reactive response to regulatory instruction.' },
+        ],
+      },
+      {
+        id: 4, title: 'Wolfsberg Group',
+        question: "The Wolfsberg Group is BEST described as:",
+        options: [
+          { text: 'An association of leading global banks that develops financial crime risk management frameworks and guidance for the private sector', correct: true, feedback: 'Correct. The Wolfsberg Group (formed in 2000) consists of 13 global banks. It produces non-binding guidance such as the Correspondent Banking Due Diligence Questionnaire (CBDDQ), Trade Finance Principles, and Anti-Bribery and Corruption Principles. It is industry-led, not regulatory.' },
+          { text: 'A sub-committee of the Basel Committee on Banking Supervision', correct: false, feedback: 'The Wolfsberg Group is independent of the Basel Committee. It is an industry body, not a regulatory or supervisory authority.' },
+          { text: 'A FATF monitoring body responsible for assessing member countries', correct: false, feedback: 'Mutual evaluations are conducted by FATF and its regional bodies (FSRBs) — not the Wolfsberg Group.' },
+          { text: 'The UN agency responsible for countering terrorist financing', correct: false, feedback: 'UN counter-terrorism functions are handled by bodies such as the CTC and UNODC. Wolfsberg is a private banking industry association.' },
+        ],
+      },
+      {
+        id: 5, title: 'Egmont Group',
+        question: "The Egmont Group's PRIMARY function in the international AML framework is to:",
+        options: [
+          { text: 'Facilitate secure and rapid exchange of financial intelligence between member Financial Intelligence Units (FIUs) worldwide', correct: true, feedback: 'Correct. The Egmont Group (established 1995) connects FIUs across 166+ member jurisdictions. It operates the Egmont Secure Web (ESW) for encrypted FIU-to-FIU intelligence sharing. It does not regulate financial institutions or set AML standards.' },
+          { text: 'Enforce sanctions against countries that fail FATF mutual evaluations', correct: false, feedback: 'Enforcement is conducted by national governments and the UN Security Council. The Egmont Group facilitates FIU cooperation — it has no enforcement powers.' },
+          { text: 'Set international accounting standards for AML compliance reporting', correct: false, feedback: 'Accounting standards are developed by the IASB and FASB. Egmont focuses exclusively on FIU-to-FIU intelligence exchange.' },
+          { text: 'Train national law enforcement officers in financial investigation methodology', correct: false, feedback: 'Training is offered by many organisations (UNODC, ILEA, ACAMS), but the Egmont Group\'s primary mandate is FIU intelligence exchange, not training.' },
+        ],
+      },
+      {
+        id: 6, title: 'Correspondent Banking',
+        question: "Under FATF Recommendation 13, financial institutions are PROHIBITED from entering into correspondent banking relationships with:",
+        options: [
+          { text: 'Shell banks — banks incorporated in jurisdictions where they have no physical presence and are not affiliated with a regulated financial group', correct: true, feedback: 'Correct. FATF R.13 explicitly prohibits correspondent relationships with shell banks. This prohibition exists because shell banks lack effective supervision and AML controls.' },
+          { text: 'Any bank headquartered in a FATF grey-listed jurisdiction', correct: false, feedback: 'Grey listing triggers EDD obligations — not prohibition. Institutions may maintain relationships with grey-listed jurisdictions under enhanced scrutiny.' },
+          { text: 'Any foreign bank that has not undergone a FATF mutual evaluation', correct: false, feedback: 'The obligation is to assess the respondent\'s own AML controls — not to verify whether their jurisdiction has been formally evaluated.' },
+          { text: 'Banks that have filed SARs in the prior 12 months', correct: false, feedback: 'SAR filings are a compliance positive. Sharing SAR filing history is generally prohibited by confidentiality rules.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'cams3', number: 'Chapter 3', isExam: true,
+    title: 'AML/CFT Compliance Programs',
+    tags: ['CAMS Prep'], sector: 'CAMS', premium: true,
+    shortDesc: 'The four pillars of an AML program, CDD/EDD, beneficial ownership, PEPs, EWRA, and suspicious activity identification.',
+    fullScenario: `CAMS EXAM PREP — Chapter 3\n\nAML/CFT Compliance Programs\n\nThis chapter covers:\n• Four pillars of an effective AML/CFT compliance program\n• Customer Due Diligence (CDD) and Enhanced Due Diligence (EDD)\n• Beneficial ownership — definition and thresholds\n• Politically Exposed Persons (PEPs) — identification and treatment\n• Enterprise-Wide Risk Assessment (EWRA)\n• Identifying and escalating suspicious activity`,
+    steps: [
+      {
+        id: 1, title: 'The Four Pillars',
+        question: "The four core elements (pillars) of an effective AML compliance program as recognised by US regulators and ACAMS are:",
+        options: [
+          { text: 'Policies and procedures, a designated compliance officer, ongoing employee training, and independent testing (audit)', correct: true, feedback: 'Correct. These four pillars are embedded in the US Bank Secrecy Act regulatory framework and cited by the OCC, FinCEN, FDIC, and Federal Reserve. They have been adopted globally as the baseline AML program architecture. A fifth pillar — CDD — was formally added to US regulations in 2018.' },
+          { text: 'Risk assessment, transaction monitoring, SAR filing, and customer screening', correct: false, feedback: 'These are important AML activities but not the four foundational pillars. The pillars describe the structural framework — not specific operational functions.' },
+          { text: 'CDD, EDD, ongoing monitoring, and sanctions screening', correct: false, feedback: 'These are components of the customer management lifecycle, not the four program pillars.' },
+          { text: 'Governance, detection, investigation, and reporting', correct: false, feedback: 'This is a logical operational sequence but not the established four-pillar framework.' },
+        ],
+      },
+      {
+        id: 2, title: 'EDD Triggers',
+        question: "Under a risk-based approach, Enhanced Due Diligence (EDD) is MOST appropriate for which of the following situations?",
+        options: [
+          { text: 'A foreign Politically Exposed Person (PEP) opening a private banking relationship with expected high-value asset management', correct: true, feedback: 'Correct. PEPs represent elevated ML/corruption risk. FATF R.12 specifically requires EDD for PEPs. Private banking adds additional risk. EDD for PEPs must include senior management approval, source-of-wealth/funds verification, and enhanced ongoing monitoring.' },
+          { text: 'A domestic retail customer opening a standard current account with a salary direct deposit', correct: false, feedback: 'Standard CDD applies. Low-risk customers (domestic, identifiable, standard product, consistent purpose) warrant simplified or standard CDD — not EDD.' },
+          { text: 'A small local business applying for a basic trade finance facility with documented invoices', correct: false, feedback: 'Trade finance can present risk, but a small local business with documented invoices is not automatically an EDD trigger without additional risk indicators.' },
+          { text: 'An existing customer making a one-off transaction above €15,000 for a property purchase', correct: false, feedback: 'A one-off threshold transaction triggers CDD — not automatically EDD. Whether EDD is required depends on the customer\'s overall risk rating and the transaction context.' },
+        ],
+      },
+      {
+        id: 3, title: 'Beneficial Ownership',
+        question: "Under most global AML frameworks (FATF R.24/25), beneficial ownership typically covers natural persons who:",
+        options: [
+          { text: 'Own or control 25% or more of a legal entity, OR exercise effective control over the entity regardless of ownership percentage', correct: true, feedback: 'Correct. The 25% threshold is standard internationally (FATF, EU AMLD, US FinCEN). However, the "control" prong is equally important — a person owning less than 25% but exercising effective control as CEO or senior officer must also be identified.' },
+          { text: 'Own any shares in a legal entity, regardless of percentage', correct: false, feedback: 'A 0% threshold is impractical for large public companies with thousands of shareholders. The 25% threshold (with a control prong) is the global standard.' },
+          { text: 'Only the registered directors of a legal entity', correct: false, feedback: 'Directors may or may not be beneficial owners. Beneficial ownership looks through the corporate structure to the natural person(s) who ultimately own or control — which may differ from registered directors.' },
+          { text: 'Only foreign nationals — domestic shareholders are generally exempt', correct: false, feedback: 'Beneficial ownership requirements apply to all legal entities regardless of owner nationality. There is no domestic exemption under FATF standards.' },
+        ],
+      },
+      {
+        id: 4, title: 'PEP Identification',
+        question: "Which of the following is MOST accurately classified as a Politically Exposed Person (PEP) under FATF Recommendation 12?",
+        options: [
+          { text: 'A current serving cabinet minister in a foreign government', correct: true, feedback: 'Correct. FATF R.12 defines PEPs as individuals entrusted with prominent public functions — including heads of state or government, senior politicians, senior government officials, senior judicial/military officials, senior SOE executives, and senior party officials. Foreign PEPs require mandatory EDD.' },
+          { text: 'A senior manager at a large multinational private corporation', correct: false, feedback: 'Corporate executives of private entities are not PEPs under FATF standards. PEP status relates to public function, not corporate seniority.' },
+          { text: 'A retired judge who left the bench 18 months ago', correct: false, feedback: 'Former PEPs present a nuanced question — FATF requires institutions to consider risk on a case-by-case basis for former PEPs considering the nature of the role, jurisdiction risk, and time since leaving office.' },
+          { text: 'A senior police officer in a low-corruption jurisdiction', correct: false, feedback: 'Senior law enforcement officials can be PEPs per FATF guidance, but a current foreign cabinet minister is the clearest and highest-risk example of a PEP.' },
+        ],
+      },
+      {
+        id: 5, title: 'EWRA',
+        question: "When should an Enterprise-Wide Risk Assessment (EWRA) be reviewed or updated?",
+        options: [
+          { text: 'When there are significant changes to the business — including new products, customer segments, delivery channels, technology, or material regulatory changes', correct: true, feedback: 'Correct. The EWRA is a living document. Trigger events include new products/services, new geographic markets, new customer segments, new technology (e.g., digital onboarding), significant ownership changes, and material regulatory developments. Most regulators also expect minimum periodic review (typically annual or biennial) even without trigger events.' },
+          { text: 'Only on a fixed three-year schedule aligned with FATF mutual evaluation cycles', correct: false, feedback: 'FATF mutual evaluations are country-level assessments, not a driver for institutional EWRA schedules.' },
+          { text: 'Only following a regulatory examination or enforcement action', correct: false, feedback: 'A reactive-only approach is itself a compliance deficiency. The EWRA should proactively reflect current risk.' },
+          { text: 'Every five years, in line with FATF\'s Technology Sub-Group review cycle', correct: false, feedback: 'There is no five-year EWRA cycle linked to any FATF body. This is not a recognised standard.' },
+        ],
+      },
+      {
+        id: 6, title: 'Suspicious Activity — Red Flags',
+        question: "Which of the following is the MOST reliable red flag indicating potential money laundering?",
+        options: [
+          { text: 'A customer\'s transaction pattern is inconsistent with their stated business purpose, income profile, or prior account activity — and they are unable or unwilling to provide a satisfactory explanation', correct: true, feedback: 'Correct. The core principle of suspicion is unexplained inconsistency — a gap between what is known about a customer and what is observed in their transactions. Unexplained wealth, cash volumes, or counterparties are the most reliable red flags because they require investigative response rather than mechanical rule-matching.' },
+          { text: 'A customer deposits large amounts of cash into their account', correct: false, feedback: 'Cash deposits are a risk indicator, not a definitive red flag. Cash is normal for many legitimate businesses. The key question is whether cash volume is consistent with the customer\'s stated business.' },
+          { text: 'A customer conducts multiple transactions in a single day', correct: false, feedback: 'Multiple daily transactions are common in legitimate business and personal banking. Activity frequency alone is not a red flag without further context.' },
+          { text: 'A customer requests wire transfers to foreign accounts', correct: false, feedback: 'International transfers are normal for international business and personal remittances. Geography alone is not a red flag.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'cams4', number: 'Chapter 4', isExam: true,
+    title: 'Conducting and Responding to Investigations',
+    tags: ['CAMS Prep'], sector: 'CAMS', premium: true,
+    shortDesc: 'SAR/STR drafting, filing timelines, tipping-off prohibition, safe harbour protection, and law enforcement cooperation.',
+    fullScenario: `CAMS EXAM PREP — Chapter 4\n\nConducting and Responding to Investigations\n\nThis chapter covers:\n• Identifying suspicious activity and internal escalation\n• SAR/STR content standards and filing timelines\n• Tipping-off prohibition and safe harbour protection\n• Responding to law enforcement requests and court orders\n• Internal investigation procedures and documentation\n• Account action decisions following SAR filing`,
+    steps: [
+      {
+        id: 1, title: 'SAR Content Standards',
+        question: "Which element is MOST critical to the quality and usefulness of a Suspicious Activity Report (SAR/STR)?",
+        options: [
+          { text: 'A clear, factual narrative explaining what activity was observed, why it is suspicious, when it occurred, and how it was detected — supported by specific transaction details', correct: true, feedback: 'Correct. FinCEN and AUSTRAC guidance consistently identify the narrative as the most valuable part of an SAR. A high-quality narrative uses specific dates, amounts, and counterparties; explains the detection mechanism; describes investigation steps; includes any customer explanation; and states why that explanation was accepted or rejected.' },
+          { text: 'The customer\'s full credit history and financial statements', correct: false, feedback: 'Credit history is not a standard SAR requirement. While financial context is relevant, the SAR narrative and transaction data are the core components.' },
+          { text: 'Confirmation that the customer has been notified of the filing', correct: false, feedback: 'This would be a tipping-off violation. In virtually all jurisdictions, notifying a subject that an SAR has been filed is a criminal offence.' },
+          { text: 'A recommendation for specific law enforcement action', correct: false, feedback: 'SARs are intelligence reports — not prosecutorial recommendations. The institution reports what it knows and suspects; law enforcement determines what action to take.' },
+        ],
+      },
+      {
+        id: 2, title: 'SAR Filing Timeline',
+        question: "Under US Bank Secrecy Act regulations, a financial institution must file a SAR within how many calendar days of initially detecting a reportable suspicious transaction?",
+        options: [
+          { text: '30 calendar days from initial detection, extendable to 60 days if the subject is unidentified at the time of detection', correct: true, feedback: 'Correct. 31 CFR §1020.320 requires SAR filing within 30 days. The 60-day extension applies only when the subject is initially unidentified. For continuing suspicious activity, continuing SARs should be filed every 90 days. Note: Australia (AUSTRAC) requires reporting within 3 business days of forming a suspicion.' },
+          { text: '7 business days from the date the transaction occurred', correct: false, feedback: '7 business days is not a US BSA SAR filing timeline. 30 calendar days from detection is the standard.' },
+          { text: '15 calendar days from initial detection with no extension permitted', correct: false, feedback: 'Not a recognised SAR timeline under US or most international frameworks.' },
+          { text: '90 days from the date of the suspicious transaction', correct: false, feedback: '90 days applies to continuing SAR filing on ongoing suspicious activity — not the initial filing deadline.' },
+        ],
+      },
+      {
+        id: 3, title: 'Tipping Off',
+        question: "After filing an SAR, a customer calls asking why their account is restricted. An employee says: 'Your account was flagged for suspicious activity and we\'ve reported it to regulators.' This response is:",
+        options: [
+          { text: 'A criminal tipping-off offence — disclosing that an SAR has been filed or that the account was flagged for suspicious activity is prohibited by law in virtually all jurisdictions', correct: true, feedback: 'Correct. Tipping off is a criminal offence (31 USC §5318(g)(2) in the US; s.123 of the AML/CTF Act in Australia; s.333A of POCA in the UK). The correct response is a neutral statement such as "there is a security review on your account." Staff should not be told about the SAR — only that a compliance hold exists.' },
+          { text: 'Acceptable if the customer provides a satisfactory explanation during the call', correct: false, feedback: 'The tipping-off prohibition is absolute — not conditioned on the customer\'s explanation. No response justifies disclosing an SAR filing.' },
+          { text: 'Acceptable because the restriction already alerts the customer to the investigation', correct: false, feedback: 'The account restriction itself does not constitute tipping off. Tipping off occurs at the point of explicit disclosure — confirming the SAR or investigation crosses the line.' },
+          { text: 'Required as a matter of procedural fairness to the customer', correct: false, feedback: 'There is no right of notification for SAR subjects. The purpose of SAR confidentiality is to preserve law enforcement intelligence integrity.' },
+        ],
+      },
+      {
+        id: 4, title: 'Safe Harbour',
+        question: "The 'safe harbour' protection under US and most international AML laws protects financial institutions from civil liability when they:",
+        options: [
+          { text: 'File SARs in good faith, even if the reported activity subsequently proves not to be criminal', correct: true, feedback: 'Correct. Safe harbour (31 USC §5318(g)(3)) protects institutions and employees from civil liability for SAR disclosures made in good faith. Without it, institutions might face defamation or breach-of-confidentiality claims. The protection requires good faith — fraudulent or malicious SARs are not protected.' },
+          { text: 'Decline high-risk customers without documenting the reason', correct: false, feedback: 'Safe harbour relates specifically to SAR filing — not to customer declination decisions. De-risking decisions have their own documentation requirements.' },
+          { text: 'Cooperate with law enforcement voluntarily without first obtaining a court order', correct: false, feedback: 'Voluntary law enforcement cooperation is generally permitted. Safe harbour specifically addresses the civil liability risk arising from SAR filings.' },
+          { text: 'Apply EDD retroactively to existing customers without notice', correct: false, feedback: 'Retroactive EDD is a CDD governance matter. Safe harbour is specifically about immunity from civil claims arising from SAR filings.' },
+        ],
+      },
+      {
+        id: 5, title: 'Law Enforcement Requests',
+        question: "Law enforcement presents a valid grand jury subpoena for a customer\'s transaction records. The institution should:",
+        options: [
+          { text: 'Consult legal counsel, comply with the subpoena, and NOT notify the customer — grand jury secrecy rules prohibit disclosure', correct: true, feedback: 'Correct. Grand jury subpoenas carry secrecy obligations — notifying the customer would violate grand jury rules and could constitute obstruction of justice. The institution should: verify the subpoena is facially valid; involve legal counsel; produce records within the required timeframe; and log the production.' },
+          { text: 'Notify the customer before releasing any records — privacy regulations require advance notice', correct: false, feedback: 'Grand jury secrecy (Fed. R. Crim. P. 6(e)) and tipping-off principles prohibit customer notification for legally compelled production.' },
+          { text: 'Refuse to produce records — a search warrant is required, not a subpoena', correct: false, feedback: 'A grand jury subpoena is a valid legal instrument for compelling document production from third parties. Refusal to comply can be criminal contempt.' },
+          { text: 'File a new SAR to report the fact that law enforcement has presented a subpoena', correct: false, feedback: 'Receipt of a grand jury subpoena alone is not a suspicious transaction requiring an SAR.' },
+        ],
+      },
+      {
+        id: 6, title: 'Account Action Post-SAR',
+        question: "An SAR has been filed on a high-value customer. Which account action approach is MOST appropriate?",
+        options: [
+          { text: 'Apply a debit restriction proportionate to the suspicious funds while awaiting law enforcement direction, document the rationale, and coordinate further action with legal counsel', correct: true, feedback: 'Correct. Account action after SAR filing is within the institution\'s risk management authority. A debit restriction does not constitute tipping off. Document the decision carefully — the decision-making process may later be scrutinised by law enforcement or regulators.' },
+          { text: 'Immediately close the account and return funds to the customer', correct: false, feedback: 'Immediate closure and return of funds risks tipping off the customer and potentially facilitating money laundering by returning suspicious funds. Closure decisions should involve legal counsel and, where appropriate, law enforcement guidance.' },
+          { text: 'Take no action — FinCEN/AUSTRAC will instruct you after receiving the SAR', correct: false, feedback: 'FIUs do not proactively instruct institutions on account action after receiving SARs. They disseminate intelligence to law enforcement. The institution must exercise its own risk management judgment.' },
+          { text: 'Close the account without explanation and refuse to confirm or deny the reason', correct: false, feedback: 'An unexplained abrupt closure may expose the institution to legal challenge. A "security review" holding position while coordinating with legal counsel is more defensible.' },
+        ],
+      },
+    ],
+  },
+]
+
 const TAG_STYLE = {
   Escalation: 'bg-amber-100 text-amber-700 border border-amber-200',
   Regulatory: 'bg-pink-100 text-pink-700 border border-pink-200',
   Premium: 'bg-indigo-100 text-indigo-600 border border-indigo-200',
+  'CAMS Prep': 'bg-violet-100 text-violet-700 border border-violet-200',
   'In Progress': 'bg-blue-100 text-blue-700 border border-blue-200',
   Completed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
 }
@@ -270,7 +550,7 @@ const TAG_STYLE = {
 export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
-  const cases = activeRole === 'mlro' ? MLRO_CASES : ANALYST_CASES
+  const cases = activeRole === 'mlro' ? MLRO_CASES : activeRole === 'cams' ? CAMS_MODULES : ANALYST_CASES
 
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
@@ -355,14 +635,14 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
         <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-6 grid grid-cols-5 gap-6 items-start">
           {/* Scenario panel */}
           <div className="col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 sticky top-20">
-            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">Case Briefing</p>
+            <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">{activeCase.isExam ? 'Chapter Overview' : 'Case Briefing'}</p>
             <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-line">{activeCase.fullScenario}</p>
           </div>
 
           {/* Step panel */}
           <div className="col-span-3 space-y-4">
             <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
-              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Step {activeStep + 1} of {total} — {step.title}</p>
+              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">{activeCase.isExam ? `Question ${activeStep + 1} of ${total}` : `Step ${activeStep + 1} of ${total}`} — {step.title}</p>
               <p className="text-slate-900 dark:text-white font-semibold text-base leading-snug mb-5">{step.question}</p>
 
               <div className="space-y-2">
@@ -397,9 +677,9 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
             {showFeedback && (
               <button
                 onClick={handleNext}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors"
+                className={`w-full py-3 text-white rounded-xl font-semibold text-sm transition-colors ${activeCase.isExam ? 'bg-violet-600 hover:bg-violet-500' : 'bg-blue-600 hover:bg-blue-500'}`}
               >
-                {activeStep < total - 1 ? 'Next Step →' : 'Complete Case ✓'}
+                {activeStep < total - 1 ? (activeCase.isExam ? 'Next Question →' : 'Next Step →') : (activeCase.isExam ? 'Complete Module ✓' : 'Complete Case ✓')}
               </button>
             )}
           </div>
@@ -460,11 +740,13 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
         <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-              {activeRole === 'mlro' ? 'MLRO' : 'Analyst'} Training Modules
+              {activeRole === 'mlro' ? 'MLRO' : activeRole === 'cams' ? 'CAMS Certification Prep' : 'Analyst'} Training Modules
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
               {activeRole === 'mlro'
                 ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
+                : activeRole === 'cams'
+                ? 'Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Premium required.'
                 : 'Investigative training for AML case analysis and decision-making.'}
             </p>
           </div>
@@ -497,12 +779,25 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               </svg>
               MLRO
             </button>
+            <button
+              onClick={() => setActiveRole('cams')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeRole === 'cams'
+                  ? 'bg-violet-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+              CAMS Prep
+            </button>
           </div>
         </div>
 
         {/* Industry pill */}
-        <div className="w-full bg-slate-300/60 dark:bg-slate-700/60 rounded-full py-2 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
-          Banking
+        <div className={`w-full rounded-full py-2 text-center text-xs font-semibold uppercase tracking-widest mb-6 ${activeRole === 'cams' ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400' : 'bg-slate-300/60 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400'}`}>
+          {activeRole === 'cams' ? 'ACAMS CAMS Certification — 6th Edition' : 'Banking'}
         </div>
 
         {/* Case grid */}
