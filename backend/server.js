@@ -9,8 +9,10 @@ app.use(cors());
 app.use(express.json());
 
 // ── In-memory auth store ──────────────────────────────────────────────────
-const users = new Map()   // email → { id, name, email, passwordHash }
+const users = new Map()   // email → { id, name, email, passwordHash, premium }
 const sessions = new Map() // token → email
+
+const PREMIUM_EMAILS = new Set(['haidershahid3.16@live.com'])
 
 function hashPassword(password) {
   return crypto.createHash('sha256').update(password + 'aml_salt_2026').digest('hex')
@@ -29,10 +31,11 @@ app.post('/auth/register', (req, res) => {
   }
   const id = crypto.randomUUID()
   const passwordHash = hashPassword(password)
-  users.set(email.toLowerCase(), { id, name, email: email.toLowerCase(), passwordHash })
+  const premium = PREMIUM_EMAILS.has(email.toLowerCase())
+  users.set(email.toLowerCase(), { id, name, email: email.toLowerCase(), passwordHash, premium })
   const token = crypto.randomUUID()
   sessions.set(token, email.toLowerCase())
-  res.json({ token, user: { id, name, email: email.toLowerCase() } })
+  res.json({ token, user: { id, name, email: email.toLowerCase(), premium } })
 })
 
 app.post('/auth/login', (req, res) => {
@@ -46,7 +49,7 @@ app.post('/auth/login', (req, res) => {
   }
   const token = crypto.randomUUID()
   sessions.set(token, email.toLowerCase())
-  res.json({ token, user: { id: user.id, name: user.name, email: user.email } })
+  res.json({ token, user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
 })
 
 app.post('/auth/logout', (req, res) => {
