@@ -1,353 +1,383 @@
 import { useState, useRef, useEffect } from 'react'
+import ThemeToggle from './ThemeToggle'
 
-const QUICK_QUESTIONS = [
-  { section: 'Global AML', questions: [
-    'What is AML?',
-    '3 stages of money laundering',
-    'What is KYC?',
-    'What is a SAR?',
-    'What is a CTR?',
-    'AML red flags',
-    'What is FATF?',
-    'What is a PEP?',
-    'What is structuring?',
-    'Beneficial ownership',
-  ]},
-  { section: 'AUSTRAC Guidance', questions: [
-    'What is AUSTRAC?',
-    'What is the AML/CTF Act?',
-    'What is an AML/CTF Program?',
-    'What is an SMR?',
-    'What is a TTR?',
-    'What is an IFTI?',
-    'What is a reporting entity?',
-    'What is an EWRA?',
-    'What is OCDD?',
-    'Digital currency exchange AML',
-    'Remittance sector obligations',
-    'Tipping off prohibition',
-    'AUSTRAC e-learning modules',
-    'AUSTRAC enforcement actions',
-    'Fintel Alliance',
-  ]},
+const SUGGESTIONS = [
+  'Explain the difference between Source of Funds and Source of Wealth.',
+  'What are the FATF requirements for verifying beneficial ownership?',
+  'List the typical red flags for trade-based money laundering.',
+  'Help me draft an SMR/SAR narrative for a structuring case.',
 ]
 
-const WELCOME = {
-  id: 0,
-  role: 'assistant',
-  text: `Welcome to the AML Compliance Assistant — covering global AML frameworks and AUSTRAC guidance.
-
-GLOBAL AML:
-• AML fundamentals, the 3 stages of money laundering
-• KYC / CDD / EDD requirements
-• SARs, CTRs, red flags, FATF, OFAC, PEPs
-• Beneficial ownership, structuring, TBML
-
-AUSTRAC & AUSTRALIAN AML/CTF:
-• AML/CTF Act 2006 and AML/CTF Program (Part A & Part B)
-• Suspicious Matter Reports (SMRs)
-• Threshold Transaction Reports (TTRs)
-• International Funds Transfer Instructions (IFTIs)
-• Reporting entities, designated services, EWRA, OCDD
-• Digital Currency Exchange (DCE), Remittance sector
-• Tipping off prohibition, enforcement actions, Fintel Alliance
-• AUSTRAC e-learning modules
-
-Ask me anything or select a topic from the sidebar.
-
-Disclaimer: For educational purposes only. Always consult a qualified compliance professional for legal advice.`,
-}
-
-function PremiumGate({ onBack, onSignOut, onUpgrade, user }) {
+function PremiumGate({ onBack, onSignOut, onUpgrade }) {
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 font-sans items-center justify-center">
+    <div className="flex h-screen bg-slate-100 text-slate-800 font-sans items-center justify-center">
       <div className="max-w-md w-full mx-auto px-8 text-center">
-        <div className="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-600/30 flex items-center justify-center mx-auto mb-6">
-          <svg className="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-14 h-14 rounded-2xl bg-indigo-100 flex items-center justify-center mx-auto mb-6">
+          <svg className="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold mb-2">AI Assistant is Premium</h2>
-        <p className="text-slate-400 text-sm leading-relaxed mb-8">
-          The AI-powered AML compliance assistant is available on the Premium plan. Upgrade to get instant, regulation-backed answers on KYC, SARs, FATF, sanctions, and AUSTRAC guidance — with no daily cap.
+        <h2 className="text-2xl font-bold mb-2 text-slate-900">AI Assistant is Premium</h2>
+        <p className="text-slate-500 text-sm leading-relaxed mb-8">
+          The AI-powered AML compliance assistant is available on the Premium plan. Upgrade to get instant, regulation-backed answers on KYC, SMRs/SARs, FATF, sanctions, and AUSTRAC guidance.
         </p>
-        <ul className="text-left space-y-3 mb-8 bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <ul className="text-left space-y-3 mb-8 bg-white border border-slate-200 rounded-2xl p-5">
           {[
             'AI Co-Pilot trained on FATF, AUSTRAC & global regulations',
-            'Live transaction monitoring guidance',
+            'AI Live Transaction Monitoring guidance',
             'Full SMR/SAR investigation workflow',
-            'Unlimited questions — no daily cap',
             'Access to all CDD scenarios across industries',
+            'Personalised FATF & AUSTRAC compliance mapping',
+            'Unlimited questions — no daily cap',
           ].map((f) => (
-            <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
-              <svg className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <li key={f} className="flex items-start gap-2.5 text-sm text-slate-700">
+              <svg className="w-4 h-4 text-indigo-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
               {f}
             </li>
           ))}
         </ul>
-        <button onClick={onUpgrade} className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-sm transition-colors mb-3">
+        <button onClick={onUpgrade} className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold text-sm transition-colors mb-3">
           Upgrade to Premium — $49.99/mo
         </button>
-        <p className="text-xs text-slate-500 mb-6">7-day free trial · cancel anytime</p>
+        <p className="text-xs text-slate-400 mb-6">7-day free trial · cancel anytime</p>
         <div className="flex items-center justify-center gap-4">
-          {onBack && (
-            <button onClick={onBack} className="text-sm text-slate-400 hover:text-slate-200 transition-colors">
-              ← Back to home
-            </button>
-          )}
-          {onSignOut && (
-            <button onClick={onSignOut} className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
-              Sign out
-            </button>
-          )}
+          {onBack && <button onClick={onBack} className="text-sm text-slate-500 hover:text-slate-800 transition-colors">← Back to home</button>}
+          {onSignOut && <button onClick={onSignOut} className="text-sm text-slate-400 hover:text-slate-600 transition-colors">Sign out</button>}
         </div>
       </div>
     </div>
   )
 }
 
-export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining }) {
-  const [messages, setMessages] = useState([WELCOME])
+function newSession() {
+  return { id: crypto.randomUUID(), title: 'New Chat', messages: [], createdAt: Date.now() }
+}
+
+function sessionTitle(session) {
+  const first = session.messages.find((m) => m.role === 'user')
+  if (!first) return 'New Chat'
+  return first.text.length > 40 ? first.text.slice(0, 40) + '…' : first.text
+}
+
+function groupSessions(sessions) {
+  const now = Date.now()
+  const today = [], yesterday = [], older = []
+  for (const s of sessions) {
+    const age = now - s.createdAt
+    if (age < 86400000) today.push(s)
+    else if (age < 172800000) yesterday.push(s)
+    else older.push(s)
+  }
+  return { today, yesterday, older }
+}
+
+export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, onUpgrade }) {
+  const storageKey = `aml_chats_${user?.id || 'guest'}`
+
+  const [sessions, setSessions] = useState(() => {
+    try {
+      const saved = localStorage.getItem(storageKey)
+      if (saved) return JSON.parse(saved)
+    } catch {}
+    return [newSession()]
+  })
+  const [currentId, setCurrentId] = useState(() => sessions[0]?.id)
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const bottomRef = useRef(null)
+  const inputRef = useRef(null)
 
-  if (!user?.premium) {
-    return <PremiumGate onBack={onBack} onSignOut={onSignOut} onUpgrade={onUpgrade} user={user} />
-  }
+  const currentSession = sessions.find((s) => s.id === currentId) || sessions[0]
+  const messages = currentSession?.messages || []
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
-  const sendMessage = async (text) => {
-    const userMsg = { id: Date.now(), role: 'user', text }
-    setMessages((prev) => [...prev, userMsg])
-    setInput('')
-    setLoading(true)
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(sessions))
+  }, [sessions])
 
+  if (!user?.premium) {
+    return <PremiumGate onBack={onBack} onSignOut={onSignOut} onUpgrade={onUpgrade} />
+  }
+
+  const updateSession = (id, msgs) => {
+    setSessions((prev) =>
+      prev.map((s) => s.id === id ? { ...s, messages: msgs, title: sessionTitle({ ...s, messages: msgs }) } : s)
+    )
+  }
+
+  const sendToAPI = async (text, msgs, sessionId) => {
     try {
+      const history = msgs.map((m) => ({ role: m.role, text: m.text }))
       const res = await fetch('http://localhost:3000/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history }),
       })
       const data = await res.json()
-      setMessages((prev) => [
-        ...prev,
-        { id: Date.now() + 1, role: 'assistant', text: data.reply },
-      ])
+      const reply = { id: Date.now() + 1, role: 'assistant', text: data.reply }
+      const next = [...msgs, reply]
+      updateSession(sessionId, next)
     } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          role: 'assistant',
-          text: 'Unable to connect to the server. Please make sure the backend is running on port 3000.',
-        },
-      ])
+      const errMsg = { id: Date.now() + 1, role: 'assistant', text: 'Unable to connect to the server. Please make sure the backend is running.' }
+      updateSession(sessionId, [...msgs, errMsg])
     } finally {
       setLoading(false)
     }
   }
 
+  const sendMessage = (text) => {
+    if (!text.trim() || loading) return
+    const userMsg = { id: Date.now(), role: 'user', text: text.trim() }
+    const next = [...messages, userMsg]
+    updateSession(currentId, next)
+    setInput('')
+    setLoading(true)
+    sendToAPI(text.trim(), next, currentId)
+    inputRef.current?.focus()
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (input.trim() && !loading) sendMessage(input.trim())
+    sendMessage(input)
   }
 
   const handleNewChat = () => {
-    setMessages([WELCOME])
+    const s = newSession()
+    setSessions((prev) => [s, ...prev])
+    setCurrentId(s.id)
+    setInput('')
+    inputRef.current?.focus()
+  }
+
+  const handleSelectSession = (id) => {
+    setCurrentId(id)
     setInput('')
   }
 
-  return (
-    <div className="flex h-screen bg-slate-950 text-slate-100 font-sans overflow-hidden">
+  const handleDeleteSession = (e, id) => {
+    e.stopPropagation()
+    setSessions((prev) => {
+      const next = prev.filter((s) => s.id !== id)
+      if (next.length === 0) {
+        const fresh = newSession()
+        setCurrentId(fresh.id)
+        return [fresh]
+      }
+      if (id === currentId) setCurrentId(next[0].id)
+      return next
+    })
+  }
 
-      {/* Sidebar */}
+  const roleLabel = user?.role === 'mlro' ? 'MLRO Mode' : 'Analyst Mode'
+  const { today, yesterday, older } = groupSessions(sessions)
+
+  return (
+    <div className="flex h-screen bg-[#f0f0f0] dark:bg-slate-950 font-sans overflow-hidden transition-colors">
+
+      {/* ── Sidebar ── */}
       {sidebarOpen && (
-        <aside className="w-64 shrink-0 bg-slate-900 border-r border-slate-800 flex flex-col">
-          <div className="p-4 border-b border-slate-800">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-sm shrink-0">
-                AML
-              </div>
-              <div>
-                <p className="text-sm font-semibold leading-tight">AML Assistant</p>
-                <p className="text-xs text-slate-400">Compliance Knowledge Base</p>
-              </div>
+        <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+          <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">A</div>
+              <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">AML Co-Pilot</span>
             </div>
-            <button
-              onClick={handleNewChat}
-              className="w-full px-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium transition-colors"
-            >
-              + New Chat
+            <button onClick={() => setSidebarOpen(false)} className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             </button>
-            {onOpenTraining && (
-              <button
-                onClick={onOpenTraining}
-                className="w-full px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium transition-colors text-slate-300 mt-2 flex items-center gap-2"
-              >
-                <svg className="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                Training Modules
-              </button>
+          </div>
+
+          <div className="px-3 pt-3 pb-2">
+            <button onClick={handleNewChat} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 text-sm font-medium transition-colors border border-indigo-200 dark:border-indigo-800">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+              New Chat
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-2 pb-4">
+            {[{ label: 'Today', items: today }, { label: 'Yesterday', items: yesterday }, { label: 'Older', items: older }].map(({ label, items }) =>
+              items.length > 0 ? (
+                <div key={label} className="mb-3">
+                  <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2 py-1.5">{label}</p>
+                  {items.map((s) => (
+                    <div key={s.id} onClick={() => handleSelectSession(s.id)}
+                      className={`group flex items-center gap-2 px-3 py-2 rounded-xl cursor-pointer transition-colors mb-0.5 ${
+                        s.id === currentId
+                          ? 'bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <svg className="w-3.5 h-3.5 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                      <span className="text-xs flex-1 truncate">{sessionTitle(s)}</span>
+                      <button onClick={(e) => handleDeleteSession(e, s.id)} className="opacity-0 group-hover:opacity-100 w-4 h-4 flex items-center justify-center rounded text-slate-400 hover:text-red-500 transition-all shrink-0">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null
             )}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-3 space-y-4">
-            {QUICK_QUESTIONS.map((group) => (
-              <div key={group.section}>
-                <p className="text-xs text-slate-500 uppercase tracking-wider px-2 mb-1">{group.section}</p>
-                <div className="flex flex-col gap-0.5">
-                  {group.questions.map((q) => (
-                    <button
-                      key={q}
-                      onClick={() => sendMessage(q)}
-                      disabled={loading}
-                      className="text-left text-xs px-3 py-2 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                    >
-                      {q}
-                    </button>
-                  ))}
-                </div>
+          <div className="px-3 py-3 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-2 px-2">
+              <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-white shrink-0">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
               </div>
-            ))}
-          </div>
-
-          <div className="p-4 border-t border-slate-800">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-              <span className="text-xs text-slate-400">Knowledge base active</span>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{user?.name}</p>
+                <p className="text-[10px] text-slate-400 truncate">{user?.email}</p>
+              </div>
             </div>
           </div>
         </aside>
       )}
 
-      {/* Main area */}
+      {/* ── Main area ── */}
       <div className="flex-1 flex flex-col min-w-0">
 
-        {/* Header */}
-        <header className="shrink-0 px-5 py-3 border-b border-slate-800 bg-slate-900 flex items-center justify-between">
+        <header className="shrink-0 bg-[#f0f0f0] dark:bg-slate-950 px-5 py-3 flex items-center justify-between border-b border-slate-200/60 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setSidebarOpen((v) => !v)}
-              className="p-2 rounded-lg hover:bg-slate-800 transition-colors text-slate-400 hover:text-slate-200"
-              title="Toggle sidebar"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            {!sidebarOpen && (
+              <button onClick={() => setSidebarOpen(true)} className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-slate-800 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
+            )}
             {onBack && (
-              <button
-                onClick={onBack}
-                className="flex items-center gap-1.5 p-2 rounded-lg hover:bg-slate-800 transition-colors text-slate-400 hover:text-slate-200 text-xs"
-                title="Back to home"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
+              <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Home
               </button>
             )}
-            <div>
-              <h1 className="text-sm font-semibold">AML Compliance Assistant</h1>
-              <p className="text-xs text-slate-400">Anti-Money Laundering Knowledge Base</p>
-            </div>
+            {onOpenTraining && (
+              <button onClick={onOpenTraining} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800">
+                Training
+              </button>
+            )}
           </div>
+
           <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-700 dark:text-slate-300 font-medium border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 rounded-full">
+              {roleLabel}
+            </span>
+            <ThemeToggle />
             {user && (
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-600/30 border border-blue-600/40 flex items-center justify-center text-xs font-semibold text-blue-300">
-                  {user.name.charAt(0).toUpperCase()}
+                <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white shrink-0">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
                 </div>
-                <span className="text-xs text-slate-400 hidden sm:block">{user.name}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-400 hidden sm:block">{user.email || user.name}</span>
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </div>
             )}
             {onSignOut && (
-              <button
-                onClick={onSignOut}
-                className="text-xs text-slate-500 hover:text-slate-300 transition-colors px-2 py-1 rounded-lg hover:bg-slate-800"
-                title="Sign out"
-              >
+              <button onClick={onSignOut} className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800">
                 Sign out
               </button>
             )}
           </div>
         </header>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              {msg.role === 'assistant' && (
-                <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                  A
-                </div>
-              )}
-              <div
-                className={`max-w-2xl px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
-                  msg.role === 'user'
-                    ? 'bg-blue-600 text-white rounded-tr-sm'
-                    : 'bg-slate-800 text-slate-100 rounded-tl-sm'
-                }`}
-              >
-                {msg.text}
+        <div className="flex-1 overflow-y-auto">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-full px-4 py-12">
+              <div className="w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center mb-6">
+                <svg className="w-8 h-8 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3l1.5 1.5M12 2v2M19 3l-1.5 1.5M2 12h2M20 12h2M5 21l1.5-1.5M12 20v2M19 21l-1.5-1.5M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                </svg>
               </div>
-              {msg.role === 'user' && (
-                <div className="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs shrink-0 mt-0.5">
-                  U
-                </div>
-              )}
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">AML Co-Pilot</h1>
+              <p className="text-[10px] text-slate-400 mb-3 tracking-wide">Powered by Anthropic</p>
+              <p className="text-slate-500 dark:text-slate-400 text-center text-base leading-relaxed mb-10 max-w-sm">
+                Specialised in FATF, FIU and global regulatory requirements. Ask anything AML, KYC or sanctions related.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl mb-10">
+                {SUGGESTIONS.map((s) => (
+                  <button key={s} onClick={() => sendMessage(s)} disabled={loading}
+                    className="text-left px-5 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm text-slate-700 dark:text-slate-300 hover:border-indigo-300 dark:hover:border-indigo-600 hover:bg-indigo-50/40 dark:hover:bg-indigo-900/20 transition-all shadow-sm leading-snug"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                Co-Pilot provides regulatory training guidance, not legal advice.
+              </p>
             </div>
-          ))}
-
-          {loading && (
-            <div className="flex gap-3 justify-start">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
-                A
-              </div>
-              <div className="bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-sm">
-                <div className="flex gap-1.5 items-center">
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '160ms' }} />
-                  <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '320ms' }} />
+          ) : (
+            <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+              {messages.map((msg) => (
+                <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  {msg.role === 'assistant' && (
+                    <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center shrink-0 mt-0.5">
+                      <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3l1.5 1.5M12 2v2M19 3l-1.5 1.5M2 12h2M20 12h2M5 21l1.5-1.5M12 20v2M19 21l-1.5-1.5M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className={`max-w-2xl px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+                    msg.role === 'user'
+                      ? 'bg-indigo-600 text-white rounded-tr-sm'
+                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-slate-700 rounded-tl-sm shadow-sm'
+                  }`}>
+                    {msg.text}
+                  </div>
+                  {msg.role === 'user' && (
+                    <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white shrink-0 mt-0.5">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
+                    </div>
+                  )}
                 </div>
-              </div>
+              ))}
+              {loading && (
+                <div className="flex gap-3 justify-start">
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center shrink-0 mt-0.5">
+                    <svg className="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3l1.5 1.5M12 2v2M19 3l-1.5 1.5M2 12h2M20 12h2M5 21l1.5-1.5M12 20v2M19 21l-1.5-1.5M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                  </div>
+                  <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm">
+                    <div className="flex gap-1.5 items-center">
+                      <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-bounce" style={{ animationDelay: '160ms' }} />
+                      <div className="w-2 h-2 bg-slate-300 dark:bg-slate-600 rounded-full animate-bounce" style={{ animationDelay: '320ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={bottomRef} />
             </div>
           )}
-
-          <div ref={bottomRef} />
         </div>
 
-        {/* Input bar */}
-        <div className="shrink-0 px-4 pb-4 pt-3 border-t border-slate-800 bg-slate-900">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about AML compliance, KYC, SARs, FATF..."
-              className="flex-1 bg-slate-800 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-slate-100 placeholder-slate-500 transition-colors"
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || loading}
-              className="px-5 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-sm font-medium transition-colors"
-            >
-              Send
-            </button>
+        <div className="shrink-0 px-4 pb-5 pt-3">
+          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+            <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm px-4 py-3 gap-3">
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask about FATF, KYC, sanctions, SMR/SAR drafting..."
+                className="flex-1 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none bg-transparent"
+                disabled={loading}
+              />
+              <button type="button" className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </button>
+              <button type="submit" disabled={!input.trim() || loading}
+                className="shrink-0 w-9 h-9 rounded-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center transition-colors"
+              >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+              </button>
+            </div>
           </form>
-          <p className="text-xs text-slate-600 text-center mt-2">
-            For educational purposes only — consult a qualified compliance professional for legal advice.
-          </p>
         </div>
       </div>
     </div>

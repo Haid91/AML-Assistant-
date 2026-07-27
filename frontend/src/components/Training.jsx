@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import ThemeToggle from './ThemeToggle'
 
 const ANALYST_CASES = [
   {
@@ -267,9 +268,9 @@ const TAG_STYLE = {
 }
 
 export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade }) {
-  const role = user?.role || 'analyst'
   const isPremium = user?.premium || false
-  const cases = role === 'mlro' ? MLRO_CASES : ANALYST_CASES
+  const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
+  const cases = activeRole === 'mlro' ? MLRO_CASES : ANALYST_CASES
 
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
@@ -327,49 +328,50 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
     const total = activeCase.steps.length
 
     return (
-      <div className="min-h-screen bg-slate-100 font-sans flex flex-col">
-        <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-4 sticky top-0 z-10">
+      <div className="min-h-screen bg-slate-100 dark:bg-slate-900 font-sans flex flex-col">
+        <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center gap-4 sticky top-0 z-10">
           <button
             onClick={() => setActiveCase(null)}
-            className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to modules
           </button>
-          <div className="h-4 w-px bg-slate-200" />
+          <div className="h-4 w-px bg-slate-200 dark:bg-slate-600" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-slate-900 truncate">{activeCase.number} {activeCase.title}</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">{activeCase.number} {activeCase.title}</p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {Array.from({ length: total }).map((_, i) => (
-              <div key={i} className={`h-1.5 w-8 rounded-full transition-colors ${i < activeStep ? 'bg-blue-600' : i === activeStep ? 'bg-blue-400' : 'bg-slate-200'}`} />
+              <div key={i} className={`h-1.5 w-8 rounded-full transition-colors ${i < activeStep ? 'bg-blue-600' : i === activeStep ? 'bg-blue-400' : 'bg-slate-200 dark:bg-slate-700'}`} />
             ))}
-            <span className="text-xs text-slate-400 ml-1">{activeStep + 1}/{total}</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500 ml-1">{activeStep + 1}/{total}</span>
           </div>
+          <ThemeToggle />
         </header>
 
         <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-6 grid grid-cols-5 gap-6 items-start">
           {/* Scenario panel */}
-          <div className="col-span-2 bg-white rounded-2xl border border-slate-200 p-5 sticky top-20">
+          <div className="col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 sticky top-20">
             <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-2">Case Briefing</p>
-            <p className="text-slate-700 text-sm leading-relaxed whitespace-pre-line">{activeCase.fullScenario}</p>
+            <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed whitespace-pre-line">{activeCase.fullScenario}</p>
           </div>
 
           {/* Step panel */}
           <div className="col-span-3 space-y-4">
-            <div className="bg-white rounded-2xl border border-slate-200 p-6">
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Step {activeStep + 1} of {total} — {step.title}</p>
-              <p className="text-slate-900 font-semibold text-base leading-snug mb-5">{step.question}</p>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6">
+              <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Step {activeStep + 1} of {total} — {step.title}</p>
+              <p className="text-slate-900 dark:text-white font-semibold text-base leading-snug mb-5">{step.question}</p>
 
               <div className="space-y-2">
                 {step.options.map((opt, i) => {
-                  let cls = 'bg-slate-50 border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50 cursor-pointer'
+                  let cls = 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer'
                   if (showFeedback) {
-                    if (i === selected) cls = opt.correct ? 'bg-emerald-50 border-emerald-400 text-emerald-900' : 'bg-red-50 border-red-400 text-red-900'
-                    else if (opt.correct) cls = 'bg-emerald-50 border-emerald-300 text-emerald-800'
-                    else cls = 'bg-slate-50 border-slate-200 text-slate-400 cursor-default'
+                    if (i === selected) cls = opt.correct ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 dark:border-emerald-600 text-emerald-900 dark:text-emerald-300' : 'bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-600 text-red-900 dark:text-red-300'
+                    else if (opt.correct) cls = 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-400'
+                    else cls = 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-500 cursor-default'
                   }
                   return (
                     <button
@@ -385,7 +387,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               </div>
 
               {showFeedback && chosen && (
-                <div className={`mt-4 p-4 rounded-xl border text-sm leading-relaxed ${chosen.correct ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-amber-50 border-amber-200 text-amber-800'}`}>
+                <div className={`mt-4 p-4 rounded-xl border text-sm leading-relaxed ${chosen.correct ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'}`}>
                   <p className="font-semibold mb-1">{chosen.correct ? '✓ Correct' : '✗ Incorrect'}</p>
                   {chosen.feedback}
                 </div>
@@ -408,21 +410,21 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
 
   /* ── Dashboard view ── */
   return (
-    <div className="min-h-screen bg-slate-100 font-sans">
-      <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 font-sans">
+      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {onBack && (
-            <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors">
+            <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Home
             </button>
           )}
-          <div className="h-4 w-px bg-slate-200" />
+          <div className="h-4 w-px bg-slate-200 dark:bg-slate-600" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-            <span className="text-sm font-semibold text-slate-800">AML Assistant</span>
+            <span className="text-sm font-semibold text-slate-800 dark:text-white">AML Assistant</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -431,7 +433,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               <div className="w-7 h-7 rounded-lg bg-blue-100 border border-blue-200 flex items-center justify-center text-xs font-semibold text-blue-700">
                 {user.name?.charAt(0).toUpperCase()}
               </div>
-              <span className="text-sm text-slate-500 hidden sm:block">{user.name}</span>
+              <span className="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">{user.name}</span>
             </div>
           )}
           {onOpenChat && (
@@ -445,8 +447,9 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               AI Assistant
             </button>
           )}
+          <ThemeToggle />
           {onSignOut && (
-            <button onClick={onSignOut} className="text-xs text-slate-400 hover:text-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+            <button onClick={onSignOut} className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
               Sign out
             </button>
           )}
@@ -454,19 +457,51 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
       </header>
 
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-slate-900">
-            {role === 'mlro' ? 'MLRO' : 'Analyst'} Training Modules
-          </h1>
-          <p className="text-slate-500 text-sm mt-1">
-            {role === 'mlro'
-              ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
-              : 'Investigative training for AML case analysis and decision-making.'}
-          </p>
+        <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+              {activeRole === 'mlro' ? 'MLRO' : 'Analyst'} Training Modules
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+              {activeRole === 'mlro'
+                ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
+                : 'Investigative training for AML case analysis and decision-making.'}
+            </p>
+          </div>
+
+          {/* Role switcher */}
+          <div className="flex items-center gap-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-1 shadow-sm shrink-0">
+            <button
+              onClick={() => setActiveRole('analyst')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeRole === 'analyst'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Analyst
+            </button>
+            <button
+              onClick={() => setActiveRole('mlro')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeRole === 'mlro'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              MLRO
+            </button>
+          </div>
         </div>
 
         {/* Industry pill */}
-        <div className="w-full bg-slate-300/60 rounded-full py-2 text-center text-xs font-semibold text-slate-500 uppercase tracking-widest mb-6">
+        <div className="w-full bg-slate-300/60 dark:bg-slate-700/60 rounded-full py-2 text-center text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-6">
           Banking
         </div>
 
@@ -481,10 +516,10 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
             return (
               <div
                 key={c.id}
-                className={`bg-white border border-slate-200 rounded-2xl p-6 flex flex-col relative ${locked ? 'opacity-60' : ''}`}
+                className={`bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col relative ${locked ? 'opacity-60' : ''}`}
               >
                 {locked && (
-                  <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400">
+                  <div className="absolute top-4 right-4 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-slate-400">
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -500,8 +535,8 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
                   {locked && <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${TAG_STYLE['Premium']}`}>Premium</span>}
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-sm leading-snug mb-2">{c.number} {c.title}</h3>
-                <p className="text-slate-500 text-xs leading-relaxed flex-1 mb-5">{c.shortDesc}</p>
+                <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug mb-2">{c.number} {c.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-1 mb-5">{c.shortDesc}</p>
 
                 <div className="flex items-center justify-end gap-3">
                   {locked ? (
@@ -517,7 +552,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
                     </>
                   ) : inProgress ? (
                     <>
-                      <button onClick={() => startCase(c)} className="text-sm text-slate-700 font-medium hover:text-blue-600 transition-colors">Continue</button>
+                      <button onClick={() => startCase(c)} className="text-sm text-slate-700 dark:text-slate-300 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Continue</button>
                       <button onClick={(e) => restart(c, e)} className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full text-sm font-semibold transition-colors">
                         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -542,9 +577,9 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
 
         {/* Premium upsell banner */}
         {!isPremium && (
-          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6">
-            <p className="font-bold text-slate-900 mb-1">Free plan: locked to Banking</p>
-            <p className="text-slate-600 text-sm mb-5">
+          <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
+            <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: locked to Banking</p>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
               Want access to <strong>Law</strong>, <strong>Crypto</strong>, <strong>Fintech</strong> and other industry modules? Upgrade to <strong>Premium</strong> to unlock every track, switch between industries anytime, and resume any case files you've already started in other modules.
             </p>
             <div className="flex items-center gap-4 flex-wrap">

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
+export default function SignIn({ onSignIn, onGoSignUp, onGoHome, onForgotPassword }) {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -39,17 +39,17 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white flex flex-col">
 
       {/* Navbar */}
-      <nav className="border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+      <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
         <button onClick={onGoHome} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold">AML</div>
-          <span className="font-semibold text-sm">AML Assistant</span>
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
+          <span className="font-semibold text-sm text-slate-900 dark:text-white">AML Assistant</span>
         </button>
-        <p className="text-sm text-slate-400">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           Don't have an account?{' '}
-          <button onClick={onGoSignUp} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+          <button onClick={onGoSignUp} className="text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
             Sign up
           </button>
         </p>
@@ -59,16 +59,16 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold mx-auto mb-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold text-white mx-auto mb-4">
               AML
             </div>
             <h1 className="text-2xl font-bold mb-1">Welcome back</h1>
-            <p className="text-slate-400 text-sm">Sign in to your AML Assistant account</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Sign in to your AML Assistant account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
+              <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-1.5">Email address</label>
               <input
                 type="email"
                 name="email"
@@ -76,12 +76,21 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
                 onChange={handleChange}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className="w-full bg-slate-900 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-white placeholder-slate-500 transition-colors"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-medium text-slate-600 dark:text-slate-300">Password</label>
+                <button
+                  type="button"
+                  onClick={onForgotPassword}
+                  className="text-xs text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+                >
+                  Forgot password?
+                </button>
+              </div>
               <input
                 type="password"
                 name="password"
@@ -89,12 +98,12 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
                 onChange={handleChange}
                 placeholder="••••••••"
                 autoComplete="current-password"
-                className="w-full bg-slate-900 border border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-white placeholder-slate-500 transition-colors"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
               />
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-400">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-sm text-red-500 dark:text-red-400">
                 {error}
               </div>
             )}
@@ -102,20 +111,20 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-sm transition-colors"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-sm text-white transition-colors"
             >
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-500 mt-6">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-500 mt-6">
             Don't have an account?{' '}
-            <button onClick={onGoSignUp} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+            <button onClick={onGoSignUp} className="text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
               Sign up for free
             </button>
           </p>
 
-          <p className="text-center text-xs text-slate-700 mt-8">
+          <p className="text-center text-xs text-slate-400 dark:text-slate-700 mt-8">
             For educational purposes only. Not legal advice.
           </p>
         </div>

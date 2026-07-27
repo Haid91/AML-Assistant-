@@ -48,13 +48,13 @@ export default function Checkout({ user, onBack, onSuccess }) {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 font-sans flex flex-col">
 
       {/* Top bar */}
       <div className="px-8 py-4 flex items-center">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors"
+          className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -67,31 +67,31 @@ export default function Checkout({ user, onBack, onSuccess }) {
       <div className="flex-1 flex items-start justify-center px-6 py-8 gap-8 max-w-4xl mx-auto w-full">
 
         {/* Left — plan summary */}
-        <div className="w-80 shrink-0 bg-white rounded-2xl border border-slate-200 overflow-hidden">
-          <div className="p-6 border-b border-slate-100">
+        <div className="w-80 shrink-0 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="p-6 border-b border-slate-100 dark:border-slate-700">
             <p className="text-emerald-500 font-bold text-2xl mb-4">7 day free trial</p>
-            <p className="text-slate-500 text-sm mb-1">AML Assistant Premium</p>
-            <p className="text-slate-900 font-bold text-xl mb-1">$49.99/month</p>
-            <p className="text-slate-400 text-xs">from {trialEnd}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">AML Assistant Premium</p>
+            <p className="text-slate-900 dark:text-white font-bold text-xl mb-1">$49.99/month</p>
+            <p className="text-slate-400 dark:text-slate-500 text-xs">from {trialEnd}</p>
           </div>
-          <div className="px-6 py-4 border-b border-slate-100">
-            <div className="flex justify-between text-sm text-slate-500 mb-1">
+          <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+            <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400 mb-1">
               <span>Qty: 1</span>
             </div>
           </div>
           <div className="px-6 py-5 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Total</span>
-              <span className="font-semibold text-slate-900">$0.00</span>
+              <span className="text-slate-600 dark:text-slate-400">Total</span>
+              <span className="font-semibold text-slate-900 dark:text-white">$0.00</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Due on {trialEnd}</span>
-              <span className="font-semibold text-slate-900">$49.99</span>
+              <span className="text-slate-600 dark:text-slate-400">Due on {trialEnd}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">$49.99</span>
             </div>
-            <p className="text-xs text-slate-400">If you don't cancel anytime before then</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">If you don't cancel anytime before then</p>
           </div>
-          <div className="px-6 pb-5 border-t border-slate-100 pt-4">
-            <p className="text-xs text-slate-400">{user?.email}</p>
+          <div className="px-6 pb-5 border-t border-slate-100 dark:border-slate-700 pt-4">
+            <p className="text-xs text-slate-400 dark:text-slate-500">{user?.email}</p>
           </div>
         </div>
 
@@ -103,31 +103,31 @@ export default function Checkout({ user, onBack, onSuccess }) {
             <button
               onClick={() => setTab('card')}
               className={`flex flex-col items-center gap-1.5 py-4 rounded-xl border-2 transition-all ${
-                tab === 'card' ? 'border-emerald-500 bg-white' : 'border-slate-200 bg-white hover:border-slate-300'
+                tab === 'card' ? 'border-emerald-500 bg-white dark:bg-slate-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600'
               }`}
             >
-              <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
               </svg>
-              <span className="text-sm font-medium text-slate-700">Card</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Card</span>
             </button>
             <button
               onClick={() => setTab('paypal')}
               className={`flex flex-col items-center gap-1.5 py-4 rounded-xl border-2 transition-all ${
-                tab === 'paypal' ? 'border-emerald-500 bg-white' : 'border-slate-200 bg-white hover:border-slate-300'
+                tab === 'paypal' ? 'border-emerald-500 bg-white dark:bg-slate-800' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600'
               }`}
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
                 <path d="M7.5 21H4L6 9h5.5c2.5 0 4.5 1.5 4 4.5C14.8 17.5 11.5 21 7.5 21z" fill="#003087"/>
                 <path d="M10 16H6.5L8 9h4c2 0 3.5 1 3 3.5C14.5 15 12 16 10 16z" fill="#009cde"/>
               </svg>
-              <span className="text-sm font-medium text-slate-700">PayPal</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-200">PayPal</span>
             </button>
           </div>
 
           {tab === 'paypal' ? (
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-              <p className="text-slate-500 text-sm mb-4">You will be redirected to PayPal to complete your payment.</p>
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8 text-center">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">You will be redirected to PayPal to complete your payment.</p>
               <button
                 onClick={handleSubmit}
                 disabled={loading}
@@ -141,27 +141,27 @@ export default function Checkout({ user, onBack, onSuccess }) {
 
               {/* Name on card */}
               <div>
-                <label className="block text-sm text-slate-600 mb-1.5">Name on card</label>
+                <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1.5">Name on card</label>
                 <input
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Jane Smith"
-                  className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 placeholder-slate-400 transition-colors"
+                  className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
                 />
               </div>
 
               {/* Card details */}
               <div>
-                <label className="block text-sm text-slate-600 mb-1.5">Card details</label>
-                <div className="bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-emerald-400 transition-colors">
-                  <div className="relative px-4 py-3 border-b border-slate-100">
+                <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1.5">Card details</label>
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden focus-within:border-emerald-400 transition-colors">
+                  <div className="relative px-4 py-3 border-b border-slate-100 dark:border-slate-700">
                     <input
                       name="number"
                       value={form.number}
                       onChange={handleChange}
                       placeholder="XXXX XXXX XXXX XXXX"
-                      className="w-full text-sm outline-none text-slate-900 placeholder-slate-400 pr-32"
+                      className="w-full text-sm outline-none bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 pr-32"
                     />
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1">
                       <span className="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded">VISA</span>
@@ -175,14 +175,14 @@ export default function Checkout({ user, onBack, onSuccess }) {
                       value={form.expiry}
                       onChange={handleChange}
                       placeholder="MM / YY"
-                      className="px-4 py-3 text-sm outline-none text-slate-900 placeholder-slate-400 border-r border-slate-100"
+                      className="px-4 py-3 text-sm outline-none bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 border-r border-slate-100 dark:border-slate-700"
                     />
                     <input
                       name="cvv"
                       value={form.cvv}
                       onChange={handleChange}
                       placeholder="CVV"
-                      className="px-4 py-3 text-sm outline-none text-slate-900 placeholder-slate-400"
+                      className="px-4 py-3 text-sm outline-none bg-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
                   </div>
                 </div>
@@ -191,12 +191,12 @@ export default function Checkout({ user, onBack, onSuccess }) {
               {/* Country & Postcode */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1.5">Country</label>
+                  <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1.5">Country</label>
                   <select
                     name="country"
                     value={form.country}
                     onChange={handleChange}
-                    className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 transition-colors"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white transition-colors"
                   >
                     {['Australia', 'New Zealand', 'United Kingdom', 'United States', 'Canada', 'Singapore', 'Hong Kong'].map(c => (
                       <option key={c}>{c}</option>
@@ -204,25 +204,25 @@ export default function Checkout({ user, onBack, onSuccess }) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-slate-600 mb-1.5">Postcode</label>
+                  <label className="block text-sm text-slate-600 dark:text-slate-300 mb-1.5">Postcode</label>
                   <input
                     name="postcode"
                     value={form.postcode}
                     onChange={handleChange}
                     placeholder="2000"
-                    className="w-full bg-white border border-slate-200 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 placeholder-slate-400 transition-colors"
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-emerald-400 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
                   />
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400">We collect this information to prevent fraud and secure your payment.</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500">We collect this information to prevent fraud and secure your payment.</p>
 
               {/* Discount code */}
-              <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                 <button
                   type="button"
                   onClick={() => setDiscountOpen((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                 >
                   <span>Add discount code</span>
                   <svg className={`w-4 h-4 transition-transform ${discountOpen ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -230,14 +230,14 @@ export default function Checkout({ user, onBack, onSuccess }) {
                   </svg>
                 </button>
                 {discountOpen && (
-                  <div className="px-4 pb-3 flex gap-2 border-t border-slate-100">
+                  <div className="px-4 pb-3 flex gap-2 border-t border-slate-100 dark:border-slate-700">
                     <input
                       value={discount}
                       onChange={(e) => setDiscount(e.target.value)}
                       placeholder="Enter code"
-                      className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none"
+                      className="flex-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                     />
-                    <button type="button" className="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg text-sm font-medium transition-colors">
+                    <button type="button" className="px-4 py-2 bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 rounded-lg text-sm font-medium text-slate-800 dark:text-white transition-colors">
                       Apply
                     </button>
                   </div>
@@ -245,7 +245,7 @@ export default function Checkout({ user, onBack, onSuccess }) {
               </div>
 
               {error && (
-                <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-xl px-4 py-3">{error}</p>
+                <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3">{error}</p>
               )}
 
               <button
@@ -256,7 +256,7 @@ export default function Checkout({ user, onBack, onSuccess }) {
                 {loading ? 'Processing…' : 'Start your free trial'}
               </button>
 
-              <p className="text-xs text-center text-slate-400">
+              <p className="text-xs text-center text-slate-400 dark:text-slate-500">
                 7-day free trial, then $49.99/month from {trialEnd}. Cancel anytime.
               </p>
             </form>

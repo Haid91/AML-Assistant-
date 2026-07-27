@@ -3,36 +3,65 @@ import LandingPage from './components/LandingPage'
 import AMLAssistant from './components/AMLAssistant'
 import Training from './components/Training'
 import RoleSelect from './components/RoleSelect'
+import IndustrySelect from './components/IndustrySelect'
+import SimulationSelect from './components/SimulationSelect'
 import Checkout from './components/Checkout'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
+import ForgotPassword from './components/ForgotPassword'
+import ResetPassword from './components/ResetPassword'
+
+const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
+
+function isPremium(u) {
+  return u?.premium || OWNER_EMAILS.has(u?.email?.toLowerCase())
+}
 
 function App() {
   const [view, setView] = useState('landing')
   const [user, setUser] = useState(null)
+  const [selectedIndustry, setSelectedIndustry] = useState(null)
+  const [resetToken, setResetToken] = useState(null)
 
   useEffect(() => {
     const stored = localStorage.getItem('aml_user')
     if (stored) {
       try { setUser(JSON.parse(stored)) } catch { localStorage.removeItem('aml_user') }
     }
+    // Detect password reset link: /?action=reset&token=...
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('action') === 'reset' && params.get('token')) {
+      setResetToken(params.get('token'))
+      setView('resetpassword')
+    }
   }, [])
 
-  const goHome = (u) => setView(u?.premium ? 'chat' : 'training')
+  const goHome = (u) => setView(isPremium(u) ? 'chat' : 'training')
 
   const handleSignIn = (userData) => {
     setUser(userData)
     const saved = localStorage.getItem('aml_user')
     const parsed = saved ? JSON.parse(saved) : {}
+    // New users: go through industry → simulation → role select
+    // Returning users with role already set: go straight home
     if (parsed.role) {
       goHome(userData)
     } else {
-      setView('roleselect')
+      setView('industryselect')
     }
   }
 
+  const handleIndustrySelect = (industry) => {
+    setSelectedIndustry(industry)
+    setView('simulationselect')
+  }
+
+  const handleSimulationContinue = () => {
+    setView('roleselect')
+  }
+
   const handleRoleSelect = (role) => {
-    const updated = { ...user, role }
+    const updated = { ...user, role, industry: selectedIndustry }
     setUser(updated)
     localStorage.setItem('aml_user', JSON.stringify(updated))
     goHome(updated)
@@ -69,6 +98,26 @@ function App() {
         onSignIn={handleSignIn}
         onGoSignUp={() => setView('signup')}
         onGoHome={() => setView('landing')}
+        onForgotPassword={() => setView('forgotpassword')}
+      />
+    )
+  }
+
+  if (view === 'forgotpassword') {
+    return (
+      <ForgotPassword
+        onGoSignIn={() => setView('signin')}
+        onGoHome={() => setView('landing')}
+      />
+    )
+  }
+
+  if (view === 'resetpassword') {
+    return (
+      <ResetPassword
+        token={resetToken}
+        onGoSignIn={() => setView('signin')}
+        onGoHome={() => setView('landing')}
       />
     )
   }
@@ -79,6 +128,25 @@ function App() {
         onSignUp={handleSignIn}
         onGoSignIn={() => setView('signin')}
         onGoHome={() => setView('landing')}
+      />
+    )
+  }
+
+  if (view === 'industryselect') {
+    return (
+      <IndustrySelect
+        user={user}
+        onSelect={handleIndustrySelect}
+      />
+    )
+  }
+
+  if (view === 'simulationselect') {
+    return (
+      <SimulationSelect
+        user={user}
+        industry={selectedIndustry}
+        onContinue={handleSimulationContinue}
       />
     )
   }
@@ -96,7 +164,7 @@ function App() {
     return (
       <Checkout
         user={user}
-        onBack={() => setView(user?.premium ? 'chat' : 'training')}
+        onBack={() => setView(isPremium(user) ? 'chat' : 'training')}
         onSuccess={handleCheckoutSuccess}
       />
     )
@@ -105,7 +173,7 @@ function App() {
   if (view === 'training') {
     return (
       <Training
-        user={user}
+        user={user ? { ...user, premium: isPremium(user) } : user}
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
         onOpenChat={() => setView('chat')}
@@ -117,7 +185,7 @@ function App() {
   if (view === 'chat') {
     return (
       <AMLAssistant
-        user={user}
+        user={user ? { ...user, premium: isPremium(user) } : user}
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
         onOpenTraining={() => setView('training')}

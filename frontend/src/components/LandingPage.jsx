@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import ThemeToggle from './ThemeToggle'
 
 const FEATURES = [
   {
@@ -90,7 +91,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
   }, [])
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
+    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
 
       {/* Navbar */}
       <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm">
@@ -178,7 +179,8 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             )}
           </div>
 
-          {/* Auth buttons */}
+          {/* Theme toggle + Auth buttons */}
+          <ThemeToggle className="mr-1" />
           {user ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-slate-400 hidden sm:block">Hi, {user.name.split(' ')[0]}</span>
@@ -217,28 +219,28 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
       {/* Hero */}
       <section className="text-center pt-28 pb-24 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-600 text-xs font-medium mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 text-xs font-medium mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 inline-block"></span>
             AUSTRAC guidance · FATF-aligned · BSA compliant · For compliance professionals
           </div>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight mb-6">
             Risk-based AML<br />
             <span className="text-blue-600">compliance assistant</span>
           </h1>
-          <p className="text-lg md:text-xl text-slate-500 leading-relaxed mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed mb-10 max-w-2xl mx-auto">
             An intelligent knowledge base that puts you inside KYC, transaction monitoring, and sanctions investigations — with instant, regulation-backed answers.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={onStart}
-              className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold transition-colors text-sm"
+              className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm"
             >
               {user ? 'Open Assistant →' : 'Get started free →'}
             </button>
             {!user && (
               <button
                 onClick={onSignIn}
-                className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 hover:border-slate-400 rounded-xl text-slate-600 hover:text-slate-900 transition-colors text-sm text-center"
+                className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-sm text-center"
               >
                 Sign in
               </button>
@@ -246,25 +248,25 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             {user && (
               <a
                 href="#features"
-                className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 hover:border-slate-400 rounded-xl text-slate-600 hover:text-slate-900 transition-colors text-sm text-center"
+                className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-sm text-center"
               >
                 See features
               </a>
             )}
           </div>
-          <p className="text-xs text-slate-400 mt-6">
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-6">
             Fictional scenarios for educational purposes only. Not legal advice.
           </p>
         </div>
       </section>
 
       {/* Features */}
-      <section id="features" className="py-24 px-6 bg-slate-50">
+      <section id="features" className="py-24 px-6 bg-slate-50 dark:bg-slate-800">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs text-blue-600 uppercase tracking-widest font-medium mb-3">What you get</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">What you get</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Everything you need for AML compliance</h2>
-            <p className="text-slate-500 max-w-xl mx-auto text-sm leading-relaxed">
+            <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
               Built around real regulatory frameworks — from FATF recommendations to BSA requirements to AUSTRAC guidance.
             </p>
           </div>
@@ -272,13 +274,13 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             {FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl p-7 transition-colors group shadow-sm"
+                className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 rounded-2xl p-7 transition-colors group shadow-sm"
               >
-                <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 mb-5 group-hover:bg-blue-100 transition-colors">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-5 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors">
                   {f.icon}
                 </div>
                 <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -286,24 +288,24 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 px-6 bg-slate-50">
+      <section id="pricing" className="py-24 px-6 bg-slate-50 dark:bg-slate-800">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs text-blue-600 uppercase tracking-widest font-medium mb-3">Pricing</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Simple, transparent pricing</h2>
-            <p className="text-slate-500 text-sm">Start free. Upgrade when you need more.</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">Pricing</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Simple, transparent pricing</h2>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">Start free. Upgrade when you need more.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
 
             {/* Free */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 flex flex-col">
-              <p className="font-bold text-slate-900 text-lg mb-3">Free</p>
+            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Free</p>
               <div className="mb-2 flex items-end gap-1">
-                <span className="text-4xl font-bold text-slate-900">$0</span>
-                <span className="text-slate-500 text-sm mb-1">/forever</span>
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">$0</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/forever</span>
               </div>
-              <p className="text-slate-500 text-sm mb-7">Try the assistant and core investigative workflow at no cost.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-7">Try the assistant and core investigative workflow at no cost.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'One free CDD scenario',
@@ -312,7 +314,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   'Sanctions & PEP screening guidance',
                   'Industry glossary and FATF reference panels',
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600">
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
@@ -322,23 +324,23 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               </ul>
               <button
                 onClick={onSignIn}
-                className="w-full py-3 border border-slate-300 rounded-xl text-slate-800 font-semibold text-sm hover:bg-slate-50 transition-colors"
+                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-xl text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
               >
                 Sign in to start
               </button>
             </div>
 
             {/* Premium */}
-            <div className="relative bg-white border-2 border-slate-900 rounded-2xl p-8 flex flex-col">
+            <div className="relative bg-white dark:bg-slate-700 border-2 border-slate-900 dark:border-slate-400 rounded-2xl p-8 flex flex-col">
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                <span className="bg-slate-900 text-white text-xs font-bold px-5 py-1.5 rounded-full uppercase tracking-widest">
+                <span className="bg-slate-900 dark:bg-slate-200 text-white dark:text-slate-900 text-xs font-bold px-5 py-1.5 rounded-full uppercase tracking-widest">
                   Most Popular
                 </span>
               </div>
-              <p className="font-bold text-slate-900 text-lg mb-3">Premium</p>
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Premium</p>
               <div className="mb-1 flex items-end gap-1">
-                <span className="text-4xl font-bold text-slate-900">$49.99</span>
-                <span className="text-slate-500 text-sm mb-1">/month</span>
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">$49.99</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
               </div>
               <p className="text-orange-500 text-sm font-semibold mb-6">7-day free trial. Cancel anytime.</p>
               <ul className="space-y-3 mb-8 flex-1">
@@ -350,7 +352,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   'Personalised FATF & AUSTRAC compliance mapping',
                   'Unlimited questions — no daily cap',
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600">
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
@@ -360,18 +362,18 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               </ul>
               <button
                 onClick={onStart}
-                className="w-full py-3.5 bg-slate-900 text-white rounded-xl font-semibold text-sm hover:bg-slate-800 transition-colors"
+                className="w-full py-3.5 bg-slate-900 dark:bg-slate-200 text-white dark:text-slate-900 rounded-xl font-semibold text-sm hover:bg-slate-800 dark:hover:bg-white transition-colors"
               >
                 Start 7-day free trial
               </button>
-              <p className="text-center text-xs text-slate-400 mt-3">Free for 7 days, then $49.99/month.</p>
+              <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">Free for 7 days, then $49.99/month.</p>
             </div>
 
             {/* Team */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-8 flex flex-col">
-              <p className="font-bold text-slate-900 text-lg mb-3">Team</p>
-              <p className="text-4xl font-bold text-slate-900 mb-4">Custom</p>
-              <p className="text-slate-500 text-sm mb-8 flex-1">Customise a package for your financial crime compliance team.</p>
+            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Team</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Custom</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 flex-1">Customise a package for your financial crime compliance team.</p>
               <ul className="space-y-3 mb-8">
                 {[
                   'Everything in Premium',
@@ -380,7 +382,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   'Dedicated compliance advisor',
                   'Volume licensing',
                 ].map((f) => (
-                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600">
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
@@ -388,7 +390,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-3 border border-slate-300 rounded-xl text-slate-800 font-semibold text-sm hover:bg-slate-50 transition-colors">
+              <button className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-xl text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors">
                 Contact sales
               </button>
             </div>
@@ -403,7 +405,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           <div className="text-center mb-12">
             <p className="text-xs text-blue-600 uppercase tracking-widest font-medium mb-3">Real-world experience</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Built on the compliance desk</h2>
-            <p className="text-slate-600 max-w-xl mx-auto text-sm leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
               The guidance in this assistant isn't just from regulation documents — it's shaped by the real-time judgement calls made by compliance professionals in the field.
             </p>
           </div>
@@ -442,10 +444,10 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 desc: 'Guidance shaped by real SMR decisions, transaction monitoring reviews, and customer due diligence investigations.',
               },
             ].map((item) => (
-              <div key={item.label} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+              <div key={item.label} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
                 <p className="text-2xl font-bold text-blue-600 mb-1">{item.stat}</p>
                 <p className="font-semibold text-sm mb-2">{item.label}</p>
-                <p className="text-slate-500 text-xs leading-relaxed">{item.desc}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -471,9 +473,9 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 px-6 py-10">
+      <footer className="border-t border-slate-200 dark:border-slate-700 px-6 py-10">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
               <span>© 2026 AML Assistant</span>
