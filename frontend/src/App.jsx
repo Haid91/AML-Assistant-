@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import LandingPage from './components/LandingPage'
 import AMLAssistant from './components/AMLAssistant'
+import Training from './components/Training'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 
@@ -56,12 +57,23 @@ function App() {
     )
   }
 
+  if (view === 'training') {
+    return (
+      <Training
+        user={user}
+        onBack={() => setView('landing')}
+        onSignOut={handleSignOut}
+      />
+    )
+  }
+
   if (view === 'chat') {
     return (
       <AMLAssistant
         user={user}
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
+        onOpenTraining={() => setView('training')}
       />
     )
   }
@@ -73,6 +85,7 @@ function App() {
       onSignIn={() => setView('signin')}
       onSignUp={() => setView('signup')}
       onOpenChat={() => setView('chat')}
+      onOpenTraining={() => setView('training')}
       onSignOut={handleSignOut}
     />
   )
