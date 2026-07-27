@@ -58,7 +58,7 @@ Ask me anything or select a topic from the sidebar.
 Disclaimer: For educational purposes only. Always consult a qualified compliance professional for legal advice.`,
 }
 
-function PremiumGate({ onBack, onSignOut, user }) {
+function PremiumGate({ onBack, onSignOut, onUpgrade, user }) {
   return (
     <div className="flex h-screen bg-slate-950 text-slate-100 font-sans items-center justify-center">
       <div className="max-w-md w-full mx-auto px-8 text-center">
@@ -87,7 +87,7 @@ function PremiumGate({ onBack, onSignOut, user }) {
             </li>
           ))}
         </ul>
-        <button className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-sm transition-colors mb-3">
+        <button onClick={onUpgrade} className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-sm transition-colors mb-3">
           Upgrade to Premium — $49.99/mo
         </button>
         <p className="text-xs text-slate-500 mb-6">7-day free trial · cancel anytime</p>
@@ -116,7 +116,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining }
   const bottomRef = useRef(null)
 
   if (!user?.premium) {
-    return <PremiumGate onBack={onBack} onSignOut={onSignOut} user={user} />
+    return <PremiumGate onBack={onBack} onSignOut={onSignOut} onUpgrade={onUpgrade} user={user} />
   }
 
   useEffect(() => {

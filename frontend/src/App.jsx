@@ -3,6 +3,7 @@ import LandingPage from './components/LandingPage'
 import AMLAssistant from './components/AMLAssistant'
 import Training from './components/Training'
 import RoleSelect from './components/RoleSelect'
+import Checkout from './components/Checkout'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 
@@ -35,6 +36,15 @@ function App() {
     setUser(updated)
     localStorage.setItem('aml_user', JSON.stringify(updated))
     goHome(updated)
+  }
+
+  const handleUpgrade = () => setView('checkout')
+
+  const handleCheckoutSuccess = () => {
+    const upgraded = { ...user, premium: true }
+    setUser(upgraded)
+    localStorage.setItem('aml_user', JSON.stringify(upgraded))
+    setView('chat')
   }
 
   const handleSignOut = async () => {
@@ -82,6 +92,16 @@ function App() {
     )
   }
 
+  if (view === 'checkout') {
+    return (
+      <Checkout
+        user={user}
+        onBack={() => setView(user?.premium ? 'chat' : 'training')}
+        onSuccess={handleCheckoutSuccess}
+      />
+    )
+  }
+
   if (view === 'training') {
     return (
       <Training
@@ -89,6 +109,7 @@ function App() {
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
         onOpenChat={() => setView('chat')}
+        onUpgrade={handleUpgrade}
       />
     )
   }
@@ -100,6 +121,7 @@ function App() {
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
         onOpenTraining={() => setView('training')}
+        onUpgrade={handleUpgrade}
       />
     )
   }
