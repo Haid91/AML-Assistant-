@@ -11,8 +11,6 @@ function getTrialEndDate() {
 export default function Checkout({ user, onBack, onSuccess }) {
   const [tab, setTab] = useState('card')
   const [form, setForm] = useState({ name: user?.name || '', number: '', expiry: '', cvv: '', country: 'Australia', postcode: '' })
-  const [discountOpen, setDiscountOpen] = useState(false)
-  const [discount, setDiscount] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -216,33 +214,6 @@ export default function Checkout({ user, onBack, onSuccess }) {
               </div>
 
               <p className="text-xs text-slate-400 dark:text-slate-500">We collect this information to prevent fraud and secure your payment.</p>
-
-              {/* Discount code */}
-              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setDiscountOpen((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                >
-                  <span>Add discount code</span>
-                  <svg className={`w-4 h-4 transition-transform ${discountOpen ? 'rotate-45' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
-                {discountOpen && (
-                  <div className="px-4 pb-3 flex gap-2 border-t border-slate-100 dark:border-slate-700">
-                    <input
-                      value={discount}
-                      onChange={(e) => setDiscount(e.target.value)}
-                      placeholder="Enter code"
-                      className="flex-1 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
-                    />
-                    <button type="button" className="px-4 py-2 bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 rounded-lg text-sm font-medium text-slate-800 dark:text-white transition-colors">
-                      Apply
-                    </button>
-                  </div>
-                )}
-              </div>
 
               {error && (
                 <p className="text-sm text-red-500 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3">{error}</p>
