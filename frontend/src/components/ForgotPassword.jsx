@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Logo from './Logo'
 
 export default function ForgotPassword({ onGoSignIn, onGoHome }) {
   const [email, setEmail] = useState('')
@@ -36,7 +37,7 @@ export default function ForgotPassword({ onGoSignIn, onGoHome }) {
       {/* Navbar */}
       <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
         <button onClick={onGoHome} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
+          <Logo size={32} />
           <span className="font-semibold text-sm text-slate-900 dark:text-white">Intel</span>
         </button>
         <button onClick={onGoSignIn} className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">

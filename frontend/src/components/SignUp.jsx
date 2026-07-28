@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Logo from './Logo'
 
 export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
@@ -52,7 +53,7 @@ export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
       {/* Navbar */}
       <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
         <button onClick={onGoHome} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
+          <Logo size={32} />
           <span className="font-semibold text-sm text-slate-900 dark:text-white">Intel</span>
         </button>
         <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -67,9 +68,7 @@ export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
       <div className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold text-white mx-auto mb-4">
-              AML
-            </div>
+            <div className="mx-auto mb-4 w-fit"><Logo size={48} /></div>
             <h1 className="text-2xl font-bold mb-1">Create your account</h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm">Access the AML Compliance Assistant</p>
           </div>

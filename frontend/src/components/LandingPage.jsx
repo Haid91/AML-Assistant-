@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
+import Logo from './Logo'
 
 const FEATURES = [
   {
@@ -99,9 +100,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
 
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold tracking-tight">
-              AML
-            </div>
+            <Logo size={32} />
             <span className="font-semibold text-sm">Intel</span>
           </div>
 
@@ -490,7 +489,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
+              <Logo size={24} />
               <span>© 2026 AmlIntel</span>
             </div>
             <div className="flex gap-6">

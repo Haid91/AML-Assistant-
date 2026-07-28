@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
+import Logo from './Logo'
 
 const SUGGESTIONS = [
   'Explain the difference between Source of Funds and Source of Wealth.',
@@ -185,7 +186,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
         <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
           <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">A</div>
+              <Logo size={28} />
               <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">AmlIntel</span>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
