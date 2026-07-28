@@ -100,7 +100,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
 
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <Logo size={32} />
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold tracking-tight text-white">AML</div>
             <span className="font-semibold text-sm">Intel</span>
           </div>
 
@@ -183,11 +183,8 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           {user ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-slate-400 hidden sm:block">Hi, {user.name.split(' ')[0]}</span>
-              <button
-                onClick={onOpenChat}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors"
-              >
-                AI →
+              <button onClick={onOpenChat} className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
+                <Logo size={36} />
               </button>
               <button
                 onClick={onSignOut}
@@ -489,7 +486,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-2">
-              <Logo size={24} />
+              <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
               <span>© 2026 AmlIntel</span>
             </div>
             <div className="flex gap-6">

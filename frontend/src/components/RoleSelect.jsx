@@ -1,5 +1,3 @@
-import Logo from './Logo'
-
 export default function RoleSelect({ user, onSelectRole }) {
   const roles = [
     {
@@ -29,7 +27,7 @@ export default function RoleSelect({ user, onSelectRole }) {
 
       {/* Logo */}
       <div className="mb-8 flex items-center gap-2.5">
-        <Logo size={32} />
+        <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
         <span className="font-semibold text-sm text-slate-800 dark:text-white">Intel</span>
       </div>
 
