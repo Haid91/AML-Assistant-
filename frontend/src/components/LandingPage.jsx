@@ -102,7 +102,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold tracking-tight">
               AML
             </div>
-            <span className="font-semibold text-sm">AmlIntel</span>
+            <span className="font-semibold text-sm">Intel</span>
           </div>
 
           {/* Nav links */}

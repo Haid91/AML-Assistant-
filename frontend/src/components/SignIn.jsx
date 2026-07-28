@@ -45,7 +45,7 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome, onForgotPasswor
       <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
         <button onClick={onGoHome} className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-          <span className="font-semibold text-sm text-slate-900 dark:text-white">AmlIntel</span>
+          <span className="font-semibold text-sm text-slate-900 dark:text-white">Intel</span>
         </button>
         <p className="text-sm text-slate-500 dark:text-slate-400">
           Don't have an account?{' '}

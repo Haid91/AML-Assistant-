@@ -30,7 +30,7 @@ export default function RoleSelect({ user, onSelectRole }) {
         <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">
           AML
         </div>
-        <span className="font-semibold text-sm text-slate-800 dark:text-white">AmlIntel</span>
+        <span className="font-semibold text-sm text-slate-800 dark:text-white">Intel</span>
       </div>
 
       <div className="w-full max-w-sm">
