@@ -259,6 +259,450 @@ Work through each section to understand what the Board expects and what AUSTRAC 
   },
 ]
 
+const LAW_ANALYST_CASES = [
+  {
+    id: 'la1', number: 'Part 1',
+    title: 'SRA CDD: Cash-Funded Property Purchase',
+    tags: ['Escalation'], sector: 'Law', premium: false,
+    shortDesc: 'A foreign national from a grey-listed jurisdiction is purchasing a £1.2M London property in cash. Work through SRA/LSAG CDD requirements for a regulated legal practice.',
+    fullScenario: `NEW CLIENT MATTER — For CDD Review
+
+Client: Viktor Sokolov (DOB: 14 March 1971, Ukrainian national, resident UAE)
+Matter: Purchase of residential property — 14 Whitmore Gardens, Chelsea
+Purchase price: £1,200,000 — CASH (no mortgage)
+Instructing solicitor: Partner, Property Department
+
+Documents provided so far:
+• UAE driving licence (current)
+• Utility bill from Dubai (6 months old)
+• Claims source of funds is "business income" from a UAE trading company
+• No further documentation provided
+
+Work through each CDD step before the firm can proceed.`,
+    steps: [
+      {
+        id: 1, title: 'Client Risk Rating',
+        question: "What CDD level applies to Viktor Sokolov before the firm can proceed?",
+        options: [
+          { text: 'Enhanced Due Diligence (EDD) — a cash-funded property purchase by a foreign national from a higher-risk jurisdiction requires EDD as a minimum', correct: true, feedback: 'Correct. The SRA/LSAG guidance identifies cash-funded property purchases as a high-risk indicator. Foreign nationals from higher-risk jurisdictions add further risk. EDD is mandatory and must include source-of-funds verification, source-of-wealth evidence, and senior management sign-off before accepting the matter.' },
+          { text: 'Standard CDD — a driving licence and utility bill are sufficient', correct: false, feedback: 'Incorrect. Identity verification is only one element of CDD. Standard CDD does not satisfy the EDD requirement triggered by: (1) cash-funded property, (2) foreign national from a higher-risk jurisdiction, and (3) no source-of-funds documentation.' },
+          { text: 'Simplified CDD — UAE is a reputable financial centre', correct: false, feedback: 'Incorrect. Simplified CDD applies only where risk factors are demonstrably low. A cash-funded £1.2M property purchase by a foreign national with undocumented funds cannot be assessed as low-risk.' },
+          { text: 'No CDD required — property purchases are not designated high-risk by the SRA', correct: false, feedback: 'Incorrect. The legal sector is covered by the UK Money Laundering Regulations 2017. Cash-funded property transactions are one of the highest-risk services solicitors provide and a primary ML vector in the UK legal sector.' },
+        ],
+      },
+      {
+        id: 2, title: 'Source of Funds',
+        question: "Viktor says his source of funds is 'business income' from a UAE trading company. What evidence must the firm obtain?",
+        options: [
+          { text: 'Audited or signed management accounts, 6–12 months of corporate bank statements, and details of the trade and ownership structure of the UAE entity', correct: true, feedback: 'Correct. "Business income" is one of the highest-risk source-of-funds declarations — it is vague and frequently used to conceal beneficial ownership of criminal proceeds. The LSAG guidance requires contemporaneous documentary evidence showing funds accumulating consistently with the declared business activity.' },
+          { text: 'A signed client declaration confirming the funds are not from criminal activity', correct: false, feedback: 'Incorrect. Self-declarations have no evidentiary value. A money launderer would simply sign the declaration. The obligation is to verify the source of funds — not to accept the client\'s word.' },
+          { text: 'A bank reference letter confirming the account balance', correct: false, feedback: 'Partially helpful for confirming funds exist, but a balance confirmation does not explain source of funds. The origin of the funds — not just their current location — must be established.' },
+          { text: 'Nothing — solicitors are not responsible for verifying how clients earned their money', correct: false, feedback: 'Incorrect. Under the Money Laundering Regulations 2017 and SRA AML practice note, solicitors must take reasonable steps to verify source of funds for property transactions. Failure constitutes a breach of the Regulations and may constitute criminal facilitation.' },
+        ],
+      },
+      {
+        id: 3, title: 'PEP Screen Hit',
+        question: "Your PEP screening tool flags Viktor Sokolov as a former Ukrainian deputy minister who left office 4 years ago. What do you do?",
+        options: [
+          { text: 'Treat Viktor as a PEP — obtain senior management sign-off, verify source of wealth (not just source of funds), and apply enhanced ongoing monitoring for the matter', correct: true, feedback: 'Correct. UK MLR 2017 require PEP treatment for at least 12 months after leaving office. The SRA/LSAG recommends a risk-based assessment for former PEPs for considerably longer — especially where the jurisdiction carries elevated corruption risk. Source of wealth (accumulated over career) must also be verified.' },
+          { text: 'Ignore the hit — he left office 4 years ago', correct: false, feedback: 'Incorrect. Former PEPs do not automatically revert to standard status. UK MLR 2017 Reg.35(14) requires PEP treatment for at least 12 months post-office. A former deputy minister from a high-corruption jurisdiction likely retains elevated risk well beyond that period.' },
+          { text: 'Decline the matter immediately', correct: false, feedback: 'Premature. PEP status triggers EDD — not automatic declination. Many PEPs have entirely legitimate wealth. The obligation is to conduct enhanced due diligence and make an informed decision.' },
+          { text: 'Refer to the MLRO who can decide without additional EDD information', correct: false, feedback: 'Partially correct — the MLRO must be informed and sign off. However, the MLRO must be provided with a full EDD file including source of wealth documentation, not make a decision in the absence of it.' },
+        ],
+      },
+      {
+        id: 4, title: 'Proceed or Report?',
+        question: "Viktor provides company bank statements showing consistent cash deposits into his UAE company over 24 months, but cannot explain the origin of the cash. How do you proceed?",
+        options: [
+          { text: 'Escalate to the MLRO — unexplained cash means source of funds cannot be verified. The MLRO must decide whether to decline and consider whether a Suspicious Activity Report is required before any further steps on the matter', correct: true, feedback: 'Correct. The "consent" SAR regime under POCA 2002 is critical here. If the MLRO suspects ML, an SAR must be filed with the NCA and consent obtained (or the moratorium period allowed to pass) BEFORE doing anything further. Proceeding while an SAR is pending could constitute facilitation of money laundering.' },
+          { text: 'Proceed — the bank statements satisfy source-of-funds requirements', correct: false, feedback: 'Incorrect. Bank statements show the movement of funds — not their origin. Unexplained cash deposits into a UAE company are themselves a red flag for ML placement. The origin of those cash deposits must be explained.' },
+          { text: 'Request a second opinion from the instructing partner and proceed if satisfied', correct: false, feedback: 'Incorrect. The MLRO function operates independently of the instructing partner. Partners cannot override the MLRO\'s assessment. Commercial relationships must not override AML compliance — this is a classic pressure point in legal practice.' },
+          { text: 'Return the client\'s documents and close the file without informing anyone', correct: false, feedback: 'Incorrect and potentially criminal. If the firm has formed a suspicion of ML, closing the file without reporting may constitute "failing to disclose" under POCA 2002 s.330. The MLRO must assess whether an SAR obligation exists.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'la2', number: 'Part 2',
+    title: 'SRA Monitoring: Sub-Threshold Cash Payments to Client Account',
+    tags: ['Escalation'], sector: 'Law', premium: true,
+    shortDesc: 'Finance flags multiple sub-threshold cash deposits into the firm\'s client account from 7 different individuals. Investigate and determine your reporting obligations.',
+  },
+]
+
+const LAW_MLRO_CASES = [
+  {
+    id: 'lm1', number: '1.',
+    title: 'MLRO: Consent SAR — Offshore SPV Property Purchase',
+    tags: ['Regulatory'], sector: 'Law', premium: false,
+    shortDesc: 'A BVI-registered SPV with no trading history seeks to purchase a £3.2M London commercial property in cash. The beneficial owner has adverse media linking him to a Nigerian regulatory investigation.',
+    fullScenario: `ESCALATION FROM PROPERTY TEAM — For MLRO Decision
+
+Fee earner: Junior associate, property department
+Matter: Purchase of commercial property — 88 Canary Wharf Office Suite, London
+Purchase price: £3,200,000 — CASH (offshore wire from Cayman Islands SPV)
+Client entity: Nexus Holdings Ltd (BVI registered, incorporated 4 months ago)
+Declared beneficial owner: Mr K. Okonkwo (Nigerian national, UK resident)
+
+Escalation triggers:
+• No source-of-funds documentation after three formal requests
+• BVI SPV incorporated 4 months ago — no trading history, no apparent business rationale
+• Adverse media: Mr Okonkwo linked to a Nigerian SEC investigation (settled, no conviction)
+• Wire originates from a Cayman Islands trust account — no documentation provided
+
+Your task: make the MLRO determination and manage the consent SAR process.`,
+    steps: [
+      {
+        id: 1, title: 'SAR Assessment',
+        question: "As MLRO, what is your initial assessment?",
+        options: [
+          { text: 'Reasonable grounds to suspect exist — the combination of an offshore SPV, adverse media, unexplained source of funds, and refusal to provide documentation meets the POCA s.330 disclosure threshold', correct: true, feedback: 'Correct. The POCA 2002 threshold is "reasonable grounds to suspect" — not proof. Multiple indicators (fresh offshore SPV, adverse media, no source-of-funds evidence after three requests, Cayman wire with no documentation) collectively and individually support the suspicion threshold.' },
+          { text: 'No SAR required — the adverse media was settled without conviction', correct: false, feedback: 'Incorrect. A settled regulatory matter without conviction does not eliminate ML risk. The lack of conviction is one factor — the combination of all indicators here creates reasonable grounds to suspect regardless of the outcome of the Nigerian regulatory matter.' },
+          { text: 'Wait for the source-of-funds documents before forming a view', correct: false, feedback: 'Incorrect. Three requests have been made and ignored. Continuing to wait is itself a red flag — legitimate clients provide documentation. The facts as they stand already meet the disclosure threshold.' },
+          { text: 'The fee earner should have declined this matter at intake — the MLRO has no role now', correct: false, feedback: 'Incorrect. The MLRO is responsible for the firm\'s SAR decisions throughout the client lifecycle — including at the point of escalation. The MLRO must now determine whether to file an SAR and how to manage the matter going forward.' },
+        ],
+      },
+      {
+        id: 2, title: 'Consent SAR Process',
+        question: "You decide to file an SAR with the NCA. Can the firm continue work on the property matter while the SAR is under review?",
+        options: [
+          { text: 'No — once an SAR is filed, the firm must halt all work on the matter until NCA consent is given or the 7-day moratorium period expires without refusal', correct: true, feedback: 'Correct. Under POCA 2002, if a "consent SAR" (also known as a DAML — Defence Against Money Laundering) is filed, the firm must not proceed with the transaction until: (a) the NCA grants consent, or (b) the initial 7-day moratorium expires without refusal, or (c) the extended 31-day moratorium (if refused) expires. Proceeding before consent constitutes a criminal offence.' },
+          { text: 'Yes — the SAR is advisory only; the firm can continue while awaiting a response', correct: false, feedback: 'Incorrect. A consent/DAML SAR has a specific legal effect: it triggers moratorium periods during which the transaction must be halted. Proceeding is a criminal offence under POCA s.328 (arrangement offence).' },
+          { text: 'Yes — provided the fee earner is not told about the SAR', correct: false, feedback: 'Incorrect on both counts. The work must stop regardless of whether the fee earner knows about the SAR. Additionally, you can inform the fee earner that there is a "compliance hold" — just not the specifics of the SAR (to avoid tipping off).' },
+          { text: 'No — the firm must immediately close the file and return all client funds', correct: false, feedback: 'Incorrect. Returning client funds during the moratorium period could itself constitute facilitating money laundering if the funds are proceeds of crime. The firm holds the funds and waits for NCA direction.' },
+        ],
+      },
+      {
+        id: 3, title: 'Tipping Off Risk',
+        question: "The client\'s solicitor calls your front desk asking for a progress update on the property matter. What do you instruct staff to say?",
+        options: [
+          { text: '"The matter is subject to an internal compliance review — we will be in touch once that is resolved." Staff told only there is a compliance hold; no mention of the NCA or any report.', correct: true, feedback: 'Correct. Tipping off is a criminal offence under POCA 2002 s.333A. Disclosing that an SAR has been made, or that an NCA investigation is underway, carries up to 5 years imprisonment. A neutral "compliance review" explanation is truthful, does not disclose the SAR, and is not materially misleading.' },
+          { text: '"We have filed a report with the NCA and are awaiting their response."', correct: false, feedback: 'A serious tipping-off violation. Disclosing the existence of an SAR and NCA involvement constitutes the offence under POCA s.333A. This exposes both the firm and the individual to criminal liability.' },
+          { text: '"We cannot proceed — we suspect the funds may be connected to financial crime."', correct: false, feedback: 'Tipping off — disclosing the reason for the hold (suspicion of financial crime) reveals that an investigation is underway, which is the essence of the tipping-off offence.' },
+          { text: 'Refuse to take the call and return no communications until the NCA responds.', correct: false, feedback: 'Not ideal — a complete refusal to communicate may itself alarm the client. A measured "compliance review" explanation manages the situation without disclosure.' },
+        ],
+      },
+      {
+        id: 4, title: 'Post-SAR Matter Closure',
+        question: "The NCA grants consent after 4 days. However, during the moratorium period, new intelligence emerges: the BVI company is linked to a Zambian corruption investigation. What do you do?",
+        options: [
+          { text: 'File a second SAR with the new intelligence and do not proceed until further consent is obtained — NCA consent for the original SAR does not cover new suspicious circumstances', correct: true, feedback: 'Correct. NCA consent is granted in respect of the specific information in the original SAR. Material new intelligence constitutes a new disclosure obligation. The firm must file a second SAR and obtain further consent or allow the moratorium to expire before proceeding. This is a frequently misunderstood aspect of the consent regime.' },
+          { text: 'Proceed — the NCA already granted consent and that covers all risks', correct: false, feedback: 'Incorrect. NCA consent covers the transaction as described in the original SAR. Materially new suspicious information creates a fresh obligation to disclose. Proceeding with knowledge of a Zambian corruption link without disclosing it could constitute a separate money laundering offence.' },
+          { text: 'Proceed but note the new intelligence on the file for future reference', correct: false, feedback: 'Incorrect. Noting the intelligence on file does not discharge the SAR obligation triggered by the new information. The MLRO must assess whether to file a further SAR.' },
+          { text: 'Decline the matter and close the file — no further SAR is needed', correct: false, feedback: 'Declining the matter is one option, but a further SAR may still be required. POCA s.330 creates a continuing obligation — the new intelligence about a corruption investigation is reportable regardless of whether the firm continues to act.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'lm2', number: '2.',
+    title: 'MLRO: Firm-Wide AML Risk Assessment — Annual Review',
+    tags: ['Regulatory'], sector: 'Law', premium: true,
+    shortDesc: 'Complete the firm\'s annual MLRO report covering practice area risk, SAR statistics, CDD quality, and training compliance across all fee-earner teams.',
+  },
+]
+
+const CRYPTO_ANALYST_CASES = [
+  {
+    id: 'ca1', number: 'Part 1',
+    title: 'Crypto Exchange: High-Value Customer KYC',
+    tags: ['Escalation'], sector: 'Crypto', premium: false,
+    shortDesc: 'A self-employed consultant wants to purchase £50,000 in Bitcoin. Work through KYC tier requirements, source-of-funds verification, and wallet screening obligations.',
+    fullScenario: `NEW CUSTOMER — KYC REVIEW
+
+Customer: James Whitfield (DOB: 22 July 1988, British national)
+Occupation: Self-employed IT consultant
+Request: Purchase £50,000 in Bitcoin (BTC) — single transaction
+Account type: Individual retail — remote/digital onboarding
+
+Documents submitted so far:
+• UK driving licence (current)
+• One month bank statement showing £52,000 balance
+• No source-of-funds documentation
+• No source-of-wealth documentation
+
+Your task: complete the KYC assessment and determine what is required before funds can be accepted.`,
+    steps: [
+      {
+        id: 1, title: 'KYC Tier',
+        question: "What KYC tier applies to a customer requesting a £50,000 single Bitcoin purchase on a UK-registered crypto exchange?",
+        options: [
+          { text: 'Enhanced Due Diligence (EDD) — a single transaction of £50,000 significantly exceeds standard thresholds and requires source-of-funds and source-of-wealth documentation before the transaction is processed', correct: true, feedback: 'Correct. Under the UK MLR 2017 (as applied to cryptoasset businesses registered with the FCA), transactions of this size require EDD. The FCA\'s guidance on cryptoasset AML requires firms to apply enhanced scrutiny to high-value transactions. Source of funds and source of wealth are both required for a £50,000 single purchase.' },
+          { text: 'Standard CDD — a driving licence and bank statement are sufficient for any transaction', correct: false, feedback: 'Incorrect. Standard CDD covers lower-value transactions. A £50,000 single transaction is well above the standard KYC threshold for most UK crypto exchanges. Source-of-funds verification is specifically required at this level.' },
+          { text: 'No KYC required — cryptocurrency purchases are not subject to AML regulations in the UK', correct: false, feedback: 'Incorrect. The UK has required cryptoasset businesses to register with the FCA under the MLR 2017 since January 2020. These businesses are fully subject to AML obligations including KYC, CDD/EDD, ongoing monitoring, and SAR filing.' },
+          { text: 'Simplified CDD — the customer has a UK driving licence which is a reliable government-issued document', correct: false, feedback: 'Incorrect. The level of CDD is determined by the risk of the transaction, not just the quality of the identity document. A £50,000 cash-equivalent purchase of cryptocurrency requires EDD regardless of the quality of the ID provided.' },
+        ],
+      },
+      {
+        id: 2, title: 'Source of Funds',
+        question: "James says his funds are from his IT consultancy business. The bank statement shows a single lump-sum credit of £51,500 two weeks ago labelled 'BACS transfer'. What further evidence is required?",
+        options: [
+          { text: 'Details of the consultancy contract or invoice, the name of the paying client, and evidence the BACS transfer originated from a legitimate business payment (e.g., the client\'s company name matching a verifiable business)', correct: true, feedback: 'Correct. A single large BACS credit is a red flag for pass-through funds — money passed through an account to distance it from its source. The firm must verify that the BACS credit originated from a legitimate consulting engagement, not from a third party laundering funds through James\'s account. Asking for the contract and the paying client\'s identity is proportionate EDD.' },
+          { text: 'No further evidence — the bank statement proves the funds exist in his account', correct: false, feedback: 'Incorrect. A bank statement proves the balance, not the source. A single large deposit labelled only "BACS transfer" does not demonstrate source of funds — it raises further questions about where the funds originated.' },
+          { text: 'A letter from his accountant confirming he is self-employed', correct: false, feedback: 'Partially helpful for confirming employment status, but does not verify source of funds for this specific transaction. An accountant\'s letter confirming self-employment does not explain where this particular £50,000 came from.' },
+          { text: 'A full 12 months of personal bank statements', correct: false, feedback: 'Useful context, but the specific priority is understanding the BACS transfer that funded this purchase. Twelve months of statements would show broader financial profile but may not identify the source of this specific lump sum.' },
+        ],
+      },
+      {
+        id: 3, title: 'Wallet Screening',
+        question: "James provides a destination Bitcoin wallet address for the purchased BTC. What screening should the exchange conduct on this wallet before sending funds?",
+        options: [
+          { text: 'Screen the destination wallet against blockchain analytics tools (e.g., Chainalysis, Elliptic) to assess whether it is linked to illicit activity, sanctions, mixers, darknet markets, or high-risk exchanges', correct: true, feedback: 'Correct. Blockchain analytics is a core AML control for crypto exchanges. Sending BTC to a wallet linked to sanctions, mixers, or darknet markets exposes the exchange to regulatory liability. FCA guidance and FATF Recommendation 16 (the "Travel Rule") both require exchanges to screen counterparty wallets and, above threshold, collect beneficiary information.' },
+          { text: 'No wallet screening is needed — once the customer is KYC\'d, their wallet is automatically considered safe', correct: false, feedback: 'Incorrect. Customer KYC and wallet screening are separate controls. A verified customer may send funds to a third-party wallet controlled by a criminal or a sanctioned entity. Destination wallet screening is a mandatory AML control.' },
+          { text: 'Only check the wallet against the OFAC SDN list — no other screening is required', correct: false, feedback: 'Sanctions screening is important but insufficient. The OFAC SDN list covers sanctioned individuals but not the full range of illicit wallet activity. Blockchain analytics tools provide much richer risk signals including mixer usage, darknet market exposure, and theft-linked addresses.' },
+          { text: 'Ask James to confirm the wallet is his own — a self-certification is sufficient', correct: false, feedback: 'Incorrect. Self-certifications have no evidentiary value in wallet screening. The AML obligation is to objectively verify the risk profile of the destination wallet using blockchain analytics — not to rely on the customer\'s representation.' },
+        ],
+      },
+      {
+        id: 4, title: 'Ongoing Monitoring Rule',
+        question: "James has been onboarded. What is the most appropriate transaction monitoring rule for his account going forward?",
+        options: [
+          { text: 'Flag any transaction exceeding £10,000 for manual review, alert on rapid buy-sell cycling within 24 hours, and trigger review if BTC is immediately transferred to a high-risk wallet or mixing service after purchase', correct: true, feedback: 'Correct. Effective crypto exchange monitoring must capture: (1) high-value transaction alerts calibrated to the customer\'s declared profile, (2) rapid cycling (buy-immediately-sell patterns that suggest layering), and (3) post-purchase wallet risk — where the customer sends purchased crypto to high-risk addresses. All three are distinct layering signals in the crypto environment.' },
+          { text: 'No monitoring needed — James has passed KYC and the account is verified', correct: false, feedback: 'Incorrect. KYC is a point-in-time control. Ongoing monitoring is a separate, continuous obligation under the UK MLR 2017. Customer risk profiles can change, and monitoring detects behaviours that were not apparent at onboarding.' },
+          { text: 'Flag only if monthly trading volume exceeds £500,000', correct: false, feedback: 'Incorrect. A £500,000 monthly threshold would miss significant red flags for a customer whose declared income is from an IT consultancy. Monitoring thresholds must be calibrated to the customer\'s declared risk profile, not set arbitrarily high.' },
+          { text: 'Flag all transactions regardless of size for manual review', correct: false, feedback: 'Incorrect. Flagging every transaction for manual review is operationally unsustainable and does not represent a risk-based approach. Effective monitoring applies calibrated rules that focus analyst attention on genuinely anomalous behaviour.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ca2', number: 'Part 2',
+    title: 'Crypto Exchange: Privacy Coin Rapid-Cycling Alert',
+    tags: ['Escalation'], sector: 'Crypto', premium: true,
+    shortDesc: 'A monitoring alert detects a customer rapidly converting fiat to BTC, then immediately swapping to Monero via a mixing service and withdrawing — with zero account balance retained. Investigate and report.',
+  },
+]
+
+const CRYPTO_MLRO_CASES = [
+  {
+    id: 'cm1', number: '1.',
+    title: 'MLRO: SAR Filing — Sanctioned Wallet Exposure',
+    tags: ['Regulatory'], sector: 'Crypto', premium: false,
+    shortDesc: 'Blockchain analytics flags that a customer\'s destination wallet has 12% indirect exposure to an OFAC-sanctioned mixer. The customer has £185,000 in pending withdrawals. Make the MLRO determination.',
+    fullScenario: `COMPLIANCE ALERT — FOR MLRO REVIEW
+
+Customer: Account #CR-88204 (verified UK individual, 14 months' tenure)
+Trigger: Post-transaction blockchain analytics alert
+
+Alert details:
+• Customer withdrew 2.8 BTC (approximately £98,000) yesterday
+• Destination wallet: 1Fx9GN... (self-custodied, customer-declared)
+• Blockchain analytics (Chainalysis) risk score: HIGH
+• Indirect exposure to OFAC-sanctioned Tornado Cash mixer: 12%
+• Customer has a further £185,000 in pending BTC withdrawal requests
+
+No prior alerts. No adverse media. Customer has made no unusual statements.
+
+Your task: assess the OFAC exposure, make the SAR decision, and determine account action on the pending withdrawals.`,
+    steps: [
+      {
+        id: 1, title: 'OFAC Exposure Assessment',
+        question: "Blockchain analytics shows 12% indirect exposure to a sanctioned mixer. Does this create an OFAC sanctions violation?",
+        options: [
+          { text: 'Not necessarily a direct violation — indirect exposure requires risk-based assessment. However, 12% indirect exposure to a sanctioned entity is material and requires enhanced scrutiny, customer outreach, and escalation to compliance counsel', correct: true, feedback: 'Correct. OFAC\'s "50% rule" relates to entities owned 50%+ by sanctioned persons — not to transaction exposure percentages. 12% indirect exposure via a mixer does not automatically constitute a sanctions violation, but it is a material risk indicator. OFAC has published guidance on virtual currency suggesting firms should use blockchain analytics to assess sanctions risk. This level of exposure warrants customer outreach, legal review, and an SAR.' },
+          { text: 'Yes — any exposure to a sanctioned entity automatically constitutes an OFAC violation requiring immediate account termination', correct: false, feedback: 'Incorrect. Indirect blockchain exposure to sanctioned entities is not automatically a violation. OFAC enforcement focuses on direct transactions with sanctioned persons/entities. However, it is a significant red flag requiring investigation.' },
+          { text: 'No — 12% is below the 50% beneficial ownership threshold so no action is needed', correct: false, feedback: 'Incorrect. The 50% rule relates to beneficial ownership of sanctioned entities — not to transaction exposure percentages in blockchain analytics. These are distinct concepts. 12% indirect exposure to a sanctioned mixer is a material AML risk flag regardless of the 50% rule.' },
+          { text: 'Yes — the transaction must be reversed and funds returned immediately', correct: false, feedback: 'Incorrect. Reversing an already-completed blockchain transaction is technically impossible. The obligation is to investigate, report if suspicious, and take prospective account action on pending transactions.' },
+        ],
+      },
+      {
+        id: 2, title: 'Pending Withdrawals Decision',
+        question: "While you investigate, what should happen to the £185,000 in pending BTC withdrawal requests?",
+        options: [
+          { text: 'Place a hold on pending withdrawals, conduct wallet screening on the destination addresses, and await legal counsel review before releasing any further funds', correct: true, feedback: 'Correct. The hold is proportionate and within the exchange\'s rights under its terms of service. Releasing further funds to the same or similar high-risk wallet before completing the investigation could compound potential OFAC exposure or facilitate continued ML. Screen each destination wallet before making any release decision.' },
+          { text: 'Release all pending withdrawals immediately — blocking would alert the customer to the investigation', correct: false, feedback: 'Incorrect. Releasing funds before completing the investigation risks facilitating further ML or sanctions exposure. A "security review" delay is not tipping off — it is proportionate risk management.' },
+          { text: 'Permanently block all withdrawals and freeze the account immediately', correct: false, feedback: 'Permanent blocking before completing the investigation is disproportionate. A temporary hold pending investigation and legal review is more defensible and less likely to expose the exchange to a wrongful blocking claim if the customer has a legitimate explanation.' },
+          { text: 'Process withdrawals under £10,000 only — large withdrawals are the only real risk', correct: false, feedback: 'Incorrect. The risk is the destination wallet\'s sanctions exposure, not the withdrawal size. Processing sub-£10,000 withdrawals to the same sanctioned-linked wallet compounds the exposure.' },
+        ],
+      },
+      {
+        id: 3, title: 'SAR Filing',
+        question: "After customer outreach, the customer says: 'I used a coin swap service to get better rates — I don\'t know anything about Tornado Cash.' Does this explanation affect the SAR decision?",
+        options: [
+          { text: 'The explanation should be included in the SAR narrative and assessed — but it does not remove the obligation to file if reasonable grounds to suspect still exist after considering it', correct: true, feedback: 'Correct. Customer explanations must be documented and considered — they may reduce or intensify suspicion. In this case, using a "coin swap service" without due diligence on its sanctions exposure is itself a red flag. The customer\'s ignorance of Tornado Cash does not change the objective blockchain analytics result. File the SAR including the customer\'s explanation.' },
+          { text: 'Accept the explanation and close the investigation — the customer was not aware of the sanctioned entity', correct: false, feedback: 'Incorrect. Lack of customer awareness does not remove the exchange\'s AML/sanctions obligations. The exchange itself has an independent obligation to report suspicious activity — that obligation is not discharged by accepting a customer\'s explanation of ignorance.' },
+          { text: 'File the SAR without including the customer\'s explanation — it might weaken the report', correct: false, feedback: 'Incorrect. FinCEN and the FCA both emphasise that high-quality SARs include all relevant information — including exculpatory information. Including the customer\'s explanation strengthens the SAR\'s credibility and gives law enforcement a complete picture.' },
+          { text: 'No SAR is needed — sanctions exposure is an OFAC matter, not an AML matter', correct: false, feedback: 'Incorrect. Sanctions exposure and ML risk overlap — use of mixing services to obscure transaction trails is a classic ML technique. Both may give rise to SAR obligations under the MLRA/BSA, independently of any OFAC reporting.' },
+        ],
+      },
+      {
+        id: 4, title: 'Account Action',
+        question: "After filing the SAR, what is the appropriate long-term account action?",
+        options: [
+          { text: 'Exit the customer relationship with appropriate notice — the ongoing risk profile of a customer routing funds through sanctioned-linked mixers is incompatible with the exchange\'s risk appetite, regardless of intent', correct: true, feedback: 'Correct. Even if the customer\'s intent was not malicious, a customer who routes funds through services with material sanctions exposure creates unacceptable regulatory risk for the exchange. Customer exit is the proportionate long-term action, following appropriate notice and ensuring the exit itself doesn\'t tip off or facilitate further ML.' },
+          { text: 'Continue the relationship with no changes — the SAR has discharged the exchange\'s obligations', correct: false, feedback: 'Incorrect. An SAR discharges the reporting obligation at a point in time — it does not prevent the ongoing risk from materialising. Continuing a relationship with elevated sanctions exposure after becoming aware of it could be viewed as wilful blindness.' },
+          { text: 'Continue but reduce the customer\'s withdrawal limits permanently', correct: false, feedback: 'Reducing limits without exiting may not sufficiently manage the risk if the fundamental issue is the customer\'s choice of counterparty wallets. It also fails to address the SAR trigger appropriately.' },
+          { text: 'Freeze all funds indefinitely and await law enforcement instruction', correct: false, feedback: 'The exchange does not have legal authority to freeze funds indefinitely without a court order. Compliance holds pending investigation are permissible — indefinite freezes are not.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'cm2', number: '2.',
+    title: 'MLRO: Travel Rule Compliance — Inbound Transfer from Unhosted Wallet',
+    tags: ['Regulatory'], sector: 'Crypto', premium: true,
+    shortDesc: 'A corporate customer receives a large BTC transfer from an unhosted wallet with no counterparty information. Assess Travel Rule obligations and determine whether the exchange can credit the funds.',
+  },
+]
+
+const FINTECH_ANALYST_CASES = [
+  {
+    id: 'fa1', number: 'Part 1',
+    title: 'E-Wallet: Money Mule Account Pattern',
+    tags: ['Escalation'], sector: 'Fintech', premium: false,
+    shortDesc: 'A 22-year-old\'s e-wallet account receives 14 P2P transfers from 12 different senders within 9 days of opening, with 100% immediately forwarded to a single external bank account. Investigate.',
+    fullScenario: `MONITORING ALERT — E-WALLET ACCOUNT
+
+Customer: Sophie Clarke (DOB: 3 February 2001, UK national)
+Account type: Personal e-wallet (EMI-regulated)
+Account age: 11 days
+
+Alert: Velocity and pattern monitoring triggered
+
+Transaction pattern — past 9 days:
+• 14 incoming P2P transfers from 12 different senders
+• Total received: £8,750 (average: £625 per transfer)
+• 100% of funds immediately forwarded to a single external bank account
+• No card spend, no merchant payments, no ATM withdrawals
+• Customer age: 22 — newly joined, no previous relationship
+
+Your task: analyse the alert and determine next steps.`,
+    steps: [
+      {
+        id: 1, title: 'Pattern Recognition',
+        question: "What does this transaction pattern most likely indicate?",
+        options: [
+          { text: 'Money mule activity — the account is being used as a pass-through to receive funds from multiple sources and forward them to a single recipient, consistent with a first-party or third-party mule arrangement', correct: true, feedback: 'Correct. This is a classic mule account pattern: multiple senders, immediate forwarding to a single recipient, zero normal retail spending, and a newly opened account. Young account holders (18–25) are disproportionately targeted for mule recruitment — often via social media with promises of "easy money for holding funds." The pattern warrants immediate investigation.' },
+          { text: 'Normal P2P payment activity — young people frequently split bills and expenses via digital wallets', correct: false, feedback: 'Bill-splitting activity involves both incoming and outgoing payments to/from multiple contacts, and normal retail spending. This pattern shows exclusively incoming transfers from 12 different senders all forwarded 100% to one recipient with zero retail spend — which is inconsistent with normal bill-splitting behaviour.' },
+          { text: 'A small business using a personal account to collect customer payments', correct: false, feedback: 'Possible, but a legitimate small business would typically have card spend, supplier payments, and variable outgoing patterns — not 100% pass-through to a single recipient. The absence of any retail or business spending is inconsistent with a genuine business operation.' },
+          { text: 'A student receiving regular financial support from family members', correct: false, feedback: 'Family support typically involves a small number of regular senders (parents) and normal spending behaviour. 12 different senders with 100% immediate forwarding and zero personal spending is inconsistent with family support.' },
+        ],
+      },
+      {
+        id: 2, title: 'Risk Factors',
+        question: "Which combination of factors makes this account MOST suspicious?",
+        options: [
+          { text: 'New account (11 days) + young customer (22) + multiple unrelated senders + 100% pass-through with zero personal spending + forwarding to a single unrelated bank account', correct: true, feedback: 'Correct. Each factor in isolation could be innocuous — but the combination is highly indicative of mule activity. Account age (criminals use newly opened accounts to avoid profiling), customer age (prime mule recruitment demographic), multiple senders (aggregating proceeds from multiple criminal sources), and zero personal use (the account exists only to move money, not to support the holder\'s finances).' },
+          { text: 'The customer is 22 years old and female', correct: false, feedback: 'Age is a risk factor in context — not in isolation. Gender is not a risk factor for mule activity. The pattern of transactions, not demographic characteristics, drives the assessment.' },
+          { text: 'The account is 11 days old', correct: false, feedback: 'Account age is one risk factor but not the most significant in isolation. The complete pattern — new account + multiple senders + 100% forwarding + zero personal use — is what creates the overall assessment.' },
+          { text: 'The transfers average £625 — just below the £1,000 alert threshold', correct: false, feedback: 'The average transfer value is a factor, but average size is less significant than the overall pattern. No single red flag here is as significant as the combination of all indicators.' },
+        ],
+      },
+      {
+        id: 3, title: 'Investigation Steps',
+        question: "Before escalating to the MLRO, what investigation steps should you take?",
+        options: [
+          { text: 'Review Sophie\'s full account history, document all sender IDs and transaction details, check whether the destination bank account has appeared on prior alerts, and contact Sophie for an explanation — documenting her response precisely', correct: true, feedback: 'Correct. Customer outreach is appropriate before escalation to allow Sophie to provide context (she may be unaware she is being used as a mule). However, her response must be documented precisely and assessed critically. The destination bank account should be checked — if it appears in multiple mule alerts, that significantly strengthens the case. All findings should go into a well-documented escalation file.' },
+          { text: 'Immediately freeze the account and file an SAR without contacting Sophie', correct: false, feedback: 'Premature. While the pattern is suspicious, freezing without investigation denies Sophie the opportunity to provide an explanation (she may be a victim). The MLRO must make the account action and SAR decision with a complete investigation file — not a raw alert.' },
+          { text: 'Close the account without any investigation', correct: false, feedback: 'Account closure without investigation is disproportionate and may expose the firm to wrongful termination claims. It also fails the compliance purpose — an unexplained account closure without an SAR may mean suspicious activity goes unreported to law enforcement.' },
+          { text: 'Do nothing — the amounts are below £10,000 so no reporting is required', correct: false, feedback: 'Incorrect on two counts. (1) The SAR/STR threshold is not monetary — it is based on reasonable grounds to suspect, regardless of amount. (2) Structuring below thresholds is itself a red flag, not an exemption.' },
+        ],
+      },
+      {
+        id: 4, title: 'SAR and Account Action',
+        question: "Sophie explains she was approached on Instagram and told she could earn £200 by letting someone use her account to 'test a payment system.' She cooperated but now feels uncomfortable. What do you do?",
+        options: [
+          { text: 'Escalate to the MLRO with Sophie\'s explanation — she may be a victim of mule recruitment. File an SAR including her account of events; apply an account restriction; consider signposting her to resources (e.g., Stop Scams UK)', correct: true, feedback: 'Correct. Sophie\'s explanation is consistent with third-party mule recruitment — a significant fraud and ML problem. As a victim, she warrants some care in how the firm handles the exit. The SAR remains mandatory regardless of her victim status — the criminal activity still took place through her account. The MLRO makes the final decision on account action and exit.' },
+          { text: 'No SAR needed — Sophie is a victim, not a criminal', correct: false, feedback: 'Incorrect. The SAR obligation is based on the suspicious activity in the account — not on the account holder\'s culpability. Criminal funds moved through Sophie\'s account regardless of her intent. The SAR helps law enforcement identify the criminal network recruiting mules.' },
+          { text: 'Accept Sophie\'s explanation and restore the account to full service', correct: false, feedback: 'Incorrect. Sophie\'s account has been used for money laundering regardless of her awareness. Restoring full service exposes the firm to continued risk. At minimum, enhanced monitoring is required; in most cases, exit is appropriate.' },
+          { text: 'Report Sophie to police immediately — she admitted participating in the scheme', correct: false, feedback: 'The firm\'s obligation is to file an SAR with the FIU (NCA in the UK) — not to directly report to police. Law enforcement determines how to act on the intelligence. Additionally, Sophie\'s victim status should be considered — this is a nuanced situation requiring MLRO judgement.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fa2', number: 'Part 2',
+    title: 'PSP: High Chargeback Rate — Card-Not-Present Fraud Signal',
+    tags: ['Escalation'], sector: 'Fintech', premium: true,
+    shortDesc: 'A business customer processing £385,000 in card-not-present payments has an 8.2% chargeback rate. Investigate the ML and fraud risk and determine reporting obligations.',
+  },
+]
+
+const FINTECH_MLRO_CASES = [
+  {
+    id: 'fm1', number: '1.',
+    title: 'MLRO: Account Farm — Organised Money Mule Ring',
+    tags: ['Regulatory'], sector: 'Fintech', premium: false,
+    shortDesc: 'The fraud team identifies a cluster of 23 e-wallet accounts opened within 5 days sharing device fingerprints, overlapping IPs, and £195,000 in aggregated pass-through activity. Make the MLRO determination.',
+    fullScenario: `COMPLIANCE ESCALATION — FOR MLRO REVIEW
+
+Source: Fraud analytics team — device and network clustering
+
+Cluster summary:
+• 23 e-wallet accounts opened across 5 days (Tuesday to Saturday)
+• 19 accounts used the same selfie ID verification session (possible ID reuse)
+• All accounts share overlapping IP addresses across 3 ISPs
+• All accounts received funds from a single payments company (Apex Pay Ltd)
+• Funds immediately forwarded onward to various MSB accounts
+• Aggregated volume: £195,000 across 10 days
+• No account shows any normal retail or personal spending
+
+Your task: make the SAR and account action determinations for the cluster.`,
+    steps: [
+      {
+        id: 1, title: 'SAR Filing Strategy',
+        question: "How should the firm file SARs for this 23-account cluster?",
+        options: [
+          { text: 'File a single SAR covering all 23 accounts as a connected network, with a detailed narrative explaining the device/IP clustering, the common funding source (Apex Pay Ltd), and the aggregated £195,000 in suspicious activity', correct: true, feedback: 'Correct. A single, well-structured SAR covering the network is more useful to law enforcement than 23 isolated SARs. It communicates the organised nature of the scheme and allows law enforcement to see the full picture. The narrative must clearly connect all accounts, explain the linking evidence, and include the aggregated transaction data.' },
+          { text: 'File 23 separate SARs — one per account — as each account is technically a separate legal subject', correct: false, feedback: 'While technically permissible, 23 isolated SARs are significantly less useful to law enforcement than a single connected SAR. FinCEN and the NCA both prefer that reporting entities identify and flag networks of related subjects in a single report or linked series of reports.' },
+          { text: 'File no SAR — the individual account balances are too small to be material', correct: false, feedback: 'Incorrect. The SAR threshold is based on suspicion — not transaction size. £195,000 in aggregated suspicious activity through what appears to be an organised mule ring is clearly reportable. Failing to report would be a material compliance failure.' },
+          { text: 'Wait until law enforcement contacts the firm before filing any SARs', correct: false, feedback: 'Incorrect. SAR obligations are proactive — the firm files when it forms a suspicion, not when law enforcement arrives. Waiting for law enforcement contact before reporting is a reactive posture inconsistent with AML obligations.' },
+        ],
+      },
+      {
+        id: 2, title: 'Account Action — All 23 Accounts',
+        question: "What account action should be taken across all 23 accounts while the SAR is being prepared?",
+        options: [
+          { text: 'Apply an immediate hold on all 23 accounts simultaneously — preventing further funds from being received or forwarded while the SAR is filed', correct: true, feedback: 'Correct. A simultaneous hold is critical — if accounts are frozen one at a time, the network may detect the pattern and move remaining funds before the remaining accounts are frozen. Coordinated simultaneous holds are best practice for cluster enforcement. Document the decision and rationale carefully.' },
+          { text: 'Freeze accounts one at a time, starting with the highest-balance account', correct: false, feedback: 'Sequential freezing gives the account farm operators time to drain remaining accounts once the first freeze is detected. Simultaneous action on all connected accounts is essential for effective disruption of an organised scheme.' },
+          { text: 'Do not freeze accounts until the SAR is filed and the NCA responds', correct: false, feedback: 'Waiting for NCA response before taking account action allows funds to continue flowing. Account action (hold) can and should be taken before and during the SAR process — it does not require NCA consent for mule accounts where the firm is protecting itself from facilitating further ML.' },
+          { text: 'Close all accounts immediately and return funds to the senders', correct: false, feedback: 'Returning funds to the senders may return proceeds of crime to criminals (since the senders — Apex Pay Ltd — may themselves be part of the scheme). Account closure should follow the SAR process, not precede it, and funds should be held pending any law enforcement direction.' },
+        ],
+      },
+      {
+        id: 3, title: 'Apex Pay Ltd — Third Party',
+        question: "Apex Pay Ltd was the common funding source for all 23 accounts. What additional steps should the MLRO take regarding this entity?",
+        options: [
+          { text: 'Include Apex Pay Ltd in the SAR narrative as a linked entity, review all other accounts that have received funds from Apex Pay Ltd, and consider notifying your FIU liaison if Apex Pay Ltd appears to be a significant ML node', correct: true, feedback: 'Correct. The discovery of a common funding source is valuable intelligence that should be captured in the SAR and used to identify further potentially suspicious accounts across the platform. Law enforcement may not have visibility of Apex Pay Ltd as a node — your SAR intelligence may be highly actionable for them.' },
+          { text: 'Contact Apex Pay Ltd directly to inform them of the suspicious activity', correct: false, feedback: 'This would be a tipping-off risk if Apex Pay Ltd is itself involved in or aware of the scheme. Even if they are not, directly contacting the subject of an SAR or a linked entity about suspicious activity investigations is not appropriate without legal counsel guidance.' },
+          { text: 'No action regarding Apex Pay Ltd — your SAR obligation covers only your own customers', correct: false, feedback: 'Incorrect. While the SAR covers your direct relationship, including information about the third-party funding source is both permissible and strongly encouraged. SARs containing third-party intelligence are significantly more useful to law enforcement.' },
+          { text: 'Terminate your commercial relationship with Apex Pay Ltd immediately without filing an SAR about them', correct: false, feedback: 'If Apex Pay Ltd is itself a suspicious actor, ending the relationship without filing an SAR may leave law enforcement without critical intelligence. Additionally, abrupt termination without an SAR may constitute "failure to disclose" if the relationship itself is suspicious.' },
+        ],
+      },
+      {
+        id: 4, title: 'Systemic Control Response',
+        question: "This account farm exploited your digital onboarding process. What systemic control improvement should the MLRO recommend to the Board?",
+        options: [
+          { text: 'Implement device fingerprinting + network IP clustering at onboarding to flag accounts created from shared devices or IPs; add velocity rules for accounts receiving funds from a single corporate sender within 30 days of opening', correct: true, feedback: 'Correct. The account farm exploited gaps in your onboarding detection — specifically, the ability to open multiple accounts using shared devices or IPs without triggering a review. Device fingerprinting and network clustering are now standard fintech AML controls. The MLRO should escalate this as a control gap to the Board and recommend immediate enhancement of the onboarding risk engine.' },
+          { text: 'Stop accepting new customers for 6 months while the investigation is completed', correct: false, feedback: 'A blanket onboarding freeze is disproportionate and commercially damaging. The response should be targeted control improvements — not a suspension of normal business operations.' },
+          { text: 'Require all new customers to visit a branch in person to prevent digital fraud', correct: false, feedback: 'This eliminates the fintech business model and is disproportionate. Enhanced digital controls (biometric verification, device fingerprinting, liveness checks) can achieve comparable risk mitigation without abandoning digital onboarding.' },
+          { text: 'The existing controls were adequate — this was an unusual event that cannot be prevented', correct: false, feedback: 'Incorrect. Account farming is a well-documented and growing fintech ML threat. The FATF, FCA, and multiple national FIUs have published typologies on account farm patterns. Claiming this was unforeseeable misrepresents the known risk landscape.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fm2', number: '2.',
+    title: 'MLRO: Regulatory Examination — FCA AML Supervisory Visit',
+    tags: ['Regulatory'], sector: 'Fintech', premium: true,
+    shortDesc: 'The FCA has notified an upcoming supervisory visit focusing on your EMI\'s transaction monitoring and SAR quality. Prepare the MLRO response file and rehearse the key examination areas.',
+  },
+]
+
+const CASES_BY_INDUSTRY = {
+  banking: { analyst: ANALYST_CASES, mlro: MLRO_CASES },
+  law:     { analyst: LAW_ANALYST_CASES,    mlro: LAW_MLRO_CASES    },
+  crypto:  { analyst: CRYPTO_ANALYST_CASES, mlro: CRYPTO_MLRO_CASES },
+  fintech: { analyst: FINTECH_ANALYST_CASES, mlro: FINTECH_MLRO_CASES },
+}
+
+const INDUSTRY_LABELS = {
+  banking: 'Banking',
+  law:     'Law',
+  crypto:  'Crypto',
+  fintech: 'Fintech',
+}
+
 const CAMS_MODULES = [
   {
     id: 'cams1', number: 'Chapter 1', isExam: true,
@@ -550,7 +994,10 @@ const TAG_STYLE = {
 export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
-  const cases = activeRole === 'mlro' ? MLRO_CASES : activeRole === 'cams' ? CAMS_MODULES : ANALYST_CASES
+  const industry = user?.industry || 'banking'
+  const industryLabel = INDUSTRY_LABELS[industry] || 'Banking'
+  const caseset = CASES_BY_INDUSTRY[industry] || CASES_BY_INDUSTRY.banking
+  const cases = activeRole === 'cams' ? CAMS_MODULES : activeRole === 'mlro' ? caseset.mlro : caseset.analyst
 
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
@@ -797,7 +1244,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
 
         {/* Industry pill */}
         <div className={`w-full rounded-full py-2 text-center text-xs font-semibold uppercase tracking-widest mb-6 ${activeRole === 'cams' ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400' : 'bg-slate-300/60 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400'}`}>
-          {activeRole === 'cams' ? 'ACAMS CAMS Certification — 6th Edition' : 'Banking'}
+          {activeRole === 'cams' ? 'ACAMS CAMS Certification — 6th Edition' : industryLabel}
         </div>
 
         {/* Case grid */}
