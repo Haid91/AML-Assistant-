@@ -709,10 +709,10 @@ const CAMS_MODULES = [
     title: 'Risks and Methods of ML & Terrorist Financing',
     tags: ['CAMS Prep'], sector: 'CAMS', premium: true,
     shortDesc: 'The three-stage ML cycle, key typologies, terrorist financing distinctions, predicate offences, and detection indicators.',
-    fullScenario: `CAMS EXAM PREP — Chapter 1\n\nRisks and Methods of Money Laundering & Terrorist Financing\n\nThis chapter covers:\n• The three-stage ML cycle: placement, layering, integration\n• Key ML typologies (trade-based ML, real estate, shell companies)\n• Terrorist financing vs. money laundering\n• Predicate offences\n• Red flags and detection indicators`,
+    fullScenario: `CAMS EXAM PREP — Chapter 1\n\nRisks and Methods of Money Laundering & Terrorist Financing\n\n20 exam-style questions covering:\n• The three-stage ML cycle: placement, layering, integration\n• Key typologies: TBML, real estate, loan-back, round-tripping, hawala, cuckoo smurfing\n• Terrorist financing vs. money laundering\n• Predicate offences\n• Casinos, virtual assets, gatekeepers, NPOs, cyber-enabled ML`,
     steps: [
       {
-        id: 1, title: 'The Three Stages',
+        id: 1, title: 'Placement Stage',
         question: "Which of the following BEST describes the placement stage of money laundering?",
         options: [
           { text: 'Introducing illegal proceeds into the financial system for the first time — e.g., depositing drug-sale cash into a bank account', correct: true, feedback: 'Correct. Placement is the first and most vulnerable stage — physically moving cash into the financial system carries the highest detection risk. Common methods include cash deposits, currency exchanges, and smurfing.' },
@@ -732,7 +732,17 @@ const CAMS_MODULES = [
         ],
       },
       {
-        id: 3, title: 'ML vs. Terrorist Financing',
+        id: 3, title: 'Integration Stage',
+        question: "Which of the following BEST describes the integration stage of money laundering?",
+        options: [
+          { text: 'Reinvesting laundered funds into the legitimate economy — purchasing property, luxury goods, or stakes in legitimate businesses so proceeds appear indistinguishable from lawful wealth', correct: true, feedback: 'Correct. Integration is the final stage. Once funds have been placed and layered, they re-enter the economy as apparently legitimate assets. Detection at this stage is most difficult because the funds have already been distanced from their criminal origin.' },
+          { text: 'Introducing illegal cash into the financial system through bank deposits', correct: false, feedback: 'This describes placement — the first stage. Integration is the final stage where already-laundered funds re-enter the legitimate economy.' },
+          { text: 'Wiring funds through multiple shell company accounts across jurisdictions', correct: false, feedback: 'This describes layering — the second stage. Integration occurs after funds have already been distanced from their criminal source.' },
+          { text: 'Converting cash to cryptocurrency to obscure the audit trail', correct: false, feedback: 'Converting cash to cryptocurrency is a layering technique. Integration involves using already-laundered funds to purchase legitimate assets or investments.' },
+        ],
+      },
+      {
+        id: 4, title: 'ML vs. Terrorist Financing',
         question: "Which statement MOST accurately describes the PRIMARY distinction between money laundering and terrorist financing?",
         options: [
           { text: 'Money laundering generates proceeds from crime and seeks to legitimise them; terrorist financing may use legitimately sourced funds directed toward illegal activity', correct: true, feedback: 'Correct. This is the fundamental distinction. ML is always proceeds-driven (funds come FROM crime). TF can use clean money directed TO illegal purposes — making it harder to detect through traditional financial profiling.' },
@@ -742,17 +752,17 @@ const CAMS_MODULES = [
         ],
       },
       {
-        id: 4, title: 'Trade-Based ML',
+        id: 5, title: 'Trade-Based ML',
         question: "A company consistently over-invoices imports from a related foreign supplier by 40%, pays the inflated amounts through the banking system, and the surplus is refunded to an offshore account. This is BEST described as:",
         options: [
-          { text: 'Trade-based money laundering (TBML) — using the international trade system to transfer value and obscure its origin', correct: true, feedback: 'Correct. TBML is one of the most difficult typologies to detect because it exploits the complexity of international trade. Over-invoicing, under-invoicing, multiple invoicing, and falsely described goods are all TBML techniques.' },
+          { text: 'Trade-based money laundering (TBML) — using the international trade system to transfer value and obscure its origin', correct: true, feedback: 'Correct. TBML is one of the most difficult typologies to detect because it exploits the complexity of international trade. Over-invoicing, under-invoicing, multiple invoicing, and falsely described goods are all TBML techniques. The FATF identifies TBML as one of the three main ML methods globally.' },
           { text: 'Real estate laundering — using property to convert and clean criminal proceeds', correct: false, feedback: 'Real estate laundering involves purchasing property with criminal proceeds. This scenario involves trade transactions, not property.' },
           { text: 'Loan-back scheme — using criminal funds disguised as a loan repayment', correct: false, feedback: 'Loan-back schemes involve criminals lending themselves their own criminal proceeds through a shell company, then "repaying" the loan to create legitimate-looking income.' },
           { text: 'Structuring — breaking transactions into smaller amounts to avoid reporting thresholds', correct: false, feedback: 'Structuring involves splitting cash transactions below reporting thresholds. This scenario involves inflated trade invoices — a different method.' },
         ],
       },
       {
-        id: 5, title: 'Structuring / Smurfing',
+        id: 6, title: 'Structuring / Smurfing',
         question: "An individual makes 11 cash deposits of $9,100 over three weeks across four branches, totalling $100,100. This practice is BEST described as:",
         options: [
           { text: 'Structuring (smurfing) — deliberately splitting transactions to stay below reporting thresholds', correct: true, feedback: 'Correct. Structuring is illegal in most jurisdictions regardless of whether the underlying funds are criminal. Deliberately fragmenting transactions to avoid regulatory reporting is itself a criminal offence (31 USC §5324 in the US; s.140 of the AML/CTF Act in Australia).' },
@@ -762,13 +772,143 @@ const CAMS_MODULES = [
         ],
       },
       {
-        id: 6, title: 'Predicate Offences',
+        id: 7, title: 'Predicate Offences',
         question: "Under the FATF Recommendations, which of the following is classified as a predicate offence for money laundering?",
         options: [
           { text: 'All serious offences — including drug trafficking, corruption, fraud, tax crimes, and human trafficking. FATF recommends a broad approach covering all serious crimes', correct: true, feedback: 'Correct. FATF Recommendation 3 requires ML to apply to all serious offences. FATF specifically designates categories including drug trafficking, organised crime, terrorism, human trafficking, corruption, fraud, tax crimes, counterfeiting, cybercrime, and environmental crime.' },
           { text: 'Only drug trafficking — the original focus of AML frameworks at their establishment', correct: false, feedback: 'While AML frameworks originally focused on drug proceeds (the 1988 Vienna Convention), FATF has progressively expanded the predicate offence scope. Tax crimes and corruption were not added until 2012.' },
           { text: 'Only offences that cross international borders', correct: false, feedback: 'FATF does not require an international element. Domestic predicate offences are equally covered.' },
           { text: 'Only offences punishable by more than 10 years imprisonment', correct: false, feedback: 'FATF allows jurisdictions to define serious offences by penalty thresholds or designated category lists. The 10-year threshold is one permitted option, not the only one.' },
+        ],
+      },
+      {
+        id: 8, title: 'Loan-Back Scheme',
+        question: "In a loan-back scheme, a criminal typically:",
+        options: [
+          { text: 'Places criminal proceeds with a financial institution or shell company, then borrows against those same funds, repaying the "loan" with criminal proceeds to create the appearance of legitimate debt repayment', correct: true, feedback: 'Correct. The loan-back technique creates a paper trail that makes criminal proceeds appear to be legitimate loan repayments. The "lender" (a shell company controlled by the criminal) appears to provide a legitimate service, while the "repayments" integrate criminal funds into the financial system as apparently legitimate transactions.' },
+          { text: 'Uses multiple bank accounts to split deposits below reporting thresholds', correct: false, feedback: 'This describes structuring/smurfing — a different technique. The loan-back scheme specifically creates a fictitious lending arrangement.' },
+          { text: 'Purchases property below market value and resells at a profit to generate apparent capital gain', correct: false, feedback: 'This describes a form of real estate laundering. The loan-back scheme involves a fictitious lending arrangement, not property transactions.' },
+          { text: 'Transfers criminal proceeds through a series of offshore accounts to obscure their origin', correct: false, feedback: 'This describes layering through wire transfers. The loan-back scheme specifically uses a lending structure to legitimise the funds.' },
+        ],
+      },
+      {
+        id: 9, title: 'Real Estate ML',
+        question: "Which of the following is MOST commonly associated with real estate money laundering?",
+        options: [
+          { text: 'Purchasing property with cash or through shell companies — often using anonymous ownership structures — to convert criminal proceeds into apparently legitimate assets', correct: true, feedback: 'Correct. Real estate is one of the most heavily exploited ML sectors globally. Key characteristics: all-cash purchases (avoiding bank scrutiny), use of shell companies and nominee owners (concealing beneficial ownership), rapid resale or rental income (integration), and geographic concentration in high-value markets.' },
+          { text: 'Using a solicitor\'s client account to hold funds temporarily before business payment', correct: false, feedback: 'While law firm client accounts are exploited for ML, this describes a specific vector (gatekeepers/legal professionals) rather than the primary real estate ML method.' },
+          { text: 'Renting property to criminal associates at below-market rates', correct: false, feedback: 'Below-market rentals may involve tax evasion or undeclared income, but they are not the primary ML method associated with real estate. The primary concern is cash-funded purchases concealing beneficial ownership.' },
+          { text: 'Mortgaging criminal proceeds through a bank and defaulting deliberately', correct: false, feedback: 'This describes mortgage fraud, which is a predicate offence, but not the primary real estate ML method. The primary concern is cash purchases that avoid the financial system entirely.' },
+        ],
+      },
+      {
+        id: 10, title: 'Shell Companies',
+        question: "The PRIMARY AML risk associated with shell companies and nominee structures is:",
+        options: [
+          { text: 'They allow beneficial owners to conceal their identity behind a corporate structure, making it extremely difficult to identify the natural person ultimately controlling or benefiting from criminal funds', correct: true, feedback: 'Correct. Shell companies create a "corporate veil" that separates the apparent owner from the true beneficial owner. They are central to ML typologies because they provide apparent legitimacy, cross-border flexibility, and difficulty of attribution. FATF Recommendations 24 and 25 specifically address the need for beneficial ownership transparency for legal persons and arrangements.' },
+          { text: 'They are incorporated in offshore jurisdictions and therefore pay no tax', correct: false, feedback: 'Tax avoidance or evasion may be a consequence, but the PRIMARY AML risk is the concealment of beneficial ownership — not the tax treatment. Many legitimate businesses use offshore structures for valid commercial reasons.' },
+          { text: 'They can employ large numbers of people without AML obligations', correct: false, feedback: 'Employment capacity is not an AML risk factor. The AML risk is specifically the ability to conceal the identity of the persons controlling or benefiting from the entity.' },
+          { text: 'They must be registered with securities regulators and therefore attract scrutiny', correct: false, feedback: 'Shell companies specifically avoid regulatory registration requirements. The risk is precisely the lack of transparency and scrutiny — not increased registration obligations.' },
+        ],
+      },
+      {
+        id: 11, title: 'Bulk Cash Smuggling',
+        question: "Bulk cash smuggling refers to:",
+        options: [
+          { text: 'Physically transporting large quantities of currency across borders — typically concealed in vehicles, luggage, or cargo — to move criminal proceeds outside the regulated financial system', correct: true, feedback: 'Correct. Bulk cash smuggling avoids the AML controls of the formal financial system entirely. It is the primary ML method for drug trafficking organisations in many jurisdictions. FATF estimates that the majority of drug proceeds in some regions are moved via bulk cash smuggling rather than through the banking system.' },
+          { text: 'Using multiple small deposits across different branches to avoid Currency Transaction Reports', correct: false, feedback: 'This describes structuring/smurfing — a technique used within the financial system. Bulk cash smuggling involves physically moving currency outside the financial system.' },
+          { text: 'Moving funds electronically through multiple correspondent banks to obscure the trail', correct: false, feedback: 'This describes electronic layering via wire transfers — a different technique. Bulk cash smuggling involves the physical movement of currency.' },
+          { text: 'Using trade invoices to transfer value across borders', correct: false, feedback: 'This describes trade-based money laundering (TBML). Bulk cash smuggling specifically involves physical currency, not paper-based value transfer.' },
+        ],
+      },
+      {
+        id: 12, title: 'Hawala / Informal Value Transfer',
+        question: "Hawala and similar Informal Value Transfer Systems (IVTS) are used for ML/TF because they:",
+        options: [
+          { text: 'Transfer value across borders based on trust networks and offsetting debt settlement — with minimal or no paper trail and no movement of physical currency across borders', correct: true, feedback: 'Correct. In a hawala transaction, a sender gives funds to a broker (hawaladar) in one country, who contacts a counterpart in the destination country to pay the recipient — settling the debt separately through goods, counter-transfers, or cash. The absence of a formal paper trail makes hawala attractive to ML/TF actors, though it is also used for legitimate low-cost international remittances.' },
+          { text: 'It is a formal banking channel with lower fees than SWIFT wire transfers', correct: false, feedback: 'Hawala operates entirely outside the formal banking system. Its appeal is the absence of formal documentation and regulatory oversight, not lower banking fees.' },
+          { text: 'It requires identity verification at both sending and receiving ends under AML regulations', correct: false, feedback: 'The defining characteristic of hawala is the opposite — traditionally, minimal or no formal identity verification. However, many jurisdictions now require IVTS operators to register and apply CDD.' },
+          { text: 'It is exclusively used for legitimate remittances and presents no ML risk', correct: false, feedback: 'While hawala has deep historical roots in legitimate international remittances, it presents significant ML/TF risk specifically because of its informal, trust-based nature and minimal documentation.' },
+        ],
+      },
+      {
+        id: 13, title: 'Casino ML',
+        question: "Casinos present unique AML risks primarily because they:",
+        options: [
+          { text: 'Allow criminals to convert cash into chips, conduct minimal play, and redeem chips for a casino cheque — effectively washing criminal cash through an apparent gambling transaction', correct: true, feedback: 'Correct. The chip conversion technique is a classic casino ML method that combines placement (cash for chips) and integration (chips redeemed as apparent gambling proceeds). Casinos are also vulnerable to structuring (multiple sub-threshold transactions), smurfing (multiple players pooling chips), and infiltration of gambling revenue reporting. FATF designated casinos as DNFBPs subject to AML obligations.' },
+          { text: 'Are required to file Currency Transaction Reports for all transactions over $10,000, which attracts criminals', correct: false, feedback: 'CTR requirements are a compliance control, not a risk. The risk arises from the ability to convert cash into a new form (chips) that is redeemable as apparent gambling proceeds — circumventing CTR visibility.' },
+          { text: 'Operate exclusively online and therefore cannot verify customer identity', correct: false, feedback: 'Land-based casinos also present significant ML risk. Online casinos have different (often enhanced) KYC requirements. The ML risk is not limited to the online channel.' },
+          { text: 'Are not subject to AML regulations in any jurisdiction', correct: false, feedback: 'Casinos are subject to AML regulations as DNFBPs under FATF Recommendation 22. Most major jurisdictions require casino operators to apply CDD, report suspicious transactions, and maintain transaction records.' },
+        ],
+      },
+      {
+        id: 14, title: 'Cyber-Enabled ML',
+        question: "Which of the following is an example of cyber-enabled money laundering?",
+        options: [
+          { text: 'Using proceeds from ransomware attacks to purchase cryptocurrency, cycling through multiple wallets and mixing services, then converting to fiat through a lightly regulated exchange', correct: true, feedback: 'Correct. Cyber-enabled ML combines predicate cybercrime (ransomware) with cryptocurrency-based layering (multiple wallets, mixing services) and integration through exchanges. The speed and pseudonymity of cryptocurrency make it attractive for layering cyber-crime proceeds. FATF\'s 2021 guidance on virtual assets specifically identifies this typology.' },
+          { text: 'Hacking a bank\'s systems to reduce a customer\'s loan balance', correct: false, feedback: 'This describes cyber fraud or embezzlement — a predicate offence, not money laundering itself. ML would be the subsequent process of disguising the fraudulent proceeds.' },
+          { text: 'Using social media to recruit individuals to act as money mules', correct: false, feedback: 'Mule recruitment is a social engineering technique related to the overall ML scheme, but it is not itself cyber-enabled ML. The ML activity is the subsequent movement of funds through mule accounts.' },
+          { text: 'Installing ATM skimmers to steal card data and make fraudulent withdrawals', correct: false, feedback: 'ATM fraud is a predicate offence. The ML component would be the laundering of the fraudulently obtained cash — not the card data theft itself.' },
+        ],
+      },
+      {
+        id: 15, title: 'Round-Tripping',
+        question: "Round-tripping as a money laundering technique involves:",
+        options: [
+          { text: 'Moving funds out of a country disguised as a foreign investment, cycling them through one or more offshore jurisdictions, and reintroducing them as apparent foreign direct investment to give criminal proceeds a legitimate origin', correct: true, feedback: 'Correct. Round-tripping exploits the appearance of cross-border investment. A company or individual moves criminal proceeds offshore, then reintroduces them as a "foreign investor" — giving the funds a legitimate-sounding international origin. This technique is well-documented in jurisdictions with significant illicit capital flight.' },
+          { text: 'Making multiple small cash deposits in a circular pattern across different banks', correct: false, feedback: 'This describes structuring/smurfing. Round-tripping specifically involves moving funds offshore and reintroducing them as apparent foreign investment — not cash deposit patterns.' },
+          { text: 'Purchasing and reselling the same physical asset multiple times to inflate its apparent value', correct: false, feedback: 'This describes asset price inflation — a different technique often used in real estate ML. Round-tripping involves funds moving offshore and returning as apparent foreign investment.' },
+          { text: 'Using a hawala network to simultaneously transfer funds in both directions', correct: false, feedback: 'Bilateral hawala transfers are a different technique. Round-tripping specifically involves the movement of funds abroad and their reintroduction as apparent foreign capital.' },
+        ],
+      },
+      {
+        id: 16, title: 'Red Flags',
+        question: "A customer pays for a high-value luxury vehicle entirely in cash and declines to explain the origin of the funds. Under a risk-based approach, this should be treated as:",
+        options: [
+          { text: 'A red flag requiring documentation, customer outreach for an explanation, and MLRO escalation if the explanation is unsatisfactory', correct: true, feedback: 'Correct. Cash payment for a high-value asset is a classic placement/integration indicator. The customer\'s unwillingness to explain the source of funds intensifies the suspicion. Most jurisdictions require dealers in high-value goods to apply AML controls including CDD and suspicious activity reporting — and all financial institutions and DNFBPs should treat this pattern as a red flag requiring investigation.' },
+          { text: 'Normal behaviour — wealthy customers frequently prefer to pay in cash', correct: false, feedback: 'While some legitimate customers pay in cash, the combination of a high-value all-cash purchase and refusal to explain source of funds is a red flag that cannot be dismissed on the basis of wealth alone. The obligation is to verify, not to assume legitimacy.' },
+          { text: 'Acceptable since cash is legal tender in all jurisdictions', correct: false, feedback: 'Legal tender status does not suspend AML obligations. High-value cash transactions are specifically identified as high-risk in FATF guidance and most national AML regulations.' },
+          { text: 'A low-risk transaction because the purchase is for a tangible physical asset', correct: false, feedback: 'High-value tangible assets (luxury goods, vehicles, property, art) are frequently used for ML integration precisely because they are tangible and can be resold. Physical asset purchases are a recognised ML risk — not a mitigating factor.' },
+        ],
+      },
+      {
+        id: 17, title: 'Virtual Assets',
+        question: "FATF Recommendation 15 was updated in 2019 to address virtual assets primarily because:",
+        options: [
+          { text: 'Virtual assets present ML/TF risks due to speed of cross-border transfers, pseudonymity, and the ability to obscure transaction trails through mixing services and privacy coins', correct: true, feedback: 'Correct. FATF R.15 requires countries to apply AML/CFT regulations to Virtual Asset Service Providers (VASPs), including registration/licensing, CDD, record-keeping, SAR filing, and the Travel Rule (R.16). The risks are real but so are the opportunities — blockchain analytics can trace transactions in ways impossible with cash.' },
+          { text: 'Virtual assets are fully anonymous and untraceable in all circumstances', correct: false, feedback: 'Most public blockchains are pseudonymous, not fully anonymous. Blockchain analytics tools (Chainalysis, Elliptic) can often trace and attribute transactions. Privacy coins (Monero, Zcash) offer stronger anonymity but are not universally untraceable.' },
+          { text: 'FATF wanted to prohibit the use of cryptocurrency globally', correct: false, feedback: 'FATF does not seek to prohibit virtual assets — it seeks to regulate them. R.15 extends the existing AML framework to the virtual asset sector, not eliminate it.' },
+          { text: 'Virtual asset service providers were already fully regulated in all FATF member jurisdictions', correct: false, feedback: 'The 2019 update specifically addressed regulatory gaps — many jurisdictions had no VASP regulation. The update drove significant new regulatory activity in jurisdictions that had not yet regulated the sector.' },
+        ],
+      },
+      {
+        id: 18, title: 'Gatekeepers',
+        question: "In the AML context, 'gatekeepers' refers to:",
+        options: [
+          { text: 'Professionals such as lawyers, accountants, real estate agents, and trust and company service providers (TCSPs) who — wittingly or unwittingly — assist ML by providing access to the financial system or legitimate-appearing corporate structures', correct: true, feedback: 'Correct. Gatekeepers are designated as DNFBPs under FATF Recommendations 22 and 23 precisely because they provide professional services that can be exploited for ML. Key risks: lawyers holding client account funds, accountants structuring shell company arrangements, real estate agents facilitating cash purchases. Criminal liability for "wilful blindness" applies in many jurisdictions.' },
+          { text: 'Bank compliance officers who screen transactions before they are processed', correct: false, feedback: 'Compliance officers are AML practitioners, not gatekeepers in the FATF sense. The gatekeeper concept specifically refers to professionals in regulated non-financial sectors who provide access to the financial system.' },
+          { text: 'FATF assessors who evaluate member countries\' AML systems', correct: false, feedback: 'FATF assessors are part of the mutual evaluation framework — they are not gatekeepers. Gatekeepers are private sector professionals who can inadvertently enable ML.' },
+          { text: 'Regulators who approve new financial products before market launch', correct: false, feedback: 'Product approvers are regulators — not gatekeepers in the AML sense. The gatekeeper concept is specific to private sector professionals providing access to the financial system or legitimate-appearing structures.' },
+        ],
+      },
+      {
+        id: 19, title: 'Non-Profit Organisations',
+        question: "Terrorist financiers may exploit non-profit organisations (NPOs) primarily to:",
+        options: [
+          { text: 'Divert donated funds to terrorist groups under the guise of charitable activity, or use NPO bank accounts to move funds internationally with reduced scrutiny', correct: true, feedback: 'Correct. NPO exploitation for TF was highlighted in the 9/11 Commission Report. FATF Recommendation 8 specifically addresses NPO risks. The key vulnerabilities: cross-border fund flows with humanitarian cover, limited AML oversight in many jurisdictions, and the ability to collect funds from many donors without individual attribution. FATF does not require NPOs to apply AML controls but requires countries to protect the sector from TF abuse.' },
+          { text: 'Launder large quantities of drug proceeds through charitable donation matching programs', correct: false, feedback: 'While NPO structures can be used for ML, the PRIMARY identified risk in FATF guidance is TF — the diversion of (often legitimately donated) funds to terrorist groups — not drug money laundering.' },
+          { text: 'Avoid paying tax on criminal income by claiming charitable deductions', correct: false, feedback: 'Tax evasion through fraudulent charitable deductions is a fraud/predicate offence concern, not the primary TF risk associated with NPOs.' },
+          { text: 'Access government grants that can be redirected to criminal purposes', correct: false, feedback: 'While government grant fraud is a predicate offence, the FATF-identified TF risk for NPOs is the exploitation of genuine charitable donations and international fund transfer capabilities — not government grant access.' },
+        ],
+      },
+      {
+        id: 20, title: 'Cuckoo Smurfing',
+        question: "'Cuckoo smurfing' is BEST described as:",
+        options: [
+          { text: 'A technique where criminal funds are deposited into the bank accounts of unwitting third parties who are expecting legitimate funds from overseas — using innocent account holders as unknowing conduits', correct: true, feedback: 'Correct. In cuckoo smurfing, a criminal intercepts a legitimate overseas transfer expectation: an individual expects money from abroad; instead of the legitimate remitter sending funds, the criminal deposits equivalent criminal cash into the target\'s local account, while the "legitimate" equivalent funds are moved by the criminal\'s overseas network. The account holder receives the expected amount and has no knowledge they have received criminal proceeds.' },
+          { text: 'Using multiple couriers (smurfs) to make deposits below the reporting threshold at different branches', correct: false, feedback: 'This describes standard smurfing. Cuckoo smurfing is distinct — it specifically exploits legitimate international fund transfer expectations to launder criminal cash through unknowing account holders.' },
+          { text: 'Using shell companies to nest criminal funds within layers of legitimate corporate structures', correct: false, feedback: 'Shell company layering is a different technique. Cuckoo smurfing specifically targets individual account holders who are expecting legitimate overseas payments.' },
+          { text: 'Converting criminal cash into casino chips and redeeming them as winnings', correct: false, feedback: 'This is the casino chip conversion technique. Cuckoo smurfing is specifically about exploiting legitimate international payment expectations to deposit criminal cash into unknowing recipients\' accounts.' },
         ],
       },
     ],
@@ -840,6 +980,146 @@ const CAMS_MODULES = [
           { text: 'Banks that have filed SARs in the prior 12 months', correct: false, feedback: 'SAR filings are a compliance positive. Sharing SAR filing history is generally prohibited by confidentiality rules.' },
         ],
       },
+      {
+        id: 7, title: 'Vienna Convention 1988',
+        question: "The 1988 UN Convention Against Illicit Traffic in Narcotic Drugs and Psychotropic Substances (Vienna Convention) was significant in the AML context primarily because:",
+        options: [
+          { text: 'It was the first international treaty to require signatory countries to criminalise drug-money laundering and allow seizure of drug proceeds — establishing the concept of predicate offences and laying the foundation for modern AML frameworks', correct: true, feedback: 'Correct. The Vienna Convention marked the beginning of international AML cooperation. It required signatory states to criminalise drug money laundering and introduced concepts of predicate offences, asset confiscation, and international cooperation that underpin all subsequent AML frameworks including the FATF 40 Recommendations.' },
+          { text: 'It established the FATF and its 40 Recommendations', correct: false, feedback: 'FATF was established in 1989 by the G7 Paris Summit — separate from and following the Vienna Convention. The Convention focused on drug trafficking; FATF developed the broader AML standard framework.' },
+          { text: 'It criminalised all forms of tax evasion internationally for the first time', correct: false, feedback: 'Tax crimes as ML predicate offences were not added to the FATF framework until the 2012 revision. The Vienna Convention focused solely on drug trafficking proceeds.' },
+          { text: 'It prohibited the use of hawala and all informal value transfer systems', correct: false, feedback: 'The Vienna Convention did not address informal value transfer systems. Its focus was the criminalisation of drug-money laundering and international cooperation for seizure and confiscation.' },
+        ],
+      },
+      {
+        id: 8, title: 'Palermo Convention 2000',
+        question: "The UN Convention Against Transnational Organised Crime (Palermo Convention, 2000) built upon the Vienna Convention primarily by:",
+        options: [
+          { text: 'Extending ML criminalisation beyond drug trafficking to all serious crime proceeds, and establishing obligations for international cooperation, extradition, and mutual legal assistance between signatory countries', correct: true, feedback: 'Correct. The Palermo Convention was transformative — it broadened the predicate offence base from drug trafficking to all serious crimes, required states to criminalise participation in organised criminal groups, and established robust international cooperation obligations including extradition and mutual legal assistance (MLA).' },
+          { text: 'Introducing mandatory beneficial ownership registers for all companies worldwide', correct: false, feedback: 'Beneficial ownership registers are addressed in FATF Recommendation 24 and EU AMLD directives — not the Palermo Convention. Palermo focused on ML criminalisation scope and international cooperation.' },
+          { text: 'Replacing the FATF 40 Recommendations with legally binding treaty obligations', correct: false, feedback: 'The FATF Recommendations remain non-binding international standards. Palermo is a treaty — but it did not replace or override FATF standards; the two instruments are complementary.' },
+          { text: 'Creating Interpol as the coordinating body for cross-border financial investigations', correct: false, feedback: 'Interpol was established in 1923 — long before the Palermo Convention. The Convention established MLA frameworks and cooperation obligations but did not create Interpol.' },
+        ],
+      },
+      {
+        id: 9, title: 'FATF Mutual Evaluations',
+        question: "FATF mutual evaluations (4th Round methodology) assess member countries across which two dimensions?",
+        options: [
+          { text: 'Technical compliance (whether laws and regulations exist to meet FATF standards) and effectiveness (whether the AML/CFT system is producing real-world outcomes) — both dimensions introduced in the 4th Round methodology adopted in 2013', correct: true, feedback: 'Correct. This two-dimensional approach was a landmark change from the 3rd Round which focused primarily on technical compliance. Effectiveness is assessed against 11 Immediate Outcomes covering areas such as FIU analysis quality, investigation, prosecution, confiscation, and supervision. A country can have perfect laws on paper but still fail on effectiveness.' },
+          { text: 'Only technical compliance — effectiveness is assessed separately by the IMF through the FSAP', correct: false, feedback: 'While the IMF FSAP addresses some AML effectiveness questions, FATF mutual evaluations assess both technical compliance AND effectiveness as an integrated methodology.' },
+          { text: 'Criminal prosecution statistics and ML conviction rates only', correct: false, feedback: 'Prosecutions and convictions are one Immediate Outcome (IO.7), but evaluations assess 11 Immediate Outcomes across the full AML/CFT system — not prosecution data alone.' },
+          { text: 'The size of each country\'s FIU and the number of STRs filed annually', correct: false, feedback: 'SAR/STR volume is relevant evidence for some Immediate Outcomes but is not a standalone assessment dimension. Volume without quality or actionability data is not a reliable effectiveness metric.' },
+        ],
+      },
+      {
+        id: 10, title: 'Risk-Based Approach (R.1)',
+        question: "Under FATF Recommendation 1, the risk-based approach (RBA) requires financial institutions to:",
+        options: [
+          { text: 'Identify, assess, and understand their ML/TF risks, and apply measures commensurate with those risks — using more rigorous controls where risks are higher and permitting simplified measures where risks are demonstrably lower', correct: true, feedback: 'Correct. The RBA is the cornerstone of modern AML. It replaced the rules-based compliance model with a proportionate, risk-sensitive approach. The RBA allows institutions to allocate compliance resources where risks are greatest — rather than applying identical controls uniformly. The institutional risk assessment underpins CDD decisions, monitoring intensity, and resource allocation.' },
+          { text: 'Apply identical AML controls uniformly to all customers and products regardless of assessed risk', correct: false, feedback: 'A uniform approach is a rules-based (not risk-based) model. The RBA specifically requires differentiation based on assessed risk — otherwise high-risk relationships receive the same treatment as low-risk ones.' },
+          { text: 'Focus exclusively on high-risk customers and ignore low-risk relationships entirely', correct: false, feedback: 'The RBA requires attention across the risk spectrum. Simplified CDD applies to genuinely low-risk relationships — but this is a reduced level of diligence, not zero. Monitoring continues at all risk levels.' },
+          { text: 'Let regulators determine the risk rating of each customer before the institution applies controls', correct: false, feedback: 'The RBA specifically places risk assessment responsibility on the institution. Regulatory pre-approval of customer risk ratings is not a standard AML framework element.' },
+        ],
+      },
+      {
+        id: 11, title: 'FATF Travel Rule (R.16)',
+        question: "FATF Recommendation 16, known as the 'Travel Rule', requires:",
+        options: [
+          { text: 'Originating financial institutions to transmit accurate originator and beneficiary information alongside wire transfers — enabling counterparty institutions and FIUs to identify parties to electronic fund transfers', correct: true, feedback: 'Correct. R.16 requires that wire transfers of USD/EUR 1,000 or more include complete originator information (name, account number, address/ID number) and beneficiary information. In 2019, FATF extended the Travel Rule to virtual asset transfers — requiring VASPs to collect and transmit the same information for crypto transactions.' },
+          { text: 'Airlines and customs authorities to collect financial data from travellers carrying more than $10,000 in cash', correct: false, feedback: 'Cross-border cash declarations are addressed in FATF R.32 (Cash Couriers) — not R.16. The Travel Rule applies specifically to electronic fund transfers.' },
+          { text: 'All wire transfers to be reviewed by the national FIU before settlement', correct: false, feedback: 'FIU pre-approval of wire transfers is not a standard AML requirement. The Travel Rule is about information transmission between financial institutions — not FIU pre-clearance.' },
+          { text: 'Financial institutions to obtain law enforcement approval for cross-border transfers above $50,000', correct: false, feedback: 'No FATF standard requires law enforcement approval for wire transfers. The Travel Rule requires information transmission between institutions — not law enforcement authorisation.' },
+        ],
+      },
+      {
+        id: 12, title: 'FATF R.20 — Suspicious Transactions',
+        question: "FATF Recommendation 20 on Suspicious Transaction Reports (STRs/SARs) requires financial institutions to report:",
+        options: [
+          { text: 'Promptly to the FIU when there is reasonable suspicion or reasonable grounds to suspect that funds are proceeds of crime or linked to TF — regardless of the transaction amount', correct: true, feedback: 'Correct. R.20 does not set a monetary threshold for STR filing — the trigger is suspicion, not amount. This is distinct from currency transaction reporting (which uses a threshold). Small transactions can be highly suspicious; large ones may be entirely legitimate. The STR obligation extends to both attempted and completed transactions.' },
+          { text: 'Only for cash transactions above the applicable reporting threshold', correct: false, feedback: 'Currency Transaction Reports (CTRs) apply to cash transactions above a threshold. STRs are triggered by suspicion regardless of amount — mixing these two obligations is a common conceptual error.' },
+          { text: 'Only after law enforcement has confirmed that a criminal investigation is underway', correct: false, feedback: 'The STR obligation is triggered by the institution\'s own suspicion — not by a law enforcement tip. Requiring law enforcement confirmation before filing would undermine the proactive intelligence-gathering purpose of the STR regime.' },
+          { text: 'Only for transactions involving foreign counterparties or high-risk jurisdictions', correct: false, feedback: 'Domestic transactions can be equally suspicious. Geography is a risk factor, not a threshold for the STR obligation.' },
+        ],
+      },
+      {
+        id: 13, title: 'FATF R.24 — Beneficial Ownership',
+        question: "FATF Recommendation 24 requires countries to ensure that beneficial ownership information for legal persons is:",
+        options: [
+          { text: 'Adequate, accurate, and current — and available to competent authorities on a timely basis through mechanisms such as central registers, company filing obligations, or collection by financial institutions', correct: true, feedback: 'Correct. R.24 (significantly revised in 2022) takes a multi-pronged approach — countries may use any combination of central registers, company-level record-keeping, or financial institution collection. The key requirements are that information is accurate, kept current, and can be accessed quickly by law enforcement and FIUs. The 2022 revision strengthened requirements following widespread criticism of nominee and bearer share misuse.' },
+          { text: 'Only publicly listed companies are required to disclose beneficial ownership — private companies are exempt', correct: false, feedback: 'Listed companies are actually lower-risk for beneficial ownership transparency because shares are publicly traded. R.24 is primarily concerned with unlisted private companies, partnerships, and trusts where beneficial ownership is most easily concealed.' },
+          { text: 'All company directors must undergo FATF-certified AML training before appointment', correct: false, feedback: 'Director AML training is not a FATF beneficial ownership requirement. R.24 focuses on identification and verification of beneficial owners — not training of corporate officers.' },
+          { text: 'Legal persons must file annual SAR summaries alongside their beneficial ownership information', correct: false, feedback: 'Beneficial ownership reporting and SAR filing are separate obligations. Companies are not required to file SARs — that obligation falls on regulated financial institutions and DNFBPs.' },
+        ],
+      },
+      {
+        id: 14, title: 'EU 6th AML Directive (6AMLD)',
+        question: "The EU Sixth Anti-Money Laundering Directive (6AMLD, implemented December 2020) was notable primarily for:",
+        options: [
+          { text: 'Introducing criminal liability for legal persons (companies) — not just natural persons — for ML offences, and extending the list of predicate offences to include cybercrime and environmental crime', correct: true, feedback: 'Correct. 6AMLD harmonised the definition of ML across EU member states and crucially extended criminal liability to corporations — meaning legal entities can now be criminally prosecuted for ML, not just individuals. The extended predicate offence list (including cybercrime and environmental crime) reflects the reality of modern financial crime.' },
+          { text: 'Creating a unified EU Financial Intelligence Unit to coordinate ML investigations across all member states', correct: false, feedback: 'There is no single EU FIU — member states maintain national FIUs. 6AMLD did not create a unified FIU; it focused on criminal liability harmonisation.' },
+          { text: 'Repealing the 5th AMLD beneficial ownership register requirements', correct: false, feedback: '6AMLD did not repeal 5AMLD\'s beneficial ownership requirements. The two directives addressed different aspects — 5AMLD tightened beneficial ownership; 6AMLD focused on criminal liability harmonisation and predicate offence scope.' },
+          { text: 'Extending ML obligations exclusively to virtual asset service providers', correct: false, feedback: 'VASP obligations were introduced by 5AMLD. 6AMLD focused on criminal liability harmonisation — not exclusively VASPs.' },
+        ],
+      },
+      {
+        id: 15, title: 'FATF-Style Regional Bodies (FSRBs)',
+        question: "FATF-Style Regional Bodies (FSRBs) such as the APG, MONEYVAL, and GIABA primarily:",
+        options: [
+          { text: 'Conduct mutual evaluations and provide AML/CFT technical assistance to member jurisdictions — extending the reach of FATF global standards to non-FATF member countries through regional assessment and capacity-building', correct: true, feedback: 'Correct. The FATF and its 9 FSRBs together cover 205+ jurisdictions. FSRBs operate under a memorandum of understanding with FATF and conduct mutual evaluations using the same 4th Round methodology. They identify deficiencies, monitor action plans, and provide training and technical assistance — significantly broadening the global AML architecture beyond FATF\'s 39 members.' },
+          { text: 'Are direct decision-making bodies that can independently amend the FATF 40 Recommendations', correct: false, feedback: 'Only FATF members can amend the Recommendations through the FATF plenary. FSRBs implement and assess against existing standards — they do not set them.' },
+          { text: 'Are law enforcement agencies with authority to arrest and extradite financial criminals', correct: false, feedback: 'FSRBs are policy and assessment bodies — they have no law enforcement authority. Criminal jurisdiction remains with national authorities.' },
+          { text: 'Are funded exclusively by World Bank development grants', correct: false, feedback: 'FSRBs have diverse funding models — member government contributions, FATF grants, and multilateral development bank support. They are not exclusively World Bank-funded.' },
+        ],
+      },
+      {
+        id: 16, title: 'Proliferation Financing',
+        question: "Proliferation financing, as addressed by FATF Recommendation 7, refers to:",
+        options: [
+          { text: 'Financial support for the development, acquisition, manufacture, possession, or deployment of weapons of mass destruction (WMDs) and their delivery systems — countered through targeted financial sanctions implementation', correct: true, feedback: 'Correct. FATF added proliferation financing to its mandate following UN Security Council resolutions targeting WMD programmes. R.7 requires countries to implement targeted financial sanctions without delay against UN-listed proliferators — particularly those linked to North Korea and Iranian WMD programmes. The 2012 FATF mandate expansion formally recognised proliferation financing as a distinct threat alongside ML and TF.' },
+          { text: 'The spread of ML techniques from one criminal network to another through criminal learning', correct: false, feedback: 'The spread of ML methods is a typologies concern — not the subject of FATF R.7. Proliferation financing specifically concerns WMD-related funding.' },
+          { text: 'State-sponsored investment in rapid domestic financial market expansion', correct: false, feedback: 'State investment policy is not an AML/CFT concern. Proliferation financing is the funding of WMD development — a national security concern addressed through financial sanctions.' },
+          { text: 'The rapid increase in cryptocurrency use for drug financing globally', correct: false, feedback: 'Crypto-asset risks are addressed in FATF R.15. Proliferation financing is specifically about WMD funding — a distinct and separately classified risk category.' },
+        ],
+      },
+      {
+        id: 17, title: 'DNFBPs',
+        question: "'Designated Non-Financial Businesses and Professions' (DNFBPs) under FATF Recommendations 22 and 23 include:",
+        options: [
+          { text: 'Casinos, real estate agents, dealers in precious metals and stones, lawyers, notaries, other independent legal professionals, accountants, and trust and company service providers (TCSPs) — when conducting specific higher-risk activities', correct: true, feedback: 'Correct. FATF identified these sectors as vulnerable to ML abuse even though they are not traditional financial institutions. The trigger for DNFBP AML obligations is activity-based: a lawyer is only a DNFBP when acting in specific financial/corporate capacities (e.g., managing client funds, forming companies) — not in all professional contexts such as litigation.' },
+          { text: 'All non-financial businesses including retailers, manufacturers, and wholesalers', correct: false, feedback: 'DNFBP status is sector- and activity-specific — not a general classification for all non-financial businesses. Retail shops and manufacturers are not DNFBPs under FATF standards.' },
+          { text: 'Only law firms and accounting practices — casinos and real estate agents are covered by separate legislation', correct: false, feedback: 'Casinos and real estate agents are explicitly named as DNFBPs in FATF Recommendations 22 and 23. They are subject to the same AML obligations as legal professionals when conducting covered activities.' },
+          { text: 'Technology companies providing payment infrastructure to banks', correct: false, feedback: 'Payment infrastructure providers are regulated as financial institutions under FATF R.14 or R.15 — not as DNFBPs. DNFBPs are specifically professional and commercial sectors, not technology providers.' },
+        ],
+      },
+      {
+        id: 18, title: 'Basel Committee AML Guidance',
+        question: "The Basel Committee on Banking Supervision's AML guidelines are significant because they:",
+        options: [
+          { text: 'Set supervisory expectations for banks\' group-wide AML risk management — including governance, CDD standards for correspondent banking, and sound management of financial crime risk across banking groups operating in multiple jurisdictions', correct: true, feedback: 'Correct. The Basel Committee guidelines complement FATF standards by providing prudential supervisory guidance specifically for banking supervisors. They address the AML/CFT expectations that banking supervisors should enforce, group-wide AML programme management, and the treatment of financial crime risk within the broader risk management framework of banks.' },
+          { text: 'Replace the FATF 40 Recommendations with legally binding capital requirements for AML compliance', correct: false, feedback: 'Basel Committee guidelines are not legally binding and do not replace FATF standards. They are prudential guidance for banking supervisors — complementing, not replacing, the FATF framework.' },
+          { text: 'Create a mandatory global AML supervisory college for all G20 banking groups', correct: false, feedback: 'There is no mandatory global AML supervisory college. The Basel Committee provides guidance — it does not establish binding supervisory structures.' },
+          { text: 'Require all banks to implement AI-based transaction monitoring systems by a specified date', correct: false, feedback: 'The Basel Committee does not mandate specific monitoring technologies. Technology choices are at the institution\'s discretion — the obligation is effective monitoring, not a particular technical approach.' },
+        ],
+      },
+      {
+        id: 19, title: 'UNCAC and ML',
+        question: "The UN Convention Against Corruption (UNCAC, 2003) is relevant to AML because:",
+        options: [
+          { text: 'Corruption is a designated ML predicate offence under FATF standards, and UNCAC requires signatory countries to criminalise bribery, embezzlement, and trading in influence — creating ML exposure for any proceeds derived from corrupt acts', correct: true, feedback: 'Correct. UNCAC and AML are deeply interconnected. Once corruption proceeds exist, ML laws apply to any effort to disguise or use those funds. The linkage makes anti-corruption and AML enforcement mutually reinforcing — identifying corrupt officials often leads to ML investigations, and vice versa. UNCAC also requires international asset recovery cooperation, relevant when corrupt proceeds have been moved abroad.' },
+          { text: 'UNCAC replaced all prior FATF anti-corruption guidance with stronger legally binding treaty obligations', correct: false, feedback: 'UNCAC is a treaty and is legally binding on signatories, but it did not replace FATF standards. The two frameworks coexist and reinforce each other.' },
+          { text: 'UNCAC created a global asset recovery fund that financial institutions must contribute to proportionally', correct: false, feedback: 'There is no mandatory asset recovery fund under UNCAC. The Convention requires cooperation in returning stolen assets to their countries of origin — through governmental bilateral and multilateral processes.' },
+          { text: 'UNCAC grants full immunity from AML obligations to public officials acting in their official capacity', correct: false, feedback: 'UNCAC contains no such immunity. In fact, it specifically requires the criminalisation of corruption by public officials and creates obligations for state-level accountability.' },
+        ],
+      },
+      {
+        id: 20, title: 'Mutual Legal Assistance (MLA)',
+        question: "Under international AML conventions, in which circumstance may a country legitimately refuse a Mutual Legal Assistance (MLA) request from another signatory country?",
+        options: [
+          { text: 'When the requested action would violate fundamental legal principles of the requested country — such as constitutional rights, bank secrecy protections not subject to judicial override, or dual criminality requirements where the underlying conduct is not a crime in the requested state', correct: true, feedback: 'Correct. MLA refusal grounds are defined in bilateral MLA treaties and relevant conventions. Common permitted grounds include: dual criminality (the act must be a crime in both states), fundamental legal principles, and national security. The trend internationally is toward narrowing refusal grounds to facilitate cross-border financial crime cooperation.' },
+          { text: 'Any time a country disagrees with the investigative strategy being pursued by the requesting state', correct: false, feedback: 'Disagreement with investigation strategy is not a recognised MLA refusal ground. Refusal grounds are specific and limited — not available for policy disagreement.' },
+          { text: 'When the requesting country has a larger GDP — smaller countries can refuse larger ones on proportionality grounds', correct: false, feedback: 'GDP differential is not an MLA refusal ground. MLA obligations are reciprocal and bilateral — not based on economic size.' },
+          { text: 'When the SAR underlying the request was filed more than six months before the MLA request', correct: false, feedback: 'There is no time limitation on MLA requests based on SAR filing dates. MLA timelines are governed by statutes of limitations for the underlying offences — not SAR filing dates.' },
+        ],
+      },
     ],
   },
   {
@@ -909,6 +1189,146 @@ const CAMS_MODULES = [
           { text: 'A customer requests wire transfers to foreign accounts', correct: false, feedback: 'International transfers are normal for international business and personal remittances. Geography alone is not a red flag.' },
         ],
       },
+      {
+        id: 7, title: 'Simplified CDD',
+        question: "Simplified Customer Due Diligence (SDD) may be applied when:",
+        options: [
+          { text: 'The customer, product, transaction, or delivery channel presents a demonstrably lower ML/TF risk as determined through the institution\'s risk-based assessment — and no suspicious activity indicators are present', correct: true, feedback: 'Correct. FATF explicitly permits simplified CDD in genuinely lower-risk situations. Examples include listed companies, regulated financial institutions, government entities, and standard low-risk products like basic savings accounts or low-value insurance. Even where SDD applies, CDD is not eliminated — the level of verification and monitoring is reduced, not removed.' },
+          { text: 'A customer has been a client for more than 5 years without incident', correct: false, feedback: 'Tenure is a CDD refresh consideration — not a basis for simplified CDD. A long-standing customer relationship does not automatically create a lower risk profile, particularly if the customer\'s activity has changed or risk indicators have emerged.' },
+          { text: 'The customer is listed on a major stock exchange — listed companies are always exempt from CDD', correct: false, feedback: 'Listed companies may qualify for simplified CDD as a lower-risk category, but they are not exempt from CDD entirely. Institutions must still identify beneficial ownership through public filings and maintain records.' },
+          { text: 'Management approves a waiver on a case-by-case basis without a documented risk basis', correct: false, feedback: 'Simplified CDD must have a documented risk basis — not simply management approval. Using SDD without documented justification is a compliance deficiency that can attract regulatory action.' },
+        ],
+      },
+      {
+        id: 8, title: 'Source of Wealth vs Source of Funds',
+        question: "In AML Enhanced Due Diligence, the key distinction between 'source of wealth' and 'source of funds' is:",
+        options: [
+          { text: 'Source of wealth refers to the origin of the customer\'s overall net worth (e.g., business sale, inheritance, career earnings); source of funds refers to the specific origin of funds used in a particular transaction or relationship — both are required for EDD on high-risk customers including PEPs', correct: true, feedback: 'Correct. Both elements are needed for a complete EDD picture. Knowing source of wealth tells you whether the overall level of wealth is plausible; knowing source of funds tells you whether the specific money being used in this transaction is legitimate. A customer with plausible overall wealth could still be placing illicit funds into a specific transaction — making both inquiries necessary.' },
+          { text: 'They are interchangeable terms with no material difference in AML documentation', correct: false, feedback: 'They are meaningfully different. A customer may have legitimate overall wealth (source of wealth) but be using proceeds of crime in a specific transaction (source of funds). Both must be verified independently for EDD.' },
+          { text: 'Source of wealth is used only in private banking; source of funds only applies to retail banking CDD', correct: false, feedback: 'Both concepts apply wherever EDD is triggered — private banking, correspondent banking, PEP relationships, or any high-risk customer. The private/retail distinction is not relevant to their application.' },
+          { text: 'Source of wealth verification is only required for accounts opened before 2015 under legacy CDD rules', correct: false, feedback: 'There are no legacy exemptions of this kind. Source of wealth verification requirements apply to all current EDD situations under applicable AML frameworks.' },
+        ],
+      },
+      {
+        id: 9, title: 'Domestic PEPs vs Foreign PEPs',
+        question: "Under FATF Recommendation 12, how does the treatment of domestic PEPs differ from foreign PEPs?",
+        options: [
+          { text: 'Foreign PEPs automatically require EDD; domestic PEPs and international organisation PEPs require a risk-based determination of whether EDD is appropriate — considering corruption risk, role seniority, and jurisdiction-specific factors', correct: true, feedback: 'Correct. The automatic EDD trigger for foreign PEPs reflects the greater difficulty of verifying source of wealth across jurisdictions and the higher corruption risk profile of cross-border PEP relationships. Domestic PEPs are subject to the same regulator and legal system as the institution — but a risk-based judgment is still required, and high-risk domestic PEPs will require EDD.' },
+          { text: 'Domestic PEPs are fully exempt from EDD because they are regulated by the same domestic authorities as the institution', correct: false, feedback: 'Domestic PEPs are not exempt from EDD. Shared jurisdiction reduces some verification challenges but does not eliminate corruption risk. FATF R.12 requires a risk-based assessment — not an automatic exemption.' },
+          { text: 'Both domestic and foreign PEPs require identical EDD in all circumstances — there is no distinction', correct: false, feedback: 'FATF R.12 explicitly distinguishes between foreign PEPs (mandatory EDD) and domestic/IO PEPs (risk-based determination). This distinction reflects differences in corruption risk profiles and verification practicalities.' },
+          { text: 'International organisation PEPs (e.g., World Bank, UN officials) are not covered by FATF R.12 at all', correct: false, feedback: 'International organisation PEPs are explicitly included in FATF R.12. They require the same risk-based assessment as domestic PEPs — not the automatic EDD required for foreign PEPs.' },
+        ],
+      },
+      {
+        id: 10, title: 'Senior Managing Official',
+        question: "When no natural person can be identified as a beneficial owner of a legal entity meeting the 25% ownership threshold, financial institutions should:",
+        options: [
+          { text: 'Identify and verify the identity of the senior managing official (e.g., CEO, Managing Director) as the control person — and treat the situation as higher-risk requiring enhanced ongoing monitoring', correct: true, feedback: 'Correct. The senior managing official fallback is recognised in FATF guidance and in national CDD rules (e.g., US FinCEN Customer Due Diligence Rule). It does not satisfy the beneficial ownership obligation — it is a fallback when genuine beneficial owners cannot be identified through reasonable means. The higher-risk treatment acknowledges that complex ownership structures that prevent beneficial owner identification are themselves a risk indicator.' },
+          { text: 'Refuse to onboard the entity — beneficial ownership identification at the 25% level is a non-negotiable prerequisite', correct: false, feedback: 'Refusal is one option but not the only one. Where beneficial ownership cannot be identified, institutions apply the senior managing official approach with enhanced monitoring. The decision to proceed or refuse depends on the totality of risk.' },
+          { text: 'Accept the entity\'s statutory directors as the beneficial owners without further investigation', correct: false, feedback: 'Statutory directors and beneficial owners are distinct categories. Directors may not own or control the entity. The beneficial ownership investigation must look through the legal structure — accepting directors as proxies is insufficient.' },
+          { text: 'Request the national regulator to formally identify the beneficial owner before proceeding', correct: false, feedback: 'Regulators do not perform beneficial ownership identification for individual institutions. The institution bears the obligation to conduct its own CDD — including beneficial ownership investigation.' },
+        ],
+      },
+      {
+        id: 11, title: 'Ongoing Monitoring',
+        question: "Effective ongoing monitoring of customer relationships should include:",
+        options: [
+          { text: 'Scrutinising transactions against the customer\'s known risk profile and expected activity patterns, keeping CDD information current, identifying trigger events requiring CDD refresh, and applying proportionately enhanced monitoring to higher-risk relationships', correct: true, feedback: 'Correct. Ongoing monitoring has two components under FATF R.10: (1) transaction monitoring — ensuring transactions are consistent with the institution\'s knowledge of the customer; and (2) CDD refresh — periodically reviewing and updating customer information, especially when circumstances change. Higher-risk customers require more frequent and intensive monitoring.' },
+          { text: 'Conducting full CDD on every individual transaction for all customers regardless of risk rating', correct: false, feedback: 'Full CDD on every transaction for every customer is neither required nor practical. Monitoring intensity should be proportionate to risk — with automated transaction monitoring applying to all and manual review focused on alerts and higher-risk profiles.' },
+          { text: 'Reviewing customer information only when a SAR is filed or a law enforcement request is received', correct: false, feedback: 'A reactive-only monitoring approach is insufficient. Proactive monitoring is what enables SAR filings in the first place. Waiting for external triggers defeats the purpose of ongoing monitoring.' },
+          { text: 'Outsourcing monitoring entirely to third-party screening providers without internal oversight', correct: false, feedback: 'Outsourcing monitoring is permitted but the institution retains ultimate AML responsibility. A robust outsourcing oversight framework is required — the institution cannot transfer its regulatory obligations to a vendor.' },
+        ],
+      },
+      {
+        id: 12, title: 'Sanctions Screening',
+        question: "When conducting sanctions screening, financial institutions must screen against:",
+        options: [
+          { text: 'Multiple applicable lists — including OFAC (US), OFSI (UK), UN Security Council consolidated lists, and domestic lists — checking customers, beneficial owners, counterparties, and transaction-related entities', correct: true, feedback: 'Correct. Sanctions obligations are multi-jurisdictional and institutions must comply with all applicable lists. For most international banks, this means simultaneously managing OFAC (with its extraterritorial reach), local domestic lists, and UN lists. The screening scope extends beyond customers — beneficial owners, counterparties, vessels, aircraft, and entities involved in transactions must all be screened.' },
+          { text: 'Only the UN Security Council consolidated list — national lists like OFAC are supplementary and voluntary for non-US institutions', correct: false, feedback: 'OFAC has significant extraterritorial reach — even non-US institutions with US dollar correspondent relationships can face OFAC liability. The UN list is the baseline; additional lists (OFAC, OFSI, EU) overlay it with expanded requirements.' },
+          { text: 'Only at account opening — transactional screening is only required for wire transfers above a threshold', correct: false, feedback: 'Sanctions screening must occur continuously. New designations are added regularly — an individual not sanctioned at onboarding may be sanctioned later. Real-time transaction screening is essential, as is rescreening following new designations.' },
+          { text: 'FATF grey and black lists only — sanctions lists are purely foreign policy tools unrelated to AML', correct: false, feedback: 'FATF lists and sanctions lists are separate frameworks. Sanctions lists identify specifically designated individuals and entities — they are not the same as FATF\'s country-level risk classifications.' },
+        ],
+      },
+      {
+        id: 13, title: 'Adverse Media Screening',
+        question: "Adverse media screening (negative news screening) is used in AML compliance primarily to:",
+        options: [
+          { text: 'Identify derogatory information from public sources — such as news articles, court records, and regulatory announcements — that may indicate criminal involvement, corruption, or serious reputational risk not captured by structured database screening alone', correct: true, feedback: 'Correct. Adverse media provides an additional intelligence layer beyond sanction lists and PEP databases. Criminals who are not yet prosecuted or listed may appear in news reporting, court records, or regulatory filings. A multi-layer screening approach (sanctions + PEP databases + adverse media) provides more complete risk coverage.' },
+          { text: 'Replace formal CDD documentation requirements when customers refuse to provide identification', correct: false, feedback: 'Adverse media cannot substitute for CDD documentation. It is an additional intelligence layer that supplements — not replaces — formal identity verification and source of funds documentation.' },
+          { text: 'Assess a customer\'s creditworthiness for loan underwriting and credit scoring', correct: false, feedback: 'Credit assessment is a separate banking function. Adverse media in AML specifically focuses on criminal, regulatory, and reputational risk indicators — not financial creditworthiness.' },
+          { text: 'Confirm that a customer has never been mentioned in any media — a completely clean media record is a prerequisite for onboarding', correct: false, feedback: 'A clean media record is not required — many legitimate customers have simply never been mentioned in news articles. Adverse media screening identifies derogatory content, not the absence of all mentions.' },
+        ],
+      },
+      {
+        id: 14, title: 'Four Risk Dimensions',
+        question: "Under a risk-based approach, the four primary risk dimensions used in most institutional AML risk assessments are:",
+        options: [
+          { text: 'Customer risk, product/service risk, geographic/country risk, and delivery channel risk — these dimensions are combined to produce an overall risk rating used to determine appropriate CDD levels and monitoring intensity', correct: true, feedback: 'Correct. These four dimensions are the standard AML risk assessment architecture recommended in FATF guidance. Each dimension has multiple risk factors: customer risk includes PEP status, industry, ownership complexity; product risk includes cash-intensity, cross-border use; geographic risk includes country corruption and FATF listing status; channel risk includes digital onboarding and non-face-to-face verification.' },
+          { text: 'Identity risk, financial risk, reputational risk, and operational risk', correct: false, feedback: 'These are general enterprise risk categories. The AML-specific risk dimensions are customer, product/service, geographic/country, and delivery channel — not these general categories.' },
+          { text: 'Regulatory risk, credit risk, market risk, and liquidity risk', correct: false, feedback: 'These are prudential risk categories (Basel framework). AML risk dimensions are distinct — customer, product, geography, and channel.' },
+          { text: 'Pre-screening risk, onboarding risk, ongoing monitoring risk, and exit risk', correct: false, feedback: 'These describe stages of a customer lifecycle — not the four standard AML risk dimensions used in institutional risk assessments.' },
+        ],
+      },
+      {
+        id: 15, title: 'Correspondent Banking CDD',
+        question: "When establishing a new correspondent banking relationship, the correspondent bank must:",
+        options: [
+          { text: 'Gather sufficient information to understand the respondent\'s business, ownership structure, AML/CFT controls, regulatory status, and reputation — and obtain senior management approval before establishing the relationship', correct: true, feedback: 'Correct. FATF R.13 imposes specific correspondent banking CDD requirements beyond standard business CDD: (1) assess the respondent\'s AML/CFT controls; (2) obtain senior management approval; (3) document respective responsibilities; (4) satisfy themselves that the respondent does not permit shell banks to use its accounts. The Wolfsberg CBDDQ is widely used to structure respondent bank information gathering.' },
+          { text: 'Simply verify the respondent bank\'s SWIFT BIC code and confirm its regulated status in its home jurisdiction', correct: false, feedback: 'BIC verification and licensing confirmation are baseline checks — not the full CDD required under R.13. The correspondent must assess the quality and effectiveness of the respondent\'s AML controls, not just their regulatory status.' },
+          { text: 'Accept the respondent\'s most recent FATF mutual evaluation score as sufficient correspondent CDD', correct: false, feedback: 'Country-level FATF evaluations assess the national AML system — not the individual bank\'s controls. A bank in a highly rated country may have weak AML controls; institution-level CDD is always required.' },
+          { text: 'Apply standard retail CDD — correspondent banking has no special requirements beyond normal business onboarding', correct: false, feedback: 'Correspondent banking has explicit additional CDD requirements under FATF R.13 because the correspondent bank\'s customers effectively have indirect access to the correspondent\'s infrastructure. This "nested customer" risk justifies elevated standards.' },
+        ],
+      },
+      {
+        id: 16, title: 'De-Risking',
+        question: "FATF has expressed concern about 'de-risking' (financial institutions terminating entire customer categories) because:",
+        options: [
+          { text: 'Blanket de-risking of entire categories pushes legitimate activity outside the regulated financial system — reducing AML visibility and potentially undermining financial inclusion without improving overall ML/TF risk management', correct: true, feedback: 'Correct. FATF and the FSB have published extensive guidance criticising indiscriminate de-risking. When legitimate businesses lose banking access, they may use less regulated channels — creating opacity that makes ML harder to detect. FATF\'s position is that the RBA requires managing individual risk, not blanket category exclusion.' },
+          { text: 'De-risking reduces bank profitability and therefore reduces tax revenues available to fund AML regulation', correct: false, feedback: 'While financial impact is real, FATF\'s concern is specifically about the systemic AML risk created by pushing legitimate activity outside the regulated system — not bank profitability.' },
+          { text: 'De-risking violates FATF Recommendation 1 by applying any risk-based controls to customer categories', correct: false, feedback: 'De-risking is not inherently a violation of R.1 — but blanket de-risking without individual risk assessment is. The RBA permits category-level risk factors but requires individual assessment before relationship decisions.' },
+          { text: 'FATF prohibits all forms of customer exit decisions regardless of risk level', correct: false, feedback: 'FATF does not prohibit customer exits. Genuine risk-based decisions to decline or exit relationships are legitimate. FATF opposes indiscriminate blanket de-risking — not individual risk-based relationship decisions.' },
+        ],
+      },
+      {
+        id: 17, title: 'AML Training Requirements',
+        question: "Under most international AML frameworks, who is required to receive AML training?",
+        options: [
+          { text: 'All relevant staff — including those who handle customers, process transactions, and perform compliance functions — with training content calibrated to their role and risk exposure; senior management and the board also have AML oversight responsibilities requiring appropriate awareness training', correct: true, feedback: 'Correct. FATF R.18 requires institutions to have ongoing employee training programmes. "Relevant" employees include front-line customer staff, operations staff, compliance, legal, and risk functions — not just AML specialists. Senior management and board training on their oversight obligations is increasingly expected by regulators. Training should be risk-based: a teller receives different training than a private banker.' },
+          { text: 'Only compliance officers and AML analysts — front-line customer service staff have no AML training obligation', correct: false, feedback: 'Front-line staff are often the first to encounter suspicious behaviour. They have an obligation to recognise red flags and escalate internally. Limiting training to specialists leaves the first line of defence untrained.' },
+          { text: 'Only staff who handle cash transactions — other staff are not at risk of exposure to ML', correct: false, feedback: 'ML exposure extends well beyond cash handling. Digital banking, wire transfers, correspondent banking, trade finance, and private banking all carry ML risk. Training must reflect the breadth of potential exposure.' },
+          { text: 'AML training is a best practice recommendation with no binding regulatory obligation', correct: false, feedback: 'AML training is a regulatory requirement — not merely best practice. FATF R.18 specifically requires ongoing employee training programmes as part of the mandatory AML compliance programme framework.' },
+        ],
+      },
+      {
+        id: 18, title: 'Independent AML Audit',
+        question: "An effective AML independent testing (audit) function should:",
+        options: [
+          { text: 'Test the design and operating effectiveness of AML controls, be staffed by personnel independent from the functions being tested, occur with risk-appropriate frequency, and report findings directly to the board or audit committee', correct: true, feedback: 'Correct. Independence is the defining characteristic of effective audit. Testing should cover the full AML programme — risk assessment, CDD, transaction monitoring, SAR process, training, and governance. Risk-based frequency means higher-risk areas are tested more often. Board/audit committee reporting ensures accountability and action on findings.' },
+          { text: 'Be conducted by the same compliance team that developed the AML policies — they are best placed to test their own work', correct: false, feedback: 'Self-review fundamentally compromises independence. The team that designed controls cannot objectively test their own effectiveness. Independence is essential for audit credibility with regulators and the board.' },
+          { text: 'Focus exclusively on transaction monitoring alert dispositions and SAR filings', correct: false, feedback: 'Effective AML audit covers the full programme — risk assessment quality, CDD documentation, training effectiveness, governance, and the overall control environment — not just transaction monitoring and SARs.' },
+          { text: 'Only be triggered following a regulatory examination — proactive internal audit of AML controls is optional', correct: false, feedback: 'Independent testing is a mandatory component of an AML programme (the "fourth pillar"). Regulators expect proactive, regular internal audit — not a reactive response to examinations.' },
+        ],
+      },
+      {
+        id: 19, title: 'MLRO Responsibilities',
+        question: "An effective Money Laundering Reporting Officer (MLRO) / Chief AML Officer must have:",
+        options: [
+          { text: 'Sufficient seniority and authority to make independent compliance decisions, direct access to the board and senior management, adequate resources and staff, and AML expertise appropriate to the institution\'s risk profile', correct: true, feedback: 'Correct. FATF R.18 and national regulations require the designated compliance officer to have the authority and resources necessary to discharge their obligations. An MLRO who cannot override business-line decisions, access the board, or staff the compliance function appropriately cannot effectively manage AML risk. Regulators increasingly scrutinise compliance officer empowerment as an indicator of culture.' },
+          { text: 'Primary reporting responsibility to the chief revenue officer to ensure compliance aligns with business growth', correct: false, feedback: 'Reporting to the CRO creates a conflict of interest — the revenue officer\'s objectives are commercial, not compliance-driven. Effective compliance requires independence from revenue-generating functions.' },
+          { text: 'Authority limited to SAR filing decisions — all other programme and staffing decisions are reserved to the CEO', correct: false, feedback: 'Limiting the MLRO to SAR filing creates a compliance function without teeth. The MLRO must have authority over policy, programme design, training, and escalation — not just the narrow SAR filing decision.' },
+          { text: 'No direct board access — board AML reporting should be filtered through the chief financial officer', correct: false, feedback: 'Direct board access is essential for MLRO independence and effectiveness. Filtering through the CFO would compromise the MLRO\'s ability to bring critical compliance concerns to the board.' },
+        ],
+      },
+      {
+        id: 20, title: 'Third-Party CDD Reliance',
+        question: "Under FATF Recommendation 17, when a financial institution relies on a third party to perform CDD:",
+        options: [
+          { text: 'The financial institution retains ultimate AML responsibility — it must be able to immediately obtain relevant CDD information from the third party on request, and must satisfy itself that the third party is appropriately regulated and compliant with applicable AML standards', correct: true, feedback: 'Correct. Third-party reliance is a practical necessity (e.g., using an introducer or group entity for initial CDD), but FATF is explicit: ultimate responsibility remains with the relying institution. The third party must: be regulated and supervised; have AML measures consistent with FATF standards; and provide CDD data immediately on request.' },
+          { text: 'The third party assumes full regulatory and legal AML responsibility — the financial institution is relieved of all liability', correct: false, feedback: 'Third-party reliance transfers the operational task but not the regulatory obligation or liability. If the third party fails to perform adequate CDD, the relying institution remains liable to its regulator.' },
+          { text: 'Third-party CDD reliance is not permitted under FATF standards — all CDD must be performed directly', correct: false, feedback: 'FATF R.17 explicitly permits reliance on third parties under specific conditions. This flexibility is essential for group-level CDD sharing and certain introducer arrangements.' },
+          { text: 'Third-party reliance is only permitted for low-risk customers — EDD must always be conducted directly', correct: false, feedback: 'While EDD situations warrant greater scrutiny of third-party reliance, FATF R.17 does not categorically prohibit reliance for EDD. The key requirement is that the third party meets the R.17 conditions — not that reliance is excluded for higher-risk situations.' },
+        ],
+      },
     ],
   },
   {
@@ -976,6 +1396,146 @@ const CAMS_MODULES = [
           { text: 'Immediately close the account and return funds to the customer', correct: false, feedback: 'Immediate closure and return of funds risks tipping off the customer and potentially facilitating money laundering by returning suspicious funds. Closure decisions should involve legal counsel and, where appropriate, law enforcement guidance.' },
           { text: 'Take no action — FinCEN/AUSTRAC will instruct you after receiving the SAR', correct: false, feedback: 'FIUs do not proactively instruct institutions on account action after receiving SARs. They disseminate intelligence to law enforcement. The institution must exercise its own risk management judgment.' },
           { text: 'Close the account without explanation and refuse to confirm or deny the reason', correct: false, feedback: 'An unexplained abrupt closure may expose the institution to legal challenge. A "security review" holding position while coordinating with legal counsel is more defensible.' },
+        ],
+      },
+      {
+        id: 7, title: 'Continuing SARs',
+        question: "Under US Bank Secrecy Act rules, when should a financial institution file a 'continuing SAR' for ongoing suspicious activity?",
+        options: [
+          { text: 'Every 90 calendar days if suspicious activity is ongoing after the initial SAR — the continuing SAR should reference the original, describe activity developments, and include any new identifying information', correct: true, feedback: 'Correct. FinCEN guidance requires continuing SARs filed at 90-day intervals for ongoing suspicious activity. Each continuing SAR should cross-reference the prior filing date and capture the evolution of activity plus any new information about the subject. The 90-day clock runs from the date of the prior SAR — not from the original detection date.' },
+          { text: 'Only if the customer\'s cumulative suspicious transaction volume exceeds $100,000 over the period', correct: false, feedback: 'The continuing SAR obligation is triggered by ongoing suspicious activity — not a cumulative dollar threshold. Smaller but persistent suspicious transactions require continuing SARs regardless of total volume.' },
+          { text: 'Only if law enforcement specifically requests a follow-up report on the prior SAR', correct: false, feedback: 'Continuing SARs are an independent institutional obligation — not contingent on law enforcement requests. FIUs do not typically provide feedback on individual SARs, so waiting for a request would mean never filing continuing SARs.' },
+          { text: 'Every 30 days — the same timeline as the initial SAR filing obligation', correct: false, feedback: '30 days is the initial SAR filing deadline from initial detection. Continuing SARs for ongoing activity are due every 90 calendar days — a different and longer interval.' },
+        ],
+      },
+      {
+        id: 8, title: 'Investigation Documentation',
+        question: "Best practice in AML investigation documentation requires:",
+        options: [
+          { text: 'A contemporaneous, objective record of all investigative steps — including searches conducted, documents reviewed, internal escalations, customer contacts, MLRO decisions, and the detailed rationale for decisions to file or not file an SAR', correct: true, feedback: 'Correct. Investigation documentation serves multiple purposes: it demonstrates a systematic, good-faith inquiry; it supports the quality of any SAR filed; it provides evidence of compliance in the event of regulatory review; and it creates a record that law enforcement can use if the SAR generates an investigation. "If it isn\'t documented, it didn\'t happen" is a core AML compliance principle.' },
+          { text: 'A brief single-paragraph summary written after the SAR decision, focused on the outcome', correct: false, feedback: 'Post-hoc summaries are insufficient — they cannot capture the decision-making process contemporaneously and are more susceptible to hindsight bias. Documentation must be ongoing throughout the investigation.' },
+          { text: 'Retaining only the final SAR and the triggering transaction data — supporting investigation notes are not required', correct: false, feedback: 'Supporting investigation documentation is as important as the SAR itself. Regulators examining AML programmes look at the quality of investigation documentation, not just whether SARs were filed.' },
+          { text: 'Destroying investigation records within 30 days of SAR filing to protect customer privacy', correct: false, feedback: 'SAR-related records must be retained for the period required by law — typically 5 years in the US (BSA), the UK (POCA), and Australia (AML/CTF Act). Destroying records earlier could be an obstruction offence.' },
+        ],
+      },
+      {
+        id: 9, title: '"Reasonable Grounds to Suspect"',
+        question: "The standard 'reasonable grounds to suspect' for SAR/STR filing in most AML jurisdictions means:",
+        options: [
+          { text: 'Facts, activity, or information that would lead a reasonable, trained compliance professional to suspect ML/TF — not certainty or conclusive evidence of wrongdoing, but an objective assessment based on what is known', correct: true, feedback: 'Correct. "Reasonable grounds" is an objective standard — assessed from the perspective of a trained compliance professional, not from the individual officer\'s subjective feeling. This standard is deliberately set below certainty to ensure suspicious activity is reported early enough to be useful. Waiting for certainty would defeat the intelligence-gathering purpose of the STR regime.' },
+          { text: 'Conclusive evidence of criminal activity sufficient to support a criminal prosecution', correct: false, feedback: 'If evidence reached prosecution standard, law enforcement would already be involved. The STR/SAR threshold is set much lower — at the level of suspicion, not proof. This is intentional: the FIU aggregates intelligence from many partial reports to build a complete picture.' },
+          { text: 'A direct law enforcement tip-off confirming criminal activity before the institution is required to report', correct: false, feedback: 'Requiring law enforcement confirmation would fundamentally invert the intelligence flow. The STR regime exists precisely to provide law enforcement with leads — not to require law enforcement to first provide leads to institutions.' },
+          { text: 'A purely subjective standard — if the compliance officer personally does not feel the activity is suspicious, no SAR is required regardless of the facts', correct: false, feedback: 'The subjective feeling of an individual officer is not the standard. "Reasonable grounds" requires an objective assessment — what a reasonable, trained professional would conclude given the same facts. This objectivity prevents personal bias from overriding what the evidence indicates.' },
+        ],
+      },
+      {
+        id: 10, title: 'Proactive vs Reactive SAR Filing',
+        question: "A 'proactive' SAR filing is one where:",
+        options: [
+          { text: 'The compliance function independently identifies suspicious activity through its own transaction monitoring, CDD review, or staff alerts — without any prior law enforcement contact or external tip', correct: true, feedback: 'Correct. Proactive filing demonstrates that the institution\'s AML controls are functioning effectively. Reactive filing (in response to a law enforcement inquiry) suggests that external intelligence identified activity the institution\'s own controls missed. Regulators assess the ratio of proactive to reactive filings as an indicator of AML programme effectiveness.' },
+          { text: 'A law enforcement officer contacts the institution and requests voluntary disclosure of a customer\'s records', correct: false, feedback: 'This describes a reactive or law enforcement-prompted disclosure. The institution has not independently identified the activity — it has responded to an external trigger.' },
+          { text: 'A court order compels the institution to provide information to prosecutors about a specific customer', correct: false, feedback: 'Court-compelled disclosure is not an SAR — it is legally compelled production. An SAR is a voluntary intelligence disclosure to the FIU, separate from court-ordered document production.' },
+          { text: 'A customer self-reports suspicious activity in their own account to the institution', correct: false, feedback: 'Customer self-reporting would trigger an investigation, but the SAR is filed based on the institution\'s own assessment — not because the customer reported it. The SAR filing decision remains with the compliance function.' },
+        ],
+      },
+      {
+        id: 11, title: 'MLRO Internal Escalation Role',
+        question: "The primary role of the MLRO in the internal suspicious activity reporting process is to:",
+        options: [
+          { text: 'Receive internal disclosures from staff, independently assess whether reasonable grounds to suspect exist, make the decision to file or not file an external SAR, and document the full rationale for every decision', correct: true, feedback: 'Correct. The MLRO acts as a central clearing-house and quality-control function for suspicious activity. Staff who have concerns internally report to the MLRO — not directly to the FIU. The MLRO reviews all evidence, applies the reasonable grounds standard, and makes the external filing decision. This centralisation ensures consistency and quality in SAR filings.' },
+          { text: 'Automatically file an external SAR for every internal staff report received, without independent assessment', correct: false, feedback: 'Automatic filing without assessment would flood FIUs with low-quality intelligence and undermine the credibility of the institution\'s SAR programme. The MLRO\'s role is to assess — not to act as a mechanical pass-through.' },
+          { text: 'Discuss the suspicious activity concerns directly with the customer before deciding whether to file', correct: false, feedback: 'Discussing ML suspicions with the customer risks tipping off the subject. Any customer outreach for a legitimate explanation must be carefully managed before suspicion crystallises — not after an internal SAR decision has been made.' },
+          { text: 'Refer all internal disclosures to the CEO for final filing decisions to ensure board-level accountability', correct: false, feedback: 'SAR filing decisions are the MLRO\'s statutory responsibility. Referring to the CEO creates a conflict of interest (the CEO may have commercial relationships with the subject) and removes the MLRO\'s independence.' },
+        ],
+      },
+      {
+        id: 12, title: 'Tipping Off — Permitted Exceptions',
+        question: "Which of the following is NOT considered a prohibited tipping-off disclosure under most AML frameworks?",
+        options: [
+          { text: 'Informing a customer that their account has a "security hold" without disclosing the existence of an SAR, investigation, or the basis of any suspicion — a neutral account restriction notification does not constitute tipping off', correct: true, feedback: 'Correct. The tipping-off prohibition targets disclosures that specifically reveal the SAR filing, the investigation, or the basis of suspicion. A neutral statement that an account is under a security review — without revealing that an SAR has been filed — does not cross the line. Some jurisdictions also allow disclosure between group entities for AML purposes.' },
+          { text: 'Telling a customer that their transactions were reviewed for suspicious activity patterns', correct: false, feedback: 'Disclosing that transactions were reviewed for suspicious activity reveals the investigation — this is tipping off, even if the SAR filing itself is not mentioned.' },
+          { text: 'Advising the customer\'s solicitor that an SAR was filed so they can prepare a legal response', correct: false, feedback: 'Disclosing an SAR filing to the subject\'s legal adviser is tipping off — regardless of the apparent legitimacy of the purpose. The prohibition extends to indirect disclosures.' },
+          { text: 'Warning a business partner of the SAR subject that law enforcement is reviewing the subject\'s account', correct: false, feedback: 'This is a tipping-off disclosure — it reveals an investigation to a third party connected to the subject. The prohibition extends to third parties who might relay the information to the subject.' },
+        ],
+      },
+      {
+        id: 13, title: 'Asset Freezing vs Forfeiture',
+        question: "The legal distinction between asset freezing and asset forfeiture is:",
+        options: [
+          { text: 'Freezing is a provisional measure to prevent dissipation of assets pending investigation or trial — forfeiture is a final legal outcome transferring ownership of criminal property to the state, typically following conviction or civil proceedings', correct: true, feedback: 'Correct. Freezing preserves the status quo — it does not change ownership. It is time-limited and subject to legal challenge. Forfeiture permanently transfers ownership. Civil (non-conviction-based) forfeiture is increasingly used internationally — it requires only a civil standard of proof rather than criminal conviction, which is significant in cases where the subject cannot be prosecuted.' },
+          { text: 'Freezing applies only to funds in financial accounts; forfeiture applies only to physical property such as vehicles and real estate', correct: false, feedback: 'Both freezing and forfeiture apply to all asset types — financial accounts, real estate, vehicles, luxury goods, and virtual assets. The distinction is temporal and legal (provisional vs. final), not asset-specific.' },
+          { text: 'Forfeiture is an administrative action by the regulator; freezing always requires a court order', correct: false, feedback: 'In practice, both freezing and forfeiture typically involve court orders, though administrative freezing powers exist in some jurisdictions for sanctions purposes. Civil forfeiture involves court proceedings — it is not a purely administrative action.' },
+          { text: 'The terms are interchangeable under most international AML and criminal law frameworks', correct: false, feedback: 'They are meaningfully distinct: freezing is a provisional precautionary measure; forfeiture is a final transfer of ownership. Confusing them is a significant error in any criminal law or AML context.' },
+        ],
+      },
+      {
+        id: 14, title: 'Mutual Legal Assistance Treaties (MLATs)',
+        question: "Mutual Legal Assistance Treaties (MLATs) are primarily used in cross-border financial crime investigations to:",
+        options: [
+          { text: 'Enable formal government-to-government requests for evidence gathering — including bank records, witness statements, and asset restraint — in jurisdictions where informal cooperation is insufficient or legally compelled production is required', correct: true, feedback: 'Correct. MLATs provide the formal legal framework for cross-border evidence requests between law enforcement and justice authorities. Without an MLAT, a country cannot compel another jurisdiction\'s banks to produce records — they can only request through informal channels. MLAT requests take time (often months) but provide legally admissible evidence that informal sharing cannot.' },
+          { text: 'Allow financial institutions to exchange customer data directly across borders without government involvement', correct: false, feedback: 'MLATs operate between governments — specifically between law enforcement and justice authorities. Financial institutions are the subject of MLAT requests; they do not access or invoke MLAT mechanisms directly.' },
+          { text: 'Replace the need for national courts to approve disclosure orders in cross-border investigations', correct: false, feedback: 'MLAT responses typically still require domestic court or authority authorisation in the requested country. They are not a shortcut around judicial oversight — they are the formal channel for requesting that another jurisdiction apply its own legal process.' },
+          { text: 'Apply exclusively to terrorism financing investigations — ML investigations use Interpol red notices instead', correct: false, feedback: 'MLATs apply to the full range of serious crime including ML, corruption, fraud, and tax evasion. Interpol notices are law enforcement intelligence tools — not a substitute for formal evidence-gathering through MLATs.' },
+        ],
+      },
+      {
+        id: 15, title: 'SAR Quality Metrics',
+        question: "FIUs and supervisors typically assess SAR quality based primarily on:",
+        options: [
+          { text: 'Actionability — whether the SAR contains sufficient detail, context, and transaction specifics to support intelligence analysis or law enforcement investigation; including narrative clarity, identifying information completeness, and accuracy of transaction records', correct: true, feedback: 'Correct. A high-quality SAR enables the FIU analyst to understand the activity, identify the subjects, and connect it to other intelligence. Key quality indicators: specific dates, amounts, counterparties, and account numbers; a clear explanation of why the activity is suspicious; description of the detection mechanism; and documentation of any customer explanation and why it was rejected.' },
+          { text: 'Volume — institutions that file more SARs are automatically considered more effective AML reporters', correct: false, feedback: 'High SAR volume can indicate strong monitoring capability or, equally, poor alert quality requiring mass filing of low-value reports. Quantity without quality is counterproductive. FIUs are increasingly focused on SAR quality metrics rather than volume.' },
+          { text: 'Processing speed — SARs filed within 24 hours of suspicion formation are always considered highest quality', correct: false, feedback: 'Speed is important (statutory deadlines must be met) but a hastily filed, superficial SAR is less valuable than a carefully investigated, well-documented report filed closer to the deadline. Quality and timeliness are both required — but quality is the primary intelligence metric.' },
+          { text: 'Whether the reported suspicious activity subsequently resulted in a criminal conviction', correct: false, feedback: 'Convictions are not a SAR quality measure — many SARs support investigations that do not result in prosecutions (for legitimate reasons), and conviction timelines are often years after the SAR was filed. SAR quality is assessed at filing, not at the end of criminal proceedings.' },
+        ],
+      },
+      {
+        id: 16, title: 'Whistleblower Protections',
+        question: "AML whistleblower protection laws typically protect employees who:",
+        options: [
+          { text: 'Report suspected ML, TF, or AML compliance failures in good faith to internal compliance functions, regulators, FIUs, or other competent authorities — protecting them against retaliation such as dismissal, demotion, or harassment', correct: true, feedback: 'Correct. Whistleblower protection is essential to effective AML compliance because employees often have the earliest visibility of suspicious activity or compliance failures. Protections exist in many jurisdictions: the US FinCEN whistleblower programme (established 2022 under the AML Act), the EU Whistleblower Protection Directive (2019), the UK, and Australia. Protections typically cover both internal and external reporting channels.' },
+          { text: 'Directly file personal SARs with the FIU alleging financial crime by their employer — bypassing internal reporting channels', correct: false, feedback: 'Individual employees are generally not authorised to file SARs directly with the FIU — that is the MLRO\'s responsibility. Whistleblower protection covers reporting concerns through legitimate channels (internal compliance, regulator, FIU) — not bypassing the SAR framework.' },
+          { text: 'Disclose confidential SAR information to journalists or media outlets to publicise financial crime', correct: false, feedback: 'SAR confidentiality is statutory — disclosing SAR contents to the media violates AML law regardless of the whistleblower\'s intent. Whistleblower protections do not override the tipping-off and SAR confidentiality prohibitions.' },
+          { text: 'Unilaterally refuse to follow AML procedures they disagree with on ethical grounds — without reporting the concern', correct: false, feedback: 'Refusing to follow AML procedures without reporting the concern is not whistleblowing — it is non-compliance. Whistleblower protection is for those who report concerns through proper channels, not those who simply opt out of compliance obligations.' },
+        ],
+      },
+      {
+        id: 17, title: 'Customer Outreach During Investigation',
+        question: "When is customer outreach (contacting the customer for an explanation) appropriate during a suspicious activity investigation?",
+        options: [
+          { text: 'Before suspicion fully crystallises — to obtain a plausible explanation that could resolve the concern — but outreach must be managed carefully to avoid tipping off, must be documented including any explanation received, and must not occur after an SAR has been filed on the specific activity', correct: true, feedback: 'Correct. Early-stage customer outreach (during the fact-finding phase) is a legitimate investigative step — for example, asking a business customer about an unusual high-value deposit. However, outreach becomes tipping off if it reveals the suspicion of ML/TF or discloses that an SAR has been filed. A credible customer explanation that is documented and assessed can avoid unnecessary SAR filings; an implausible explanation strengthens the suspicion.' },
+          { text: 'Customer outreach is prohibited at all stages of a suspicious activity investigation — any contact creates tipping-off risk', correct: false, feedback: 'A blanket prohibition on customer outreach is not legally required and would prevent institutions from obtaining legitimate explanations that resolve apparent suspicious activity. The key is that outreach must not cross into tipping off.' },
+          { text: 'Outreach is required before any SAR can be filed — institutions must document a customer explanation before filing is legally valid', correct: false, feedback: 'There is no legal requirement to contact the customer before filing an SAR. In many cases, early contact would be inappropriate — particularly where the suspicion relates to a serious offence or where there is a risk the customer would flee or dissipate assets.' },
+          { text: 'Outreach can be conducted freely by front-line staff at any stage without compliance involvement', correct: false, feedback: 'Front-line-only outreach without compliance involvement creates tipping-off risk. Any outreach during a suspicious activity review should involve the compliance function to ensure questions are appropriately framed and responses properly documented and assessed.' },
+        ],
+      },
+      {
+        id: 18, title: 'Declination vs Exit vs SAR',
+        question: "When a prospective customer presents suspicious activity indicators during onboarding (before any account is opened), the institution's primary obligations are to:",
+        options: [
+          { text: 'Decline the relationship — and separately assess whether the suspicious indicators meet the threshold for SAR/STR filing, since declining a customer does not discharge the reporting obligation if reasonable grounds to suspect ML/TF exist', correct: true, feedback: 'Correct. These are two separate obligations that arise simultaneously. The onboarding refusal manages the institution\'s own risk exposure. The SAR/STR filing fulfils the regulatory reporting obligation. The error many institutions make is treating declination as a substitute for reporting. Some jurisdictions explicitly require STR filing even for refused business where suspicion arose during the onboarding attempt.' },
+          { text: 'Accept the customer and immediately file an SAR — only active customers can be the subject of SAR filings', correct: false, feedback: 'Many jurisdictions require STR/SAR filing for attempted transactions — not just completed ones. Prospective customers who present suspicion during onboarding can and should be the subject of an SAR without the institution accepting them.' },
+          { text: 'Decline the customer — no SAR is required because no financial relationship was established', correct: false, feedback: 'This is a common compliance misconception. The SAR obligation is triggered by suspicion of ML/TF — not by the completion of a financial relationship. The attempt to establish a relationship under suspicious circumstances can independently trigger reporting.' },
+          { text: 'Refer the prospective customer to another institution — this transfers AML responsibility to the new institution', correct: false, feedback: 'Referring a suspicious prospective customer to another institution could facilitate ML. The obligation is to decline and report — not to redirect suspicious customers elsewhere.' },
+        ],
+      },
+      {
+        id: 19, title: 'Cross-Border SAR Cooperation',
+        question: "When a domestic FIU receives an SAR involving suspicious cross-border activity linked to a foreign jurisdiction, it may:",
+        options: [
+          { text: 'Analyse the intelligence internally and, where appropriate, share it spontaneously or on request with the relevant foreign FIU through the Egmont Secure Web (ESW) — enabling a coordinated international intelligence picture without the formality and delay of MLAT requests', correct: true, feedback: 'Correct. The Egmont Group\'s Secure Web allows FIU-to-FIU intelligence exchange much faster than formal MLAT processes. "Spontaneous" sharing — proactively forwarding intelligence without a specific request — is an important Egmont principle. If an FIU analyses a SAR and identifies a foreign dimension, it can proactively notify the relevant foreign FIU, significantly accelerating international financial crime detection.' },
+          { text: 'Automatically forward the SAR in full to Interpol for immediate law enforcement response', correct: false, feedback: 'FIUs share intelligence with each other (via Egmont) — not typically with Interpol. FIU intelligence is subject to use limitations. Law enforcement bodies receive disseminated intelligence from FIUs through national channels — not direct SAR transfers to Interpol.' },
+          { text: 'Request foreign regulatory approval before analysing any SAR data with international dimensions', correct: false, feedback: 'FIUs are empowered to analyse their own national SAR data without foreign regulatory approval. The analysis phase is domestic — sharing the output of that analysis is the step that involves foreign FIUs.' },
+          { text: 'Disclose the SAR contents directly to the foreign bank that is the counterparty to the suspicious transaction', correct: false, feedback: 'Financial institutions — even foreign ones — cannot receive SAR data. SARs are strictly confidential. FIUs share intelligence with other FIUs and disseminate it to law enforcement through national channels.' },
+        ],
+      },
+      {
+        id: 20, title: 'Retrospective SAR Filing',
+        question: "A financial institution discovers historical AML control deficiencies that may have allowed suspicious transactions to go unreported. The appropriate response is:",
+        options: [
+          { text: 'Conduct an internal lookback review to assess the scope of missed reporting, file retrospective SARs for transactions meeting the suspicion threshold, remediate the control gaps, and consider voluntary self-disclosure to the regulator — which typically results in more favourable regulatory outcomes than regulator-discovered deficiencies', correct: true, feedback: 'Correct. Self-remediation and voluntary disclosure are consistently recognised as mitigating factors in regulatory enforcement. The lookback review establishes the scope of any historical SAR filing failures. Retrospective SARs can be filed (with a notation that they are retrospective) and may still have intelligence value. Voluntary disclosure demonstrates good faith and a strong compliance culture, which regulators credit in enforcement decisions.' },
+          { text: 'Do nothing — retrospective SAR filing for historical transactions is not permitted under BSA or international AML regulations', correct: false, feedback: 'Retrospective SAR filing is permitted and expected where historical suspicious activity was missed due to control failures. FinCEN and AUSTRAC have both addressed this in guidance — there is no prohibition on late or retrospective SARs.' },
+          { text: 'Immediately close all potentially affected accounts without documentation or regulatory reporting', correct: false, feedback: 'Unexplained mass account closures would be a significant red flag to regulators and potentially harmful to customers who have not been found to be engaged in wrongdoing. Closing accounts without a compliance framework is itself a regulatory concern.' },
+          { text: 'Request a formal regulatory waiver before filing any retrospective SARs to avoid self-incrimination', correct: false, feedback: 'No formal waiver is required before filing retrospective SARs. The institution\'s SAR-filing obligation extends to historical transactions meeting the suspicion threshold. The institution should file and simultaneously engage with the regulator on the overall control deficiency.' },
         ],
       },
     ],
