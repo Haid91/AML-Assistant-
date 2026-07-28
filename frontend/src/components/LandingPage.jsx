@@ -188,7 +188,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 onClick={onOpenChat}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors"
               >
-                Open Assistant →
+                AI →
               </button>
               <button
                 onClick={onSignOut}
