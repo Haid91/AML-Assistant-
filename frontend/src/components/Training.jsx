@@ -1721,7 +1721,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-600" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-            <span className="text-sm font-semibold text-slate-800 dark:text-white">AML Assistant</span>
+            <span className="text-sm font-semibold text-slate-800 dark:text-white">AmlIntel</span>
           </div>
         </div>
         <div className="flex items-center gap-3">

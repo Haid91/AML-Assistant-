@@ -57,7 +57,7 @@ export default function Checkout({ user, onBack, onSuccess }) {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Return to AML Assistant
+          Return to AmlIntel
         </button>
       </div>
 
@@ -68,7 +68,7 @@ export default function Checkout({ user, onBack, onSuccess }) {
         <div className="w-80 shrink-0 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
           <div className="p-6 border-b border-slate-100 dark:border-slate-700">
             <p className="text-emerald-500 font-bold text-2xl mb-4">7 day free trial</p>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">AML Assistant Premium</p>
+            <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">AmlIntel Premium</p>
             <p className="text-slate-900 dark:text-white font-bold text-xl mb-1">$49.99/month</p>
             <p className="text-slate-400 dark:text-slate-500 text-xs">from {trialEnd}</p>
           </div>

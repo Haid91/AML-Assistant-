@@ -59,16 +59,16 @@ async function sendResetEmail(toEmail, name, resetUrl) {
     return
   }
   await transporter.sendMail({
-    from: `"AML Assistant" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
+    from: `"AmlIntel" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
     to: toEmail,
-    subject: 'Reset your AML Assistant password',
+    subject: 'Reset your AmlIntel password',
     html: `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
         <div style="margin-bottom:24px">
           <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
         </div>
         <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">Reset your password</h2>
-        <p style="margin:0 0 24px;color:#475569;font-size:15px">Hi ${name}, we received a request to reset your AML Assistant password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
+        <p style="margin:0 0 24px;color:#475569;font-size:15px">Hi ${name}, we received a request to reset your AmlIntel password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
         <a href="${resetUrl}" style="display:inline-block;padding:13px 28px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px">Reset Password</a>
         <p style="margin:28px 0 0;color:#94a3b8;font-size:13px">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
         <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
@@ -421,7 +421,7 @@ app.get('/health', (_req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`AML Assistant API running on http://localhost:${PORT}`)
+  console.log(`AmlIntel API running on http://localhost:${PORT}`)
   if (anthropic) {
     console.log('✅ AI assistant: ENABLED (Claude API connected)')
   } else {

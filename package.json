@@ -1,7 +1,7 @@
 {
-  "name": "line-and-grace-fullstack",
+  "name": "amlintel",
   "version": "1.0.0",
-  "description": "Full-stack e-commerce platform for Line & Grace",
+  "description": "AML compliance intelligence platform",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",

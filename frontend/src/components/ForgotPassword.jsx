@@ -37,7 +37,7 @@ export default function ForgotPassword({ onGoSignIn, onGoHome }) {
       <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
         <button onClick={onGoHome} className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-          <span className="font-semibold text-sm text-slate-900 dark:text-white">AML Assistant</span>
+          <span className="font-semibold text-sm text-slate-900 dark:text-white">AmlIntel</span>
         </button>
         <button onClick={onGoSignIn} className="text-sm text-blue-500 dark:text-blue-400 hover:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors">
           Back to sign in

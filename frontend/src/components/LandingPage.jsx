@@ -102,7 +102,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold tracking-tight">
               AML
             </div>
-            <span className="font-semibold text-sm">AML Assistant</span>
+            <span className="font-semibold text-sm">AmlIntel</span>
           </div>
 
           {/* Nav links */}
@@ -479,7 +479,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               onClick={onStart}
               className="px-8 py-4 bg-white text-blue-700 font-semibold rounded-xl hover:bg-blue-50 transition-colors text-sm"
             >
-              {user ? 'Open AML Assistant →' : 'Sign up free →'}
+              {user ? 'Open AmlIntel →' : 'Sign up free →'}
             </button>
           </div>
         </div>
@@ -491,7 +491,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
-              <span>© 2026 AML Assistant</span>
+              <span>© 2026 AmlIntel</span>
             </div>
             <div className="flex gap-6">
               <span>For educational purposes only</span>

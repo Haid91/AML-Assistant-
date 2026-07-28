@@ -30,13 +30,13 @@ export default function RoleSelect({ user, onSelectRole }) {
         <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">
           AML
         </div>
-        <span className="font-semibold text-sm text-slate-800 dark:text-white">AML Assistant</span>
+        <span className="font-semibold text-sm text-slate-800 dark:text-white">AmlIntel</span>
       </div>
 
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Choose your role</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">Select how you want to sign in to AML Assistant</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">Select how you want to sign in to AmlIntel</p>
         </div>
 
         <div className="space-y-3">
