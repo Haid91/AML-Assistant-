@@ -994,10 +994,20 @@ const TAG_STYLE = {
 export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
-  const industry = user?.industry || 'banking'
-  const industryLabel = INDUSTRY_LABELS[industry] || 'Banking'
-  const caseset = CASES_BY_INDUSTRY[industry] || CASES_BY_INDUSTRY.banking
+  const [activeIndustry, setActiveIndustry] = useState(user?.industry || 'banking')
+  const caseset = CASES_BY_INDUSTRY[activeIndustry] || CASES_BY_INDUSTRY.banking
   const cases = activeRole === 'cams' ? CAMS_MODULES : activeRole === 'mlro' ? caseset.mlro : caseset.analyst
+
+  const handleIndustryChange = (ind) => {
+    setActiveIndustry(ind)
+    const stored = localStorage.getItem('aml_user')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        localStorage.setItem('aml_user', JSON.stringify({ ...parsed, industry: ind }))
+      } catch {}
+    }
+  }
 
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
@@ -1242,10 +1252,38 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
           </div>
         </div>
 
-        {/* Industry pill */}
-        <div className={`w-full rounded-full py-2 text-center text-xs font-semibold uppercase tracking-widest mb-6 ${activeRole === 'cams' ? 'bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400' : 'bg-slate-300/60 dark:bg-slate-700/60 text-slate-500 dark:text-slate-400'}`}>
-          {activeRole === 'cams' ? 'ACAMS CAMS Certification — 6th Edition' : industryLabel}
-        </div>
+        {/* Industry switcher */}
+        {activeRole === 'cams' ? (
+          <div className="w-full bg-violet-100 dark:bg-violet-900/30 rounded-full py-2 text-center text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-6">
+            ACAMS CAMS Certification — 6th Edition
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">Industry</span>
+            <div className="w-px h-4 bg-slate-200 dark:bg-slate-700 shrink-0" />
+            {[
+              { id: 'banking', label: 'Banking' },
+              { id: 'law',     label: 'Law' },
+              { id: 'crypto',  label: 'Crypto' },
+              { id: 'fintech', label: 'Fintech' },
+            ].map((ind) => (
+              <button
+                key={ind.id}
+                onClick={() => handleIndustryChange(ind.id)}
+                className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                  activeIndustry === ind.id
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600'
+                }`}
+              >
+                {ind.label}
+              </button>
+            ))}
+            <span className="text-xs text-slate-300 dark:text-slate-600 ml-1 hidden sm:inline">
+              · Gambling · Wealth Management · MSBs — coming soon
+            </span>
+          </div>
+        )}
 
         {/* Case grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
