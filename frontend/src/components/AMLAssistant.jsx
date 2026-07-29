@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
+import ProfileMenu from './ProfileMenu'
 
 const SUGGESTIONS = [
   'Explain the difference between Source of Funds and Source of Wealth.',
@@ -73,7 +74,7 @@ function groupSessions(sessions) {
   return { today, yesterday, older }
 }
 
-export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, onUpgrade }) {
+export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, onUpgrade, onOpenSettings }) {
   const storageKey = `aml_chats_${user?.id || 'guest'}`
 
   const [sessions, setSessions] = useState(() => {
@@ -267,20 +268,12 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
               {roleLabel}
             </span>
             <ThemeToggle />
-            {user && (
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-white shrink-0">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" /></svg>
-                </div>
-                <span className="text-sm text-slate-600 dark:text-slate-400 hidden sm:block">{user.email || user.name}</span>
-                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
-              </div>
-            )}
-            {onSignOut && (
-              <button onClick={onSignOut} className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800">
-                Sign out
-              </button>
-            )}
+            <ProfileMenu
+              user={user}
+              onGoToTraining={onOpenTraining}
+              onOpenSettings={() => onOpenSettings?.('profile')}
+              onSignOut={onSignOut}
+            />
           </div>
         </header>
 

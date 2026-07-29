@@ -61,9 +61,6 @@ export default function RoleSelect({ user, onSelectRole }) {
           ))}
         </div>
 
-        <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-6">
-          You can switch roles anytime from your profile menu.
-        </p>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import OwnershipSimulation from './OwnershipSimulation'
+import ProfileMenu from './ProfileMenu'
 
 const ANALYST_CASES = [
   {
@@ -1552,7 +1553,7 @@ const TAG_STYLE = {
   Completed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
 }
 
-export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade }) {
+export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade, onOpenSettings }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
   const [activeIndustry, setActiveIndustry] = useState(user?.industry || 'banking')
@@ -1732,14 +1733,6 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {user && (
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-blue-100 border border-blue-200 flex items-center justify-center text-xs font-semibold text-blue-700">
-                {user.name?.charAt(0).toUpperCase()}
-              </div>
-              <span className="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">{user.name}</span>
-            </div>
-          )}
           {onOpenChat && (
             <button
               onClick={onOpenChat}
@@ -1752,11 +1745,11 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
             </button>
           )}
           <ThemeToggle />
-          {onSignOut && (
-            <button onClick={onSignOut} className="text-xs text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white px-3 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-              Sign out
-            </button>
-          )}
+          <ProfileMenu
+            user={user}
+            onOpenSettings={() => onOpenSettings?.('profile')}
+            onSignOut={onSignOut}
+          />
         </div>
       </header>
 

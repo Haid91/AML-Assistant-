@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
+import ProfileMenu from './ProfileMenu'
 import Logo from './Logo'
 
 const FEATURES = [
@@ -77,7 +78,7 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onSignOut }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const dropdownRef = useRef(null)
@@ -184,15 +185,16 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           {user ? (
             <div className="flex items-center gap-3">
               <span className="text-sm text-slate-400 hidden sm:block">Hi, {user.name.split(' ')[0]}</span>
-              <button onClick={onOpenChat} className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
+              <button onClick={onOpenChat} title="Open AI Assistant" className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
                 <Logo size={36} />
               </button>
-              <button
-                onClick={onSignOut}
-                className="px-4 py-2 border border-slate-700 hover:border-slate-500 rounded-lg text-sm text-slate-400 hover:text-white transition-colors"
-              >
-                Sign out
-              </button>
+              <ProfileMenu
+                user={user}
+                variant="dark"
+                onGoToTraining={onOpenTraining}
+                onOpenSettings={() => onOpenSettings('profile')}
+                onSignOut={onSignOut}
+              />
             </div>
           ) : (
             <div className="flex items-center gap-2">

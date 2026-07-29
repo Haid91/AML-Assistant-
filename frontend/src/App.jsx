@@ -10,6 +10,7 @@ import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
 import ResetPassword from './components/ResetPassword'
+import AccountSettings from './components/AccountSettings'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
 
@@ -19,6 +20,8 @@ function isPremium(u) {
 
 function App() {
   const [view, setView] = useState('landing')
+  const [previousView, setPreviousView] = useState('landing')
+  const [settingsTab, setSettingsTab] = useState('profile')
   const [user, setUser] = useState(null)
   const [selectedIndustry, setSelectedIndustry] = useState(null)
   const [resetToken, setResetToken] = useState(null)
@@ -74,6 +77,24 @@ function App() {
     setUser(upgraded)
     localStorage.setItem('aml_user', JSON.stringify(upgraded))
     setView('chat')
+  }
+
+  const handleDowngrade = () => {
+    const downgraded = { ...user, premium: false }
+    setUser(downgraded)
+    localStorage.setItem('aml_user', JSON.stringify(downgraded))
+  }
+
+  const handleUpdateUser = (partialUser) => {
+    const updated = { ...user, ...partialUser }
+    setUser(updated)
+    localStorage.setItem('aml_user', JSON.stringify(updated))
+  }
+
+  const openSettings = (tab = 'profile') => {
+    setSettingsTab(tab)
+    setPreviousView(view)
+    setView('settings')
   }
 
   const handleSignOut = async () => {
@@ -170,6 +191,19 @@ function App() {
     )
   }
 
+  if (view === 'settings') {
+    return (
+      <AccountSettings
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        initialTab={settingsTab}
+        onBack={() => setView(previousView)}
+        onUpdateUser={handleUpdateUser}
+        onUpgrade={handleUpgrade}
+        onDowngrade={handleDowngrade}
+      />
+    )
+  }
+
   if (view === 'training') {
     return (
       <Training
@@ -178,6 +212,7 @@ function App() {
         onSignOut={handleSignOut}
         onOpenChat={() => setView('chat')}
         onUpgrade={handleUpgrade}
+        onOpenSettings={openSettings}
       />
     )
   }
@@ -190,6 +225,7 @@ function App() {
         onSignOut={handleSignOut}
         onOpenTraining={() => setView('training')}
         onUpgrade={handleUpgrade}
+        onOpenSettings={openSettings}
       />
     )
   }
@@ -203,6 +239,7 @@ function App() {
       onOpenChat={() => goHome(user)}
       onOpenTraining={() => setView('training')}
       onSignOut={handleSignOut}
+      onOpenSettings={openSettings}
     />
   )
 }

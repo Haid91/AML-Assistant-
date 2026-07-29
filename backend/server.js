@@ -126,6 +126,38 @@ app.post('/auth/logout', (req, res) => {
   res.json({ success: true })
 })
 
+function getUserFromAuth(req) {
+  const token = req.headers.authorization?.replace('Bearer ', '')
+  if (!token) return null
+  const email = sessions.get(token)
+  if (!email) return null
+  return users.get(email) || null
+}
+
+app.post('/auth/update-profile', (req, res) => {
+  const user = getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  const { name } = req.body
+  if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' })
+  user.name = name.trim()
+  users.set(user.email, user)
+  saveUsers(users)
+  res.json({ user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+})
+
+app.post('/auth/change-password', (req, res) => {
+  const user = getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Current and new password are required' })
+  if (newPassword.length < 6) return res.status(400).json({ error: 'New password must be at least 6 characters' })
+  if (user.passwordHash !== hashPassword(currentPassword)) return res.status(401).json({ error: 'Current password is incorrect' })
+  user.passwordHash = hashPassword(newPassword)
+  users.set(user.email, user)
+  saveUsers(users)
+  res.json({ success: true })
+})
+
 app.post('/auth/forgot-password', async (req, res) => {
   const { email } = req.body
   if (!email) return res.status(400).json({ error: 'Email is required' })
