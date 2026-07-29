@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import OwnershipSimulation from './OwnershipSimulation'
 import ProfileMenu from './ProfileMenu'
+import Logo from './Logo'
 
 const ANALYST_CASES = [
   {
@@ -1551,7 +1552,10 @@ const TAG_STYLE = {
   'CAMS Prep': 'bg-violet-100 text-violet-700 border border-violet-200',
   'In Progress': 'bg-blue-100 text-blue-700 border border-blue-200',
   Completed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+  'Free Preview': 'bg-violet-100 text-violet-600 border border-violet-200',
 }
+
+const CAMS_FREE_QUESTIONS = 6
 
 export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade, onOpenSettings }) {
   const isPremium = user?.premium || false
@@ -1608,6 +1612,8 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
     setShowFeedback(true)
   }
 
+  const stepLimit = (c) => (c.sector === 'CAMS' && !isPremium) ? Math.min(CAMS_FREE_QUESTIONS, c.steps.length) : c.steps.length
+
   const handleNext = () => {
     const next = activeStep + 1
     if (next >= activeCase.steps.length) {
@@ -1630,7 +1636,9 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
   if (activeCase) {
     const step = activeCase.steps[activeStep]
     const chosen = selected != null ? step.options[selected] : null
-    const total = activeCase.steps.length
+    const total = stepLimit(activeCase)
+    const isCamsFree = activeCase.sector === 'CAMS' && !isPremium
+    const isLastFreeStep = isCamsFree && activeStep === total - 1
 
     return (
       <div className="min-h-screen bg-slate-100 dark:bg-slate-900 font-sans flex flex-col">
@@ -1699,7 +1707,17 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               )}
             </div>
 
-            {showFeedback && (
+            {showFeedback && isLastFreeStep ? (
+              <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-5 text-center">
+                <p className="font-bold text-slate-900 dark:text-white mb-1">Free preview complete</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
+                  You've answered {CAMS_FREE_QUESTIONS} of {activeCase.steps.length} questions in this chapter. Upgrade to Premium to unlock the remaining {activeCase.steps.length - CAMS_FREE_QUESTIONS} questions in every CAMS chapter.
+                </p>
+                <button onClick={onUpgrade} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors">
+                  Upgrade to Premium — $49.99/mo
+                </button>
+              </div>
+            ) : showFeedback && (
               <button
                 onClick={handleNext}
                 className={`w-full py-3 text-white rounded-xl font-semibold text-sm transition-colors ${activeCase.isExam ? 'bg-violet-600 hover:bg-violet-500' : 'bg-blue-600 hover:bg-blue-500'}`}
@@ -1729,19 +1747,13 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-600" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-            <span className="text-sm font-semibold text-slate-800 dark:text-white">AmlIntel</span>
+            <span className="text-sm font-semibold text-slate-800 dark:text-white">Intel</span>
           </div>
         </div>
         <div className="flex items-center gap-3">
           {onOpenChat && (
-            <button
-              onClick={onOpenChat}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition-colors"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-              AI Assistant
+            <button onClick={onOpenChat} title="Open AI Assistant" className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
+              <Logo size={32} />
             </button>
           )}
           <ThemeToggle />
@@ -1765,7 +1777,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               {activeRole === 'mlro'
                 ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
                 : activeRole === 'cams'
-                ? 'Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Premium required.'
+                ? `Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Free plan: ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks all 20.`
                 : activeRole === 'simulations'
                 ? 'Gamified mini-games to sharpen specific AML skills.'
                 : 'Investigative training for AML case analysis and decision-making.'}
@@ -1928,7 +1940,8 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
             const prog = progress[c.id]
             const inProgress = prog && !prog.completed && prog.step > 0
             const completed = prog?.completed
-            const locked = c.premium && !isPremium
+            const camsFree = c.sector === 'CAMS' && !isPremium
+            const locked = c.premium && !isPremium && !camsFree
 
             return (
               <div
@@ -1950,6 +1963,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
                   {inProgress && <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${TAG_STYLE['In Progress']}`}>In Progress</span>}
                   {completed && <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${TAG_STYLE['Completed']}`}>Completed</span>}
                   {locked && <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${TAG_STYLE['Premium']}`}>Premium</span>}
+                  {camsFree && !completed && <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${TAG_STYLE['Free Preview']}`}>Free: {CAMS_FREE_QUESTIONS} of {c.steps.length}</span>}
                 </div>
 
                 <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug mb-2">{c.number} {c.title}</h3>
@@ -1993,7 +2007,22 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
         </div>
 
         {/* Premium upsell banner */}
-        {!isPremium && activeRole !== 'simulations' && (
+        {!isPremium && activeRole === 'cams' && (
+          <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
+            <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: {CAMS_FREE_QUESTIONS} questions per chapter</p>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
+              Each chapter's free preview covers the first {CAMS_FREE_QUESTIONS} questions. Upgrade to <strong>Premium</strong> to unlock all 20 exam-style questions in every chapter.
+            </p>
+            <div className="flex items-center gap-4 flex-wrap">
+              <button onClick={onUpgrade} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors">
+                Upgrade to Premium — $49.99/mo
+              </button>
+              <span className="text-sm text-slate-500">7-day free trial · cancel anytime</span>
+            </div>
+          </div>
+        )}
+
+        {!isPremium && activeRole !== 'simulations' && activeRole !== 'cams' && (
           <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
             <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: locked to Banking</p>
             <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
