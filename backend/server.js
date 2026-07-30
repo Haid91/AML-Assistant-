@@ -3,15 +3,10 @@ import express from 'express';
 import cors from 'cors';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import Anthropic from '@anthropic-ai/sdk';
 import rateLimit from 'express-rate-limit';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const USERS_FILE = path.join(__dirname, 'users.json');
+import { getUserByEmail, createUser, updateUserName, updateUserPassword } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,28 +31,27 @@ const chatLimiter = rateLimit({
   message: { error: 'Too many requests. Please slow down and try again shortly.' },
 })
 
+function asyncRoute(handler) {
+  return async (req, res) => {
+    try {
+      await handler(req, res)
+    } catch (err) {
+      console.error('Unexpected error:', err)
+      res.status(500).json({ error: 'Something went wrong. Please try again.' })
+    }
+  }
+}
+
 // ── Anthropic client ──────────────────────────────────────────────────────────
 const anthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here'
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null
 
-// ── Persistent auth store ─────────────────────────────────────────────────────
-function loadUsers() {
-  try {
-    if (fs.existsSync(USERS_FILE)) {
-      const data = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'))
-      return new Map(Object.entries(data))
-    }
-  } catch {}
-  return new Map()
-}
-
-function saveUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(Object.fromEntries(users), null, 2))
-}
-
-const users = loadUsers()      // email → { id, name, email, passwordHash, premium }
-const sessions = new Map()    // token → email (sessions reset on restart; user logs in again)
+// ── Sessions / reset tokens ───────────────────────────────────────────────────
+// Users are persisted in Postgres (see db.js). Sessions and reset tokens stay
+// in-memory — they're short-lived and resetting them on restart just means
+// signed-in users log in again.
+const sessions = new Map()    // token → email
 const resetTokens = new Map() // token → { email, expiresAt }
 
 // ── Email / SMTP ──────────────────────────────────────────────────────────────
@@ -114,7 +108,7 @@ function verifyPassword(password, storedHash) {
 }
 
 // ── Auth routes ───────────────────────────────────────────────────────────────
-app.post('/auth/register', authLimiter, (req, res) => {
+app.post('/auth/register', authLimiter, asyncRoute(async (req, res) => {
   const { name, email, password } = req.body
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required' })
@@ -122,37 +116,40 @@ app.post('/auth/register', authLimiter, (req, res) => {
   if (password.length < 6) {
     return res.status(400).json({ error: 'Password must be at least 6 characters' })
   }
-  if (users.has(email.toLowerCase())) {
+  const lowerEmail = email.toLowerCase()
+  if (await getUserByEmail(lowerEmail)) {
     return res.status(409).json({ error: 'An account with this email already exists' })
   }
   const id = crypto.randomUUID()
   const passwordHash = hashPassword(password)
-  const premium = PREMIUM_EMAILS.has(email.toLowerCase())
-  users.set(email.toLowerCase(), { id, name, email: email.toLowerCase(), passwordHash, premium })
-  saveUsers(users)
+  const premium = PREMIUM_EMAILS.has(lowerEmail)
+  try {
+    await createUser({ id, name, email: lowerEmail, passwordHash, premium })
+  } catch (err) {
+    if (err.code === '23505') return res.status(409).json({ error: 'An account with this email already exists' })
+    throw err
+  }
   const token = crypto.randomUUID()
-  sessions.set(token, email.toLowerCase())
-  res.json({ token, user: { id, name, email: email.toLowerCase(), premium } })
-})
+  sessions.set(token, lowerEmail)
+  res.json({ token, user: { id, name, email: lowerEmail, premium } })
+}))
 
-app.post('/auth/login', authLimiter, (req, res) => {
+app.post('/auth/login', authLimiter, asyncRoute(async (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' })
   }
-  const user = users.get(email.toLowerCase())
+  const user = await getUserByEmail(email.toLowerCase())
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return res.status(401).json({ error: 'Invalid email or password' })
   }
   if (!user.passwordHash.startsWith('$2')) {
-    user.passwordHash = hashPassword(password)
-    users.set(user.email, user)
-    saveUsers(users)
+    await updateUserPassword(user.email, hashPassword(password))
   }
   const token = crypto.randomUUID()
-  sessions.set(token, email.toLowerCase())
+  sessions.set(token, user.email)
   res.json({ token, user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
-})
+}))
 
 app.post('/auth/logout', (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '')
@@ -160,43 +157,40 @@ app.post('/auth/logout', (req, res) => {
   res.json({ success: true })
 })
 
-function getUserFromAuth(req) {
+async function getUserFromAuth(req) {
   const token = req.headers.authorization?.replace('Bearer ', '')
   if (!token) return null
   const email = sessions.get(token)
   if (!email) return null
-  return users.get(email) || null
+  return getUserByEmail(email)
 }
 
-app.post('/auth/update-profile', (req, res) => {
-  const user = getUserFromAuth(req)
+app.post('/auth/update-profile', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   const { name } = req.body
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' })
-  user.name = name.trim()
-  users.set(user.email, user)
-  saveUsers(users)
-  res.json({ user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
-})
+  const trimmedName = name.trim()
+  await updateUserName(user.email, trimmedName)
+  res.json({ user: { id: user.id, name: trimmedName, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+}))
 
-app.post('/auth/change-password', (req, res) => {
-  const user = getUserFromAuth(req)
+app.post('/auth/change-password', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   const { currentPassword, newPassword } = req.body
   if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Current and new password are required' })
   if (newPassword.length < 6) return res.status(400).json({ error: 'New password must be at least 6 characters' })
   if (!verifyPassword(currentPassword, user.passwordHash)) return res.status(401).json({ error: 'Current password is incorrect' })
-  user.passwordHash = hashPassword(newPassword)
-  users.set(user.email, user)
-  saveUsers(users)
+  await updateUserPassword(user.email, hashPassword(newPassword))
   res.json({ success: true })
-})
+}))
 
-app.post('/auth/forgot-password', authLimiter, async (req, res) => {
+app.post('/auth/forgot-password', authLimiter, asyncRoute(async (req, res) => {
   const { email } = req.body
   if (!email) return res.status(400).json({ error: 'Email is required' })
   const lowerEmail = email.toLowerCase().trim()
-  const user = users.get(lowerEmail)
+  const user = await getUserByEmail(lowerEmail)
   // Always respond success to prevent email enumeration
   if (!user) return res.json({ success: true })
   // Invalidate any existing token for this email
@@ -213,9 +207,9 @@ app.post('/auth/forgot-password', authLimiter, async (req, res) => {
     console.log(`Reset URL (fallback): ${resetUrl}`)
   }
   res.json({ success: true })
-})
+}))
 
-app.post('/auth/reset-password', (req, res) => {
+app.post('/auth/reset-password', asyncRoute(async (req, res) => {
   const { token, password } = req.body
   if (!token || !password) return res.status(400).json({ error: 'Token and password are required' })
   if (password.length < 6) return res.status(400).json({ error: 'Password must be at least 6 characters' })
@@ -224,14 +218,12 @@ app.post('/auth/reset-password', (req, res) => {
     resetTokens.delete(token)
     return res.status(400).json({ error: 'This reset link has expired or is invalid. Please request a new one.' })
   }
-  const user = users.get(entry.email)
+  const user = await getUserByEmail(entry.email)
   if (!user) return res.status(400).json({ error: 'Account not found.' })
-  user.passwordHash = hashPassword(password)
-  users.set(entry.email, user)
-  saveUsers(users)
+  await updateUserPassword(entry.email, hashPassword(password))
   resetTokens.delete(token)
   res.json({ success: true })
-})
+}))
 
 // ── AML system prompt ─────────────────────────────────────────────────────────
 const AML_SYSTEM_PROMPT = `You are an expert AML (Anti-Money Laundering) Compliance AI Assistant with deep knowledge of global AML/CFT frameworks and Australian AUSTRAC regulations. You provide accurate, detailed, professional guidance to compliance professionals, MLROs, analysts, and regulated entities.
