@@ -11,6 +11,7 @@ import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
 import ResetPassword from './components/ResetPassword'
 import AccountSettings from './components/AccountSettings'
+import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
 
@@ -101,7 +102,7 @@ function App() {
     const token = localStorage.getItem('aml_token')
     if (token) {
       try {
-        await fetch('http://localhost:3000/auth/logout', {
+        await fetch(`${API_URL}/auth/logout`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         })

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
@@ -26,7 +27,7 @@ export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
     }
     setLoading(true)
     try {
-      const res = await fetch('http://localhost:3000/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import ProfileMenu from './ProfileMenu'
+import { API_URL } from '../config'
 
 const SUGGESTIONS = [
   'Explain the difference between Source of Funds and Source of Wealth.',
@@ -115,7 +116,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
   const sendToAPI = async (text, msgs, sessionId) => {
     try {
       const history = msgs.map((m) => ({ role: m.role, text: m.text }))
-      const res = await fetch('http://localhost:3000/chat', {
+      const res = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, history }),

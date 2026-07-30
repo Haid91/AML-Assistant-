@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 const TABS = [
   { id: 'profile', label: 'Personal details' },
@@ -18,7 +19,7 @@ function ProfileTab({ user, onUpdateUser }) {
     setStatus(null)
     try {
       const token = localStorage.getItem('aml_token')
-      const res = await fetch('http://localhost:3000/auth/update-profile', {
+      const res = await fetch(`${API_URL}/auth/update-profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ name: name.trim() }),
@@ -96,7 +97,7 @@ function PasswordTab() {
     setStatus(null)
     try {
       const token = localStorage.getItem('aml_token')
-      const res = await fetch('http://localhost:3000/auth/change-password', {
+      const res = await fetch(`${API_URL}/auth/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ currentPassword: form.current, newPassword: form.next }),

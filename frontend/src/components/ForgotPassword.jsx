@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 export default function ForgotPassword({ onGoSignIn, onGoHome }) {
   const [email, setEmail] = useState('')
@@ -12,7 +13,7 @@ export default function ForgotPassword({ onGoSignIn, onGoHome }) {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('http://localhost:3000/auth/forgot-password', {
+      const res = await fetch(`${API_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim() }),

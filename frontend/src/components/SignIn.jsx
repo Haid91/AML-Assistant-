@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 export default function SignIn({ onSignIn, onGoSignUp, onGoHome, onForgotPassword }) {
   const [form, setForm] = useState({ email: '', password: '' })
@@ -18,7 +19,7 @@ export default function SignIn({ onSignIn, onGoSignUp, onGoHome, onForgotPasswor
     }
     setLoading(true)
     try {
-      const res = await fetch('http://localhost:3000/auth/login', {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

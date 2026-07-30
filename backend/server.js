@@ -2,20 +2,39 @@ import 'dotenv/config'
 import express from 'express';
 import cors from 'cors';
 import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import Anthropic from '@anthropic-ai/sdk';
+import rateLimit from 'express-rate-limit';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const USERS_FILE = path.join(__dirname, 'users.json');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-app.use(cors());
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many attempts. Please try again later.' },
+})
+
+const chatLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
 
 // ── Anthropic client ──────────────────────────────────────────────────────────
 const anthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'your_api_key_here'
@@ -81,11 +100,21 @@ async function sendResetEmail(toEmail, name, resetUrl) {
 const PREMIUM_EMAILS = new Set(['haidershahid3.16@live.com'])
 
 function hashPassword(password) {
+  return bcrypt.hashSync(password, 10)
+}
+
+// Legacy hash from before bcrypt migration — kept only to verify existing accounts' passwords.
+function legacyHashPassword(password) {
   return crypto.createHash('sha256').update(password + 'aml_salt_2026').digest('hex')
 }
 
+function verifyPassword(password, storedHash) {
+  if (storedHash.startsWith('$2')) return bcrypt.compareSync(password, storedHash)
+  return storedHash === legacyHashPassword(password)
+}
+
 // ── Auth routes ───────────────────────────────────────────────────────────────
-app.post('/auth/register', (req, res) => {
+app.post('/auth/register', authLimiter, (req, res) => {
   const { name, email, password } = req.body
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'Name, email, and password are required' })
@@ -106,14 +135,19 @@ app.post('/auth/register', (req, res) => {
   res.json({ token, user: { id, name, email: email.toLowerCase(), premium } })
 })
 
-app.post('/auth/login', (req, res) => {
+app.post('/auth/login', authLimiter, (req, res) => {
   const { email, password } = req.body
   if (!email || !password) {
     return res.status(400).json({ error: 'Email and password are required' })
   }
   const user = users.get(email.toLowerCase())
-  if (!user || user.passwordHash !== hashPassword(password)) {
+  if (!user || !verifyPassword(password, user.passwordHash)) {
     return res.status(401).json({ error: 'Invalid email or password' })
+  }
+  if (!user.passwordHash.startsWith('$2')) {
+    user.passwordHash = hashPassword(password)
+    users.set(user.email, user)
+    saveUsers(users)
   }
   const token = crypto.randomUUID()
   sessions.set(token, email.toLowerCase())
@@ -151,14 +185,14 @@ app.post('/auth/change-password', (req, res) => {
   const { currentPassword, newPassword } = req.body
   if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Current and new password are required' })
   if (newPassword.length < 6) return res.status(400).json({ error: 'New password must be at least 6 characters' })
-  if (user.passwordHash !== hashPassword(currentPassword)) return res.status(401).json({ error: 'Current password is incorrect' })
+  if (!verifyPassword(currentPassword, user.passwordHash)) return res.status(401).json({ error: 'Current password is incorrect' })
   user.passwordHash = hashPassword(newPassword)
   users.set(user.email, user)
   saveUsers(users)
   res.json({ success: true })
 })
 
-app.post('/auth/forgot-password', async (req, res) => {
+app.post('/auth/forgot-password', authLimiter, async (req, res) => {
   const { email } = req.body
   if (!email) return res.status(400).json({ error: 'Email is required' })
   const lowerEmail = email.toLowerCase().trim()
@@ -171,8 +205,7 @@ app.post('/auth/forgot-password', async (req, res) => {
   }
   const token = crypto.randomUUID()
   resetTokens.set(token, { email: lowerEmail, expiresAt: Date.now() + 60 * 60 * 1000 })
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5174'
-  const resetUrl = `${frontendUrl}/?action=reset&token=${token}`
+  const resetUrl = `${FRONTEND_URL}/?action=reset&token=${token}`
   try {
     await sendResetEmail(lowerEmail, user.name, resetUrl)
   } catch (err) {
@@ -404,7 +437,7 @@ function fallbackReply(message) {
 }
 
 // ── Chat endpoint ─────────────────────────────────────────────────────────────
-app.post('/chat', async (req, res) => {
+app.post('/chat', chatLimiter, async (req, res) => {
   const { message, history } = req.body
 
   if (!message || typeof message !== 'string' || message.trim().length === 0) {

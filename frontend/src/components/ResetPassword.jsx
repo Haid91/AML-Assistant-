@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../config'
 
 export default function ResetPassword({ token, onGoSignIn, onGoHome }) {
   const [form, setForm] = useState({ password: '', confirm: '' })
@@ -19,7 +20,7 @@ export default function ResetPassword({ token, onGoSignIn, onGoHome }) {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('http://localhost:3000/auth/reset-password', {
+      const res = await fetch(`${API_URL}/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password: form.password }),
