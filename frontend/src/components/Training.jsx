@@ -195,13 +195,13 @@ Your task: Review the escalation, make an SMR sign-off decision, and manage next
   {
     id: 'm2', number: '2.',
     title: "MLRO Escalations: Foreign PEP Onboarding — Deputy Minister",
-    tags: ['Regulatory', 'Premium'], sector: 'Banking', premium: true,
+    tags: ['Regulatory'], sector: 'Banking', premium: false,
     shortDesc: "Analyst escalates onboarding of a deputy minister from a high-corruption jurisdiction who wants to open a private banking account.",
   },
   {
     id: 'm3', number: '3.',
     title: "MLRO Escalations: Adverse Media Match — Foreign Bribery Allegation",
-    tags: ['Regulatory', 'Premium'], sector: 'Banking', premium: true,
+    tags: ['Regulatory'], sector: 'Banking', premium: false,
     shortDesc: "Analyst dismisses a credible adverse-media match linking a customer to a foreign bribery investigation. Review and make the final MLRO determination.",
   },
   {
@@ -328,7 +328,7 @@ Work through each CDD step before the firm can proceed.`,
   {
     id: 'la2', number: 'Part 2',
     title: 'SRA Monitoring: Sub-Threshold Cash Payments to Client Account',
-    tags: ['Escalation'], sector: 'Law', premium: true,
+    tags: ['Escalation'], sector: 'Law', premium: false,
     shortDesc: 'Finance flags multiple sub-threshold cash deposits into the firm\'s client account from 7 different individuals. Investigate and determine your reporting obligations.',
   },
 ]
@@ -400,7 +400,7 @@ Your task: make the MLRO determination and manage the consent SAR process.`,
   {
     id: 'lm2', number: '2.',
     title: 'MLRO: Firm-Wide AML Risk Assessment — Annual Review',
-    tags: ['Regulatory'], sector: 'Law', premium: true,
+    tags: ['Regulatory'], sector: 'Law', premium: false,
     shortDesc: 'Complete the firm\'s annual MLRO report covering practice area risk, SAR statistics, CDD quality, and training compliance across all fee-earner teams.',
   },
 ]
@@ -471,7 +471,7 @@ Your task: complete the KYC assessment and determine what is required before fun
   {
     id: 'ca2', number: 'Part 2',
     title: 'Crypto Exchange: Privacy Coin Rapid-Cycling Alert',
-    tags: ['Escalation'], sector: 'Crypto', premium: true,
+    tags: ['Escalation'], sector: 'Crypto', premium: false,
     shortDesc: 'A monitoring alert detects a customer rapidly converting fiat to BTC, then immediately swapping to Monero via a mixing service and withdrawing — with zero account balance retained. Investigate and report.',
   },
 ]
@@ -543,7 +543,7 @@ Your task: assess the OFAC exposure, make the SAR decision, and determine accoun
   {
     id: 'cm2', number: '2.',
     title: 'MLRO: Travel Rule Compliance — Inbound Transfer from Unhosted Wallet',
-    tags: ['Regulatory'], sector: 'Crypto', premium: true,
+    tags: ['Regulatory'], sector: 'Crypto', premium: false,
     shortDesc: 'A corporate customer receives a large BTC transfer from an unhosted wallet with no counterparty information. Assess Travel Rule obligations and determine whether the exchange can credit the funds.',
   },
 ]
@@ -616,7 +616,7 @@ Your task: analyse the alert and determine next steps.`,
   {
     id: 'fa2', number: 'Part 2',
     title: 'PSP: High Chargeback Rate — Card-Not-Present Fraud Signal',
-    tags: ['Escalation'], sector: 'Fintech', premium: true,
+    tags: ['Escalation'], sector: 'Fintech', premium: false,
     shortDesc: 'A business customer processing £385,000 in card-not-present payments has an 8.2% chargeback rate. Investigate the ML and fraud risk and determine reporting obligations.',
   },
 ]
@@ -687,7 +687,7 @@ Your task: make the SAR and account action determinations for the cluster.`,
   {
     id: 'fm2', number: '2.',
     title: 'MLRO: Regulatory Examination — FCA AML Supervisory Visit',
-    tags: ['Regulatory'], sector: 'Fintech', premium: true,
+    tags: ['Regulatory'], sector: 'Fintech', premium: false,
     shortDesc: 'The FCA has notified an upcoming supervisory visit focusing on your EMI\'s transaction monitoring and SAR quality. Prepare the MLRO response file and rehearse the key examination areas.',
   },
 ]
@@ -2031,20 +2031,6 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
           </div>
         )}
 
-        {!isPremium && activeRole !== 'simulations' && activeRole !== 'cams' && (
-          <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
-            <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: locked to Banking</p>
-            <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
-              Want access to <strong>Law</strong>, <strong>Crypto</strong>, <strong>Fintech</strong> and other industry modules? Upgrade to <strong>Premium</strong> to unlock every track, switch between industries anytime, and resume any case files you've already started in other modules.
-            </p>
-            <div className="flex items-center gap-4 flex-wrap">
-              <button onClick={onUpgrade} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors">
-                Upgrade to Premium — $49.99/mo
-              </button>
-              <span className="text-sm text-slate-500">7-day free trial · cancel anytime</span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
