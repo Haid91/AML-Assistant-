@@ -11,6 +11,7 @@ import SignUp from './components/SignUp'
 import ForgotPassword from './components/ForgotPassword'
 import ResetPassword from './components/ResetPassword'
 import AccountSettings from './components/AccountSettings'
+import About from './components/About'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -144,6 +145,17 @@ function App() {
     )
   }
 
+  if (view === 'about') {
+    return (
+      <About
+        user={user}
+        onGoHome={() => setView('landing')}
+        onSignUp={() => setView('signup')}
+        onSignIn={() => setView('signin')}
+      />
+    )
+  }
+
   if (view === 'signup') {
     return (
       <SignUp
@@ -241,6 +253,7 @@ function App() {
       onOpenTraining={() => setView('training')}
       onSignOut={handleSignOut}
       onOpenSettings={openSettings}
+      onOpenAbout={() => setView('about')}
     />
   )
 }

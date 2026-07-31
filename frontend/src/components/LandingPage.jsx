@@ -93,7 +93,7 @@ const MORE_INFO_SECTIONS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
@@ -165,13 +165,22 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   ))}
                 </div>
 
-                <div className="mt-5 pt-4 border-t border-slate-800">
+                <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <button
+                    onClick={() => {
+                      setMoreInfoOpen(false)
+                      onOpenAbout?.()
+                    }}
+                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                  >
+                    About →
+                  </button>
                   <button
                     onClick={() => {
                       setMoreInfoOpen(false)
                       document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
                     }}
-                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                    className="text-xs text-slate-400 hover:text-white transition-colors"
                   >
                     See full features →
                   </button>
