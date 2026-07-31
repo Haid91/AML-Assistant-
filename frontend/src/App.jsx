@@ -12,6 +12,7 @@ import ForgotPassword from './components/ForgotPassword'
 import ResetPassword from './components/ResetPassword'
 import AccountSettings from './components/AccountSettings'
 import About from './components/About'
+import CostCalculator from './components/CostCalculator'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -156,6 +157,16 @@ function App() {
     )
   }
 
+  if (view === 'cost') {
+    return (
+      <CostCalculator
+        onGoHome={() => setView('landing')}
+        onSignUp={() => setView('signup')}
+        onSignIn={() => setView('signin')}
+      />
+    )
+  }
+
   if (view === 'signup') {
     return (
       <SignUp
@@ -254,6 +265,7 @@ function App() {
       onSignOut={handleSignOut}
       onOpenSettings={openSettings}
       onOpenAbout={() => setView('about')}
+      onOpenCost={() => setView('cost')}
     />
   )
 }

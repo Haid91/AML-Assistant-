@@ -78,7 +78,7 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
@@ -116,6 +116,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <a href="#features" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">What you get</a>
             <a href="#pricing" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Pricing</a>
             <a href="#experience" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</a>
+            <button onClick={onOpenCost} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cost</button>
           </div>
 
           {/* More info dropdown */}
@@ -391,14 +392,13 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 <span className="text-4xl font-bold text-slate-900 dark:text-white">$0</span>
                 <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/forever</span>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mb-7">Try the assistant and core investigative workflow at no cost.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-7">All Analyst & MLRO training, no card required.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'One free CDD scenario',
-                  'Core 3-stage workflow (KYC, EWRA, Reporting)',
+                  'All Analyst & MLRO training modules, every industry',
+                  'Ownership Structure Simulation',
+                  'CAMS exam prep — 6 of 20 questions per chapter',
                   'AUSTRAC e-learning overview',
-                  'Sanctions & PEP screening guidance',
-                  'Industry glossary and FATF reference panels',
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -431,10 +431,9 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               <p className="text-orange-500 text-sm font-semibold mb-6">7-day free trial. Cancel anytime.</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'AI Co-Pilot trained on FATF, AUSTRAC & global regulations',
-                  'AI Live Transaction Monitoring guidance',
-                  'Full SMR/SAR investigation workflow',
-                  'Access to all CDD scenarios across industries',
+                  'AI compliance co-pilot trained on FATF, AUSTRAC & global regulations',
+                  'Full SMR/SAR drafting assistance',
+                  'Full CAMS exam prep — all 20 questions per chapter',
                   'Personalised FATF & AUSTRAC compliance mapping',
                   'Unlimited questions — no daily cap',
                 ].map((f) => (
