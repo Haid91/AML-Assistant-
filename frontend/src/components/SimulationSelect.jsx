@@ -4,7 +4,7 @@ const SIMULATIONS = [
   {
     id: 'ownership',
     name: 'Ownership Structure Simulation',
-    desc: 'Map UBOs, build structures, and diagnose red flags. Earn XP and climb the leaderboard.',
+    desc: 'Map UBOs, read structures, and diagnose red flags.',
     available: true,
     icon: (
       <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
