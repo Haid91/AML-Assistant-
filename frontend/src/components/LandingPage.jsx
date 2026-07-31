@@ -78,21 +78,6 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-const MORE_INFO_SECTIONS = [
-  {
-    title: 'Who it\'s for',
-    desc: 'AML analysts, MLROs, BSA officers, and compliance managers who need fast, accurate regulatory answers without digging through dense guidance documents.',
-  },
-  {
-    title: 'How it works',
-    desc: 'An AI compliance co-pilot grounded in FATF 40 Recommendations, BSA, EU AML Directives, FinCEN and AUSTRAC guidance — plus realistic case simulations and CAMS exam prep to practise on.',
-  },
-  {
-    title: 'Why AmlIntel',
-    desc: 'Structured, regulation-backed answers instead of generic AI responses — every answer is grounded in real frameworks across multiple jurisdictions and industries.',
-  },
-]
-
 export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
@@ -153,38 +138,18 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             </button>
 
             {moreInfoOpen && (
-              <div className="absolute top-full right-0 mt-3 w-[340px] max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6" style={{ zIndex: 9999 }}>
+              <div className="absolute top-full right-0 mt-3 w-48 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
                 <div className="absolute -top-2 right-8 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
 
-                <div className="space-y-4">
-                  {MORE_INFO_SECTIONS.map((s) => (
-                    <div key={s.title}>
-                      <p className="text-sm font-semibold text-white mb-1">{s.title}</p>
-                      <p className="text-xs text-slate-400 leading-relaxed">{s.desc}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <button
-                    onClick={() => {
-                      setMoreInfoOpen(false)
-                      onOpenAbout?.()
-                    }}
-                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
-                  >
-                    About →
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMoreInfoOpen(false)
-                      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-                    }}
-                    className="text-xs text-slate-400 hover:text-white transition-colors"
-                  >
-                    See full features →
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    setMoreInfoOpen(false)
+                    onOpenAbout?.()
+                  }}
+                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  About
+                </button>
               </div>
             )}
           </div>
