@@ -197,12 +197,98 @@ Your task: Review the escalation, make an SMR sign-off decision, and manage next
     title: "MLRO Escalations: Foreign PEP Onboarding — Deputy Minister",
     tags: ['Regulatory'], sector: 'Banking', premium: false,
     shortDesc: "Analyst escalates onboarding of a deputy minister from a high-corruption jurisdiction who wants to open a private banking account.",
+    fullScenario: `ANALYST ESCALATION — For MLRO Review & Onboarding Decision\n\nProspective client: Hon. Ibrahim Toure (age 52)\nPosition: Deputy Minister for Infrastructure, Republic of Kaslund (FATF grey-listed jurisdiction, Transparency International CPI rank: 142/180)\nService requested: Private banking relationship — investment account, initial funding £2.1M\n\nAnalyst findings:\n• Confirmed foreign PEP via World-Check and internal screening — current office holder\n• Declared source of wealth: "inheritance, salary, and business interests"\n• Declared annual ministerial salary: approximately £38,000/year equivalent\n• No supporting documentation provided for the £2.1M initial funding\n• Introduced by an existing private banking client (a Kaslund-based businessman)\n• No adverse media identified beyond standard PEP designation\n\nYour task: assess the CDD requirements, source-of-wealth evidence, and make the onboarding determination.`,
+    steps: [
+      {
+        id: 1, title: 'PEP Classification',
+        question: "What is the correct CDD classification for Hon. Ibrahim Toure?",
+        options: [
+          { text: "Foreign PEP requiring mandatory Enhanced Due Diligence — foreign PEP status alone triggers EDD regardless of transaction size, adverse media, or the individual's seniority within government", correct: true, feedback: "Correct. FATF Recommendation 12 and most national frameworks (including the UK MLR 2017 and the US BSA) require EDD for ALL foreign PEPs as a mandatory baseline — unlike domestic PEPs, where EDD is risk-based and only required when additional risk factors are present. A deputy minister squarely meets the 'prominent public function' definition." },
+          { text: "Domestic PEP — lower risk since he is not a foreign national to his own government", correct: false, feedback: "Incorrect. 'Foreign PEP' is defined relative to the bank's own jurisdiction, not the individual's home government. A Kaslund government official opening an account at a UK or similarly-jurisdictioned bank is a foreign PEP to that bank, triggering the higher mandatory EDD standard." },
+          { text: "Standard customer — a deputy minister is not senior enough to qualify as a PEP", correct: false, feedback: "Incorrect. FATF's PEP definition covers individuals 'entrusted with a prominent public function,' which explicitly includes deputy ministers, senior civil servants, and heads of state-owned enterprises — not only heads of state or cabinet ministers." },
+          { text: "Simplified due diligence, since he was introduced by an existing trusted private banking client", correct: false, feedback: "Incorrect. An introducer's standing does not reduce or substitute for the mandatory EDD obligation attached to foreign PEP status. Introductions can create a false sense of comfort that must not override statutory CDD requirements." },
+        ],
+      },
+      {
+        id: 2, title: 'Source of Wealth Verification',
+        question: "The declared salary (~£38,000/year) is grossly inconsistent with the requested £2.1M funding. What must the bank obtain before accepting the funds?",
+        options: [
+          { text: "Documented evidence of lifetime wealth accumulation — inheritance documentation, business ownership records and valuations, property sale evidence, or other legitimate income sufficient to plausibly explain the £2.1M, not just the source of this specific transfer", correct: true, feedback: "Correct. Source of wealth (how the customer accumulated their overall net worth) is distinct from source of funds (where this specific transaction's money came from) and is a mandatory EDD element for PEPs. A ministerial salary alone cannot explain £2.1M — the bank needs documented evidence covering the full gap, e.g. probate records for inheritance, audited accounts for business interests, or title deeds for property sales." },
+          { text: "Accept his self-declaration of 'inheritance, salary, and business interests' as sufficient given his official position", correct: false, feedback: "Incorrect. Self-declarations carry no evidentiary weight, and official position does not exempt a PEP from documentary verification — if anything, the elevated corruption risk associated with prominent public officials makes documentary evidence more important, not less." },
+          { text: "Ask only for evidence of where the specific £2.1M transfer originated, without needing to explain his broader wealth", correct: false, feedback: "Incorrect. This describes source-of-funds verification only. PEP EDD requires source-of-wealth verification — understanding the full picture of how the customer's overall net worth was accumulated — which is a materially higher bar than tracing a single transaction." },
+          { text: "Rely on the introducer's personal vouching that Mr Toure's wealth is legitimate", correct: false, feedback: "Incorrect. A third party's assurance is not documentary evidence and cannot substitute for the bank's own independent verification obligation under EDD requirements for foreign PEPs." },
+        ],
+      },
+      {
+        id: 3, title: 'Approval Authority',
+        question: "Who must approve establishing this relationship?",
+        options: [
+          { text: "Senior management — FATF Recommendation 12 and equivalent national requirements mandate senior management approval before establishing or continuing a business relationship with a PEP, in addition to (not instead of) the MLRO's own AML sign-off", correct: true, feedback: "Correct. PEP relationships require a distinct governance control: senior management approval, separate from and in addition to standard MLRO/compliance sign-off. This ensures accountability sits with individuals who can weigh the reputational and regulatory risk of the relationship, not just the technical AML assessment." },
+          { text: "Branch-level manager sign-off is sufficient given the account has already passed PEP screening", correct: false, feedback: "Incorrect. Passing an initial screening check is not the same as completing the EDD and approval process. Branch-level sign-off does not meet the senior management approval standard required specifically for PEP relationships." },
+          { text: "No special approval is required beyond the standard new-account opening process, since the PEP flag was already logged in the system", correct: false, feedback: "Incorrect. Logging the PEP flag is a screening step, not an approval step. A distinct, documented senior management decision to accept the PEP relationship is a mandatory control, not an optional extra." },
+          { text: "The introducer's endorsement, combined with the analyst's recommendation, is sufficient for onboarding", correct: false, feedback: "Incorrect. Neither an external introducer nor the escalating analyst has the authority to approve a PEP relationship. This decision must sit with senior management as a distinct governance step." },
+        ],
+      },
+      {
+        id: 4, title: 'Ongoing Monitoring',
+        question: "Assuming the relationship is approved, what ongoing obligations apply going forward?",
+        options: [
+          { text: "Enhanced ongoing monitoring, at least annual relationship review, updated source-of-wealth evidence whenever new significant funds are introduced, and continued PEP treatment for a defined period after he leaves office (commonly 12 months or longer given Kaslund's elevated corruption risk)", correct: true, feedback: "Correct. PEP status doesn't end at onboarding — it requires sustained enhanced monitoring for the life of the relationship, periodic re-review (more frequent than standard customers), and continued vigilance even after the individual leaves public office, since former officials retain corruption-related risk for a meaningful period." },
+          { text: "Standard periodic review, the same as any other private banking customer, since the enhanced checks were already completed at onboarding", correct: false, feedback: "Incorrect. EDD is not a one-time onboarding exercise for PEPs — ongoing enhanced monitoring is a continuing, separate obligation for the life of the relationship, reflecting the sustained elevated risk PEPs present." },
+          { text: "No further monitoring is needed once the initial source-of-wealth documentation has been verified and accepted", correct: false, feedback: "Incorrect. Verified source of wealth at onboarding does not eliminate ongoing risk — new transactions, changes in his official role, or emerging adverse media all require continued vigilance through enhanced ongoing monitoring." },
+          { text: "PEP status automatically expires once the account has been open for 12 months, reverting him to standard customer treatment", correct: false, feedback: "Incorrect. There is no automatic 12-month expiry while a PEP remains in office. Even after leaving office, most frameworks require continued PEP-level treatment for a risk-based minimum period — it does not lapse simply due to account tenure." },
+        ],
+      },
+    ],
   },
   {
     id: 'm3', number: '3.',
     title: "MLRO Escalations: Adverse Media Match — Foreign Bribery Allegation",
     tags: ['Regulatory'], sector: 'Banking', premium: false,
     shortDesc: "Analyst dismisses a credible adverse-media match linking a customer to a foreign bribery investigation. Review and make the final MLRO determination.",
+    fullScenario: `QUALITY ASSURANCE REVIEW — Escalated to MLRO\n\nCustomer: Henderson Okafor Trading Ltd (existing corporate customer, 3 years' relationship)\nBeneficial owner: Mr. Daniel Okafor\nAccount activity: Import/export trade finance facility, average monthly turnover £340,000\n\nTrigger: Quarterly adverse media re-screening identified a Reuters article (published 6 weeks ago) naming Daniel Okafor as a person of interest in an ongoing US DOJ Foreign Corrupt Practices Act (FCPA) investigation into bribery of customs officials in West Africa, allegedly to expedite the customer's shipments.\n\nAnalyst's original assessment (now under review): "Media report is unverified allegation, no charges filed, customer has good payment history — no further action required, alert closed."\n\nYour task: review the analyst's dismissal and determine the appropriate MLRO response.`,
+    steps: [
+      {
+        id: 1, title: 'Reviewing the Dismissal',
+        question: "Was the analyst's decision to close the alert without further action appropriate?",
+        options: [
+          { text: "No — a credible adverse media hit from a reputable source naming the beneficial owner in an active DOJ FCPA investigation cannot be dismissed on 'no charges filed' alone; a documented EDD assessment must be completed before the alert can be closed", correct: true, feedback: "Correct. The absence of formal charges or a conviction does not eliminate ML/predicate-offence risk — investigations can take years, and reporting entities are expected to act on reasonable suspicion, not wait for judicial outcomes. A Reuters report is a reputable-source hit that requires a documented EDD review, not a same-day dismissal." },
+          { text: "Yes — since no charges have been filed, the allegation remains unproven and requires no action", correct: false, feedback: "Incorrect. 'No charges filed' describes the status of a criminal proceeding, not the AML risk assessment threshold. SAR/SMR obligations are triggered by reasonable grounds to suspect — a materially lower bar than criminal proof — so an unproven allegation from a credible source still requires investigation." },
+          { text: "Yes — the customer's good payment history is a strong mitigating factor that outweighs the media report", correct: false, feedback: "Incorrect. Payment history reflects account conduct, not the legitimacy of the underlying trade activity or the source of the beneficial owner's wealth. A customer can maintain perfect repayment behaviour while the underlying business is implicated in bribery — the two are not connected." },
+          { text: "Yes — since this is a US DOJ matter, it falls outside the bank's domestic AML obligations", correct: false, feedback: "Incorrect. Foreign bribery and corruption are FATF-designated predicate offences for money laundering globally. A foreign investigation is highly relevant to a bank's own AML risk assessment of the customer relationship, regardless of which jurisdiction is prosecuting." },
+        ],
+      },
+      {
+        id: 2, title: 'EDD Steps Required',
+        question: "What EDD steps must be undertaken given this finding?",
+        options: [
+          { text: "Obtain further detail from public DOJ court filings, assess whether the trade finance transactions correlate with the alleged scheme's timeline and counterparties, review the relationship for other red flags, and escalate to senior management/legal for a broader FCPA exposure and sanctions assessment", correct: true, feedback: "Correct. A proper EDD response pulls together all available intelligence — public court records, internal transaction correlation, and legal input on exposure — rather than relying on the media report in isolation. This gives the MLRO an evidence-based picture to decide whether reasonable grounds to suspect exist." },
+          { text: "Contact the customer directly and ask whether the allegations are true, relying on their response", correct: false, feedback: "Incorrect as a sole step. A self-declaration from the subject of an active investigation has no evidentiary value on its own. Direct customer contact might eventually form part of a broader EDD process, but it cannot substitute for independent verification, and doing it prematurely risks tipping off if an SAR becomes likely." },
+          { text: "Wait for the DOJ investigation's outcome before taking any further action", correct: false, feedback: "Incorrect. AML obligations operate on an ongoing, proactive basis — waiting years for a criminal outcome while continuing an unassessed high-risk relationship is inconsistent with the bank's obligation to manage ML risk in real time." },
+          { text: "Rely on the existing three-year-old KYC file without further investigation, since the relationship was previously approved", correct: false, feedback: "Incorrect. A new, material risk indicator (the adverse media hit) requires a fresh, targeted review — historic KYC approval does not remain valid in the face of new adverse information; this is precisely what ongoing monitoring and periodic re-screening exist to catch." },
+        ],
+      },
+      {
+        id: 3, title: 'SAR Threshold',
+        question: "Does the adverse media alone create a reasonable-grounds-to-suspect SAR obligation?",
+        options: [
+          { text: "Adverse media alone is a risk indicator, not automatically sufficient — but combined with an EDD review that reveals corroborating factors, reasonable grounds to suspect can be established; the MLRO must complete the EDD assessment before making the final SAR determination", correct: true, feedback: "Correct. Adverse media is a trigger for investigation, not an automatic SAR requirement in isolation. The correct sequence is: investigate first (EDD), then assess whether the complete picture — media plus internal findings — meets the suspicion threshold. Filing reflexively on media alone, or dismissing it outright, are both premature." },
+          { text: "No SAR is ever required based on adverse media alone, under any circumstances", correct: false, feedback: "Incorrect. While media alone rarely meets the threshold without further investigation, dismissing it as categorically irrelevant is wrong — credible adverse media is one of the most common SAR triggers globally precisely because it often correlates with real underlying activity once investigated." },
+          { text: "SAR filing is automatically required the moment any adverse media appears, without further investigation", correct: false, feedback: "Incorrect. Filing immediately on unverified media without any internal assessment produces low-quality, poorly-substantiated SARs and skips the EDD process that regulators expect. The correct approach is investigate first, then decide." },
+          { text: "SAR filing is entirely at the MLRO's discretion regardless of the EDD findings", correct: false, feedback: "Incorrect. The SAR obligation is a legal threshold test (reasonable grounds to suspect), not a discretionary judgement call once that threshold is met. The MLRO's role is to apply the EDD findings against that legal standard, not to decide freely." },
+        ],
+      },
+      {
+        id: 4, title: 'Final Determination and Account Action',
+        question: "The EDD review finds that several trade finance shipments coincide with dates and counterparties named in the DOJ court filings, but there's no direct evidence funds moved through this account. What should the MLRO decide?",
+        options: [
+          { text: "File an SAR — reasonable grounds to suspect are met given the correlation between account activity and the alleged scheme, even without direct evidence of illicit funds moving through this specific account; consider enhanced monitoring or relationship exit, and provide corrective feedback on the original premature closure", correct: true, feedback: "Correct. SAR obligations do not require proof that illicit funds passed through the account — reasonable grounds to suspect a connection to criminal conduct is sufficient. The transaction-timeline correlation with the alleged bribery scheme is a strong corroborating factor. The MLRO should also use this case to reinforce proper EDD/escalation practice with the analyst who closed it prematurely." },
+          { text: "No SAR is needed since there is no direct evidence that illicit funds moved through this specific account", correct: false, feedback: "Incorrect. Requiring direct proof of illicit fund movement sets far too high a bar — the legal threshold is reasonable grounds to suspect, and a documented correlation between the customer's trade finance activity and an active bribery investigation clearly meets that standard." },
+          { text: "Close the account immediately without filing an SAR", correct: false, feedback: "Incorrect. Exiting the relationship does not discharge the SAR obligation — if reasonable grounds to suspect exist, the SAR must be filed regardless of whether the bank also chooses to end the relationship. Closing without reporting also risks tipping off if not carefully managed." },
+          { text: "Take no action, since the correlation could be coincidental and the bank has no duty to investigate a customer's unrelated business dealings", correct: false, feedback: "Incorrect. Once a bank becomes aware of a credible, corroborated link between its customer's transactions and a bribery scheme, it cannot treat that information as irrelevant — this is exactly the kind of finding the SAR regime exists to capture, and ignoring it after investigation would itself be a compliance failure." },
+        ],
+      },
+    ],
   },
   {
     id: 'm4', number: '4.',
@@ -330,6 +416,49 @@ Work through each CDD step before the firm can proceed.`,
     title: 'SRA Monitoring: Sub-Threshold Cash Payments to Client Account',
     tags: ['Escalation'], sector: 'Law', premium: false,
     shortDesc: 'Finance flags multiple sub-threshold cash deposits into the firm\'s client account from 7 different individuals. Investigate and determine your reporting obligations.',
+    fullScenario: `FINANCE TEAM ALERT — For CDD/Monitoring Review\n\nClient matter: Litigation funding — commercial dispute (Client: Meridian Consulting Group Ltd)\nMatter type: Client account holds settlement funds pending distribution\n\nAlert: Finance flags the following pattern over 3 weeks:\n• 7 bank transfers into the firm's client account\n• Senders: 7 different individuals, none listed as parties to the litigation or known associates of the client\n• Amounts: each between £8,200–£9,600 (consistently below the firm's internal £10,000 review threshold)\n• Total received: £61,800\n• No instruction on file explaining why third parties would be funding this client's litigation costs\n\nYour task: investigate the pattern and determine the firm's reporting obligations.`,
+    steps: [
+      {
+        id: 1, title: 'Initial Assessment',
+        question: "What does this payment pattern most likely indicate?",
+        options: [
+          { text: 'Structuring — the pattern of 7 payments from unrelated third parties, each calibrated just below the internal review threshold, is consistent with deliberate structuring to avoid detection, and warrants investigation regardless of whether the underlying litigation is legitimate', correct: true, feedback: 'Correct. Multiple unrelated senders, each transferring an amount just below a known review threshold, totalling nearly £62,000, is a textbook structuring pattern. The legitimacy of the litigation itself is a separate question from the legitimacy of how it is being funded — both must be assessed.' },
+          { text: 'Normal litigation funding, since commercial disputes are often funded by third parties without formal documentation', correct: false, feedback: 'Incorrect. Legitimate third-party litigation funding is typically arranged through a small number of identifiable, professional funders with clear documentation — not 7 unrelated individuals each sending amounts calibrated just under a review threshold.' },
+          { text: 'The amounts are too small individually to be significant and do not warrant further review', correct: false, feedback: 'Incorrect. Reviewing amounts in isolation misses the pattern. It is the aggregate — 7 similarly-sized payments from unrelated senders totalling £61,800 — that creates the red flag, not any single transaction.' },
+          { text: 'The pattern is coincidental, since threshold-adjacent payments happen often in commercial matters', correct: false, feedback: 'Incorrect. A single threshold-adjacent payment could be coincidental; seven, from seven different unrelated senders, in three weeks, is a pattern that requires investigation rather than being dismissed as chance.' },
+        ],
+      },
+      {
+        id: 2, title: 'Client File Review',
+        question: "What should be reviewed first before escalating?",
+        options: [
+          { text: "The matter file and CDD records — check whether third-party litigation funders were disclosed at matter inception, whether the client explained the funding structure, and cross-reference the 7 senders against any known parties, then request an explanation from the fee earner/client if the file doesn't already account for this", correct: true, feedback: 'Correct. Before escalating externally, the firm should exhaust its own internal information — the matter file may already explain the arrangement (in which case the alert can be closed with documented rationale), or it may confirm there is no legitimate explanation on record, strengthening the case for further investigation.' },
+          { text: 'Immediately file an SAR without any internal review', correct: false, feedback: "Incorrect. Filing before completing a basic internal review produces a low-quality, poorly-substantiated report and skips a step that might either resolve the alert legitimately or significantly strengthen it. Internal file review comes first." },
+          { text: "Contact the client's opposing party in the litigation for information", correct: false, feedback: "Incorrect and inappropriate. The opposing party has no role in the firm's CDD process and contacting them risks breaching client confidentiality and potentially tipping off, entirely aside from being the wrong source of information." },
+          { text: 'Contact the 7 senders directly to verify their identity before consulting the file', correct: false, feedback: "Incorrect sequencing. The firm should first establish what its own file says, including whether the client has already provided an explanation, before reaching out to third parties — premature outreach also raises tipping-off risk if suspicion is already forming." },
+        ],
+      },
+      {
+        id: 3, title: 'Consent SAR Before Proceeding',
+        question: 'The client instructs the firm to distribute the settlement funds (including the unexplained third-party payments) to the client\'s nominated account next week. What must happen first?',
+        options: [
+          { text: 'If, after investigation, the fee earner/MLRO forms reasonable grounds to suspect the third-party payments may be proceeds of crime, a consent SAR (DAML) must be filed with the NCA and the distribution must not proceed until consent is granted or the moratorium period expires', correct: true, feedback: 'Correct. Proceeding with a distribution that includes funds the firm reasonably suspects may be criminal proceeds risks a POCA 2002 s.328 arrangement offence. A consent SAR (Defence Against Money Laundering) must be filed, and the firm must wait for NCA consent or the moratorium to lapse before completing the distribution.' },
+          { text: 'Proceed with the distribution as instructed, since the client is contractually entitled to their settlement funds', correct: false, feedback: 'Incorrect. Client entitlement under the underlying litigation does not override the firm\'s independent statutory obligation under POCA. If reasonable grounds to suspect exist regarding the source of the third-party funds, the firm cannot proceed without consent, regardless of the client\'s instructions.' },
+          { text: 'Delay the distribution indefinitely without filing anything, until the client provides a satisfactory explanation', correct: false, feedback: "Incorrect. Indefinitely withholding funds without filing an SAR does not discharge the firm's reporting obligation and leaves the firm in an unresolved position. If suspicion exists, the correct step is to file the consent SAR — not to sit on the funds unreported." },
+          { text: "Distribute only the 'clean' portion of the funds (the original settlement) and hold back the unexplained third-party payments without escalating", correct: false, feedback: "Incorrect. Once suspicious funds have commingled with the client account balance, selectively releasing a 'clean' portion without a proper SAR assessment does not resolve the underlying suspicion and is not a recognised way to discharge the reporting obligation." },
+        ],
+      },
+      {
+        id: 4, title: 'Final Determination',
+        question: "The client says the third-party payments are from 'family and friends supporting the litigation' but cannot provide names matching the senders, and declines to explain further. How do you proceed?",
+        options: [
+          { text: 'Escalate to the MLRO with a full investigation summary recommending an SAR — an unverifiable, vague explanation combined with a classic structuring pattern and no supporting documentation meets the reasonable-grounds-to-suspect threshold', correct: true, feedback: "Correct. A vague explanation that cannot be reconciled with the actual sender names, combined with the structuring pattern already identified, is precisely the kind of unresolved red flag that meets the SAR threshold. The MLRO must now decide on filing and on whether the firm can continue acting for the client." },
+          { text: "Accept the explanation since litigation funding by friends and family is a plausible arrangement", correct: false, feedback: "Incorrect. Plausibility in the abstract is not the test — the client's account cannot be reconciled with the actual sender identities, and the explanation offered does not resolve that gap. An unverifiable explanation does not neutralise a structuring red flag." },
+          { text: "Proceed with the distribution and simply note the client's explanation on the file", correct: false, feedback: "Incorrect. Noting an unverified explanation on file does not discharge the firm's SAR obligation if reasonable grounds to suspect remain. The explanation must be assessed, not just recorded, before deciding whether to proceed." },
+          { text: 'Refuse to accept any further payments but distribute the funds already received without reporting', correct: false, feedback: "Incorrect. Refusing further payments is a reasonable protective step but does not address the SAR obligation attached to the funds already received. If suspicion is not resolved, those funds still require an SAR before distribution." },
+        ],
+      },
+    ],
   },
 ]
 
@@ -402,6 +531,49 @@ Your task: make the MLRO determination and manage the consent SAR process.`,
     title: 'MLRO: Firm-Wide AML Risk Assessment — Annual Review',
     tags: ['Regulatory'], sector: 'Law', premium: false,
     shortDesc: 'Complete the firm\'s annual MLRO report covering practice area risk, SAR statistics, CDD quality, and training compliance across all fee-earner teams.',
+    fullScenario: `FIRM-WIDE AML RISK ASSESSMENT — Guided Walkthrough\n\nThis simulation guides you through completing the firm's annual MLRO report to the Partnership Board — the structured review required under the UK Money Laundering Regulations 2017 (Reg. 18) and SRA Standards.\n\nPeriod: January – December [current year]\nMLRO: [Your name]\nFirm: 140-partner commercial practice with Property, Corporate, Litigation, and Private Client departments\n\nWork through each section to understand what the Board expects and what an SRA AML inspection would examine.`,
+    steps: [
+      {
+        id: 1, title: 'Section 1: Practice-Area Risk',
+        question: "Which practice area should be assessed as highest AML risk in the firm-wide risk assessment, and why?",
+        options: [
+          { text: 'Property — cash-funded purchases, offshore corporate buyers, and the ability to move large sums through the client account make conveyancing/commercial property consistently the highest-risk practice area identified by SRA thematic reviews and LSAG guidance', correct: true, feedback: 'Correct. SRA thematic reviews and LSAG risk guidance consistently identify property work as the highest-risk legal practice area — it combines high transaction values, cash and offshore funding, anonymous corporate structures, and the ability to launder funds through a completed, legitimate-looking asset purchase.' },
+          { text: 'Litigation, since disputes can involve large settlement sums passing through the client account', correct: false, feedback: 'Settlement funds do carry some risk, but litigation as a whole carries lower structural ML risk than property — settlements are typically tied to a court process or negotiated agreement with more inherent transparency than a property purchase funded by an unverified third party.' },
+          { text: 'Private Client, since wills and probate work rarely involve significant fund movements', correct: false, feedback: "Incorrect — this actually argues against Private Client being highest risk, not for it. Wills and probate generally involve lower transactional ML risk precisely because large, opaque fund movements are uncommon in that practice area." },
+          { text: 'Corporate, since M&A transactions are already heavily diligenced by other advisers involved in the deal', correct: false, feedback: "Incorrect. While M&A deals do involve other advisers, this does not eliminate the law firm's own independent AML obligations, and corporate structuring risk (shell companies, opaque ownership) is real — but it is still assessed as lower than property risk in most firm-wide risk assessments." },
+        ],
+      },
+      {
+        id: 2, title: 'Section 2: SAR Statistics',
+        question: "The firm filed 6 SARs this year, down from 11 last year, entirely from the Property department. How should this be presented to the Board?",
+        options: [
+          { text: 'Present the raw numbers alongside context — investigate and explain the decline, and confirm whether other departments are appropriately identifying and escalating red flags, since zero SARs from Litigation, Corporate, and Private Client across a full year may itself indicate under-reporting rather than genuinely lower risk', correct: true, feedback: "Correct. A declining SAR count is not inherently good news — it requires explanation. Equally important: if only one department out of four is generating any SARs at all, the Board needs to know whether that reflects genuinely concentrated risk, or a detection gap in the other three departments that needs addressing through training or awareness." },
+          { text: 'Report the number without further analysis, since a decline in SARs is inherently a positive sign', correct: false, feedback: "Incorrect. A raw number without analysis tells the Board nothing about whether the decline reflects improved controls, reduced transaction volume, or a detection failure. Presenting it without context fails the Board's governance oversight role." },
+          { text: 'Assume the decline proves the AML programme is working effectively and requires no further comment', correct: false, feedback: 'Incorrect. This is an unsupported assumption. Fewer SARs can equally indicate weaker detection as it can indicate better upfront deterrence — the MLRO must investigate which explanation actually applies before presenting a conclusion to the Board.' },
+          { text: 'Recommend no changes, since Property remains the only department that has ever filed SARs historically', correct: false, feedback: "Incorrect. Historical concentration in one department is itself a finding worth Board attention — it should prompt a review of whether Litigation, Corporate, and Private Client fee earners are adequately trained to recognise and escalate red flags in their own practice areas." },
+        ],
+      },
+      {
+        id: 3, title: 'Section 3: CDD Sampling',
+        question: 'A file review sample of 40 matters found 5 (12.5%) with incomplete source-of-funds documentation for property purchases. What is the appropriate response?',
+        options: [
+          { text: 'Report the finding transparently to the Board with root-cause analysis, remediate the identified files, and implement a control improvement such as mandatory supervisor sign-off before matters proceed to completion', correct: true, feedback: "Correct. A 12.5% gap rate in the firm's highest-risk practice area is a material finding. Transparent Board reporting, retrospective remediation of the specific files, and a forward-looking control improvement together demonstrate the mature compliance response an SRA inspection would expect to see." },
+          { text: 'Since it is only 12.5%, note it informally without a formal remediation plan', correct: false, feedback: 'Incorrect. 12.5% represents 1 in 8 files failing a core CDD requirement in the highest-risk practice area — this is a material gap requiring a documented, formal remediation plan, not an informal note.' },
+          { text: 'Exclude the finding from the Board report since it reflects poorly on the department', correct: false, feedback: 'Incorrect and a serious governance failure. Withholding material compliance findings from the Board undermines its oversight function, and if later discovered by the SRA, would be treated far more seriously than the underlying documentation gap itself.' },
+          { text: 'Retroactively mark the files as compliant without obtaining the missing documentation', correct: false, feedback: 'Incorrect and improper. Marking files as compliant without actually obtaining the required documentation misrepresents the firm\'s compliance position and does nothing to address the actual underlying gap — the documentation must genuinely be obtained.' },
+        ],
+      },
+      {
+        id: 4, title: 'Section 4: Training Compliance',
+        question: 'Fee-earner AML training completion is at 87% firm-wide, with the lowest completion (68%) in the Corporate department. What should the MLRO recommend?',
+        options: [
+          { text: 'Report the gap to the Board, mandate 100% completion with a firm deadline, and consider linking completion to appraisal or performance processes', correct: true, feedback: 'Correct. The UK MLR 2017 requires all relevant employees to receive AML training. A persistent departmental shortfall — particularly in Corporate, which handles complex cross-border ownership structures — is a genuine compliance risk that the Board must formally address with a clear deadline and accountability mechanism.' },
+          { text: 'Accept 87% as an acceptable industry-standard completion rate requiring no further action', correct: false, feedback: 'Incorrect. There is no regulatory basis for treating anything below 100% as acceptable — the MLR 2017 training obligation applies to all relevant employees, and an untrained fee earner represents a real compliance and detection gap, not a rounding error.' },
+          { text: 'Address it informally with department heads without giving the Board visibility of the gap', correct: false, feedback: 'Incorrect. Training compliance is a Board-level governance matter under Reg. 18, particularly where one department is materially behind. Handling it informally without Board visibility denies the Board its oversight function.' },
+          { text: 'Extend the training completion deadline again without escalating the recurring shortfall', correct: false, feedback: 'Incorrect. Repeatedly extending deadlines without escalation allows a compliance gap to persist indefinitely. A recurring shortfall in the same department is exactly the kind of pattern that warrants formal escalation and a firm deadline, not another extension.' },
+        ],
+      },
+    ],
   },
 ]
 
@@ -473,6 +645,49 @@ Your task: complete the KYC assessment and determine what is required before fun
     title: 'Crypto Exchange: Privacy Coin Rapid-Cycling Alert',
     tags: ['Escalation'], sector: 'Crypto', premium: false,
     shortDesc: 'A monitoring alert detects a customer rapidly converting fiat to BTC, then immediately swapping to Monero via a mixing service and withdrawing — with zero account balance retained. Investigate and report.',
+    fullScenario: `MONITORING ALERT — CRYPTO EXCHANGE\n\nCustomer: Account #CX-51092 (verified UK individual, 6 months' tenure)\nTrigger: Rapid-cycling and privacy-coin conversion rule\n\nTransaction pattern — past 48 hours:\n• 3 separate fiat deposits via bank transfer, totalling £42,000\n• Each deposit immediately used to purchase Bitcoin (BTC)\n• Within minutes of each BTC purchase, funds converted to Monero (XMR) via a third-party swap service\n• XMR immediately withdrawn to an external wallet\n• Account balance after each cycle: £0 (fully cycled out)\n• No prior similar activity on this account\n• Customer's declared purpose at onboarding: "long-term Bitcoin investment"\n\nYour task: assess the pattern and determine next steps.`,
+    steps: [
+      {
+        id: 1, title: 'Pattern Recognition',
+        question: "What does this transaction pattern most likely indicate?",
+        options: [
+          { text: 'Rapid layering using a privacy coin — converting fiat to BTC and immediately swapping to Monero before withdrawal is a classic layering technique, and the complete cycling to zero balance sharply contradicts the customer\'s stated "long-term investment" purpose', correct: true, feedback: "Correct. Monero uses ring signatures and stealth addresses specifically to obscure transaction trails. Converting immediately and fully cycling out to zero balance, three times in 48 hours, is inconsistent with any genuine investment strategy and matches a deliberate layering typology designed to break the audit trail." },
+          { text: 'Normal profit-taking behaviour, since crypto traders often move between coins', correct: false, feedback: 'Incorrect. Genuine trading between coins does not typically involve immediately converting 100% of a fresh deposit through a privacy coin and withdrawing to zero balance within minutes — that pattern has no legitimate trading rationale, only a detection-evasion one.' },
+          { text: 'The customer diversifying into privacy coins for legitimate financial privacy reasons', correct: false, feedback: 'Legitimate privacy interest does not typically manifest as immediate full-cycle conversion-and-withdrawal repeated three times in two days on freshly deposited fiat — that pattern is materially different from someone simply holding privacy coins as part of a portfolio.' },
+          { text: 'Arbitrage trading between BTC and XMR markets', correct: false, feedback: 'Arbitrage trading exploits price differences and typically involves round-trip trades that return to the original asset or currency, not a one-way conversion followed by full withdrawal off-platform — this pattern shows no round-trip characteristic at all.' },
+        ],
+      },
+      {
+        id: 2, title: 'Risk Factors',
+        question: "Which factor makes this pattern MOST significant from an AML perspective?",
+        options: [
+          { text: 'The use of Monero specifically — as a privacy coin, once converted and withdrawn the exchange (and any blockchain analytics tool) permanently loses visibility into where the funds go, meaning this is a deliberate detection-evasion technique, not just an unusual trading choice', correct: true, feedback: 'Correct. Unlike BTC, which is traceable on a public ledger, Monero transactions cannot be traced using standard blockchain analytics. Choosing to route funds through XMR specifically, immediately after each deposit, is the single most significant indicator here — it is the mechanism that breaks the audit trail permanently.' },
+          { text: 'The £42,000 total amount, which is unusually large for a crypto account', correct: false, feedback: '£42,000 is a moderate amount by crypto trading standards and is not, on its own, an unusual sum. The amount is a secondary factor compared to the deliberate use of a privacy coin to sever traceability.' },
+          { text: "The use of a third-party swap service, which is inherently suspicious", correct: false, feedback: 'Third-party swap services are commonly used for entirely legitimate purposes and are not inherently suspicious in isolation. It is the combination with the rapid full-cycle pattern and privacy-coin conversion that creates the red flag, not the swap service alone.' },
+          { text: "The account's 6-month tenure, which is unusually long for this kind of activity", correct: false, feedback: 'An established 6-month account is generally a lower baseline risk factor, which actually makes the sudden change in behaviour notable by contrast — but the tenure itself is not the primary red flag; the privacy-coin routing is.' },
+        ],
+      },
+      {
+        id: 3, title: 'Investigation Steps',
+        question: "Before escalating to the MLRO, what should you do?",
+        options: [
+          { text: 'Document the full transaction chain, check whether the swap service itself is a known high-risk/mixing-adjacent service, review the customer\'s full account history for any prior similar patterns, and prepare an escalation summary — avoiding customer outreach given tipping-off risk if an SAR becomes likely', correct: true, feedback: "Correct. A thorough investigation file — full transaction chain, swap service risk assessment, and account history — gives the MLRO what's needed to make an informed SAR decision. Customer outreach should generally be held back at this stage, since directly asking about a suspected layering pattern risks tipping off if an SAR is likely to follow." },
+          { text: 'Contact the customer immediately to ask why they converted to Monero', correct: false, feedback: "Incorrect. Direct outreach about a suspected deliberate layering pattern, before the investigation and SAR assessment is complete, creates a real tipping-off risk — the analyst should build the investigation file first and let the MLRO decide on next steps, including whether outreach is appropriate." },
+          { text: "Take no action, since XMR transactions can't be traced anyway so investigation is pointless", correct: false, feedback: "Incorrect. The inability to trace funds on-chain after conversion is exactly why the pre-conversion activity (deposits, BTC purchases, timing, swap service used) must be thoroughly documented now — this is the analyst's best opportunity to capture evidence before it becomes untraceable." },
+          { text: 'Automatically close the account before completing an investigation', correct: false, feedback: "Incorrect. Account closure is a decision for the MLRO to make after reviewing a completed investigation, not a default first action — premature closure also risks alerting the customer before the SAR assessment is finished." },
+        ],
+      },
+      {
+        id: 4, title: 'SAR and Account Action',
+        question: "Your investigation confirms the swap service has been flagged in industry threat intelligence as commonly used for laundering ransomware proceeds. What is the appropriate escalation?",
+        options: [
+          { text: 'Escalate immediately to the MLRO recommending an SAR — the combination of rapid full-cycle layering, deliberate privacy-coin conversion, and a swap service linked to known illicit proceeds meets the reasonable-grounds-to-suspect threshold; recommend a hold on any further transactions pending the MLRO\'s determination', correct: true, feedback: "Correct. Each individual factor strengthens the case, and together they clearly meet the suspicion threshold: the layering pattern, the privacy-coin routing chosen specifically to break traceability, and now a corroborated link between the swap service and ransomware proceeds. Immediate escalation with a recommended transaction hold is the appropriate response." },
+          { text: 'Wait for a second occurrence before escalating', correct: false, feedback: "Incorrect. The threshold for escalation is reasonable grounds to suspect, which is already met by this single pattern combined with the threat-intelligence corroboration — waiting for repetition unnecessarily delays a required report and allows further potential laundering activity." },
+          { text: 'Escalate but recommend no account restriction, since the funds have already left the platform', correct: false, feedback: "Incorrect. While the specific cycled funds have left the platform, a hold on further transactions protects against continued use of the account for the same purpose and is a standard, proportionate protective step while the MLRO reviews the case." },
+          { text: 'Handle informally by emailing the customer a warning about privacy coin use', correct: false, feedback: "Incorrect and inappropriate. Directly warning the customer about privacy-coin conversion at this stage would tip them off to the investigation. This matter requires formal escalation to the MLRO, not informal customer contact." },
+        ],
+      },
+    ],
   },
 ]
 
@@ -545,6 +760,49 @@ Your task: assess the OFAC exposure, make the SAR decision, and determine accoun
     title: 'MLRO: Travel Rule Compliance — Inbound Transfer from Unhosted Wallet',
     tags: ['Regulatory'], sector: 'Crypto', premium: false,
     shortDesc: 'A corporate customer receives a large BTC transfer from an unhosted wallet with no counterparty information. Assess Travel Rule obligations and determine whether the exchange can credit the funds.',
+    fullScenario: `COMPLIANCE QUERY — FOR MLRO DETERMINATION\n\nCustomer: Meridian Digital Assets Ltd (corporate customer, VASP-to-VASP and self-custody transacting, 8 months' tenure)\nTransaction: Inbound transfer of 15.2 BTC (approximately £520,000)\n\nTransfer details:\n• Originating wallet: unhosted (self-custodied, non-custodial) wallet — no originating VASP\n• No originator name, address, or account number provided (not obtainable from an unhosted wallet by the sending side)\n• Transaction value well above the FATF Travel Rule threshold\n• Customer states the funds are "proceeds from a private OTC sale of digital assets"\n• No documentation of the OTC counterparty provided yet\n\nYour task: assess the Travel Rule obligations and determine whether the exchange can credit the incoming funds.`,
+    steps: [
+      {
+        id: 1, title: 'Travel Rule Applicability',
+        question: "Does FATF Recommendation 16 (the Travel Rule) require originator information for this inbound transfer?",
+        options: [
+          { text: "Yes in principle — FATF R.16 requires VASPs to obtain and hold required originator/beneficiary information above the threshold, but this applies VASP-to-VASP; where the originator is an unhosted wallet with no VASP counterparty, the receiving VASP cannot obtain that information from a sending institution and must instead apply its own risk-based controls", correct: true, feedback: "Correct. The Travel Rule's data-transmission mechanism assumes a sending VASP on the other end. When the originator is an unhosted wallet, there is no sending institution to transmit the information — the obligation doesn't disappear, it shifts to the receiving VASP applying enhanced, risk-based scrutiny of its own." },
+          { text: 'No, the Travel Rule only applies to fiat wire transfers, not crypto transactions', correct: false, feedback: "Incorrect. FATF extended the Travel Rule to virtual assets specifically through the 2019 update to Recommendation 16, requiring VASPs to collect and transmit originator/beneficiary information for qualifying virtual asset transfers, just as with traditional wire transfers." },
+          { text: 'No, transfers from unhosted wallets are entirely exempt from any AML scrutiny', correct: false, feedback: 'Incorrect. Unhosted wallet transfers are not exempt from scrutiny — if anything, FATF guidance identifies unhosted wallet interactions as a heightened-risk category requiring additional due diligence precisely because standard VASP-to-VASP data sharing is unavailable.' },
+          { text: 'Yes, and the transfer must be automatically rejected since no originator VASP exists', correct: false, feedback: 'Incorrect. Automatic rejection is not the required response — FATF guidance expects a risk-based assessment (enhanced due diligence on the receiving side) rather than a blanket rejection of all unhosted-wallet transfers, which would be commercially unworkable and is not what the standard requires.' },
+        ],
+      },
+      {
+        id: 2, title: 'Missing Originator Information',
+        question: "Since no originator information can be obtained from the sending unhosted wallet, what should the exchange do?",
+        options: [
+          { text: "Apply enhanced due diligence on the receiving end — verify the customer's identity (already known), request documentation supporting the claimed OTC sale, and conduct blockchain analytics on the originating wallet address to assess its risk profile, before deciding whether to credit the funds", correct: true, feedback: "Correct. This is the standard risk-based response to unhosted-wallet Travel Rule gaps: since originator information can't be transmitted, the receiving VASP compensates with its own enhanced controls — verifying the beneficiary (its own customer) thoroughly and independently assessing the origin and risk of the funds through blockchain analytics and supporting documentation." },
+          { text: "Automatically credit the funds since the customer's identity is already verified", correct: false, feedback: "Incorrect. Beneficiary identity verification alone does not address the originator-information gap or assess the risk of the funds themselves — a £520,000 transfer from an unhosted wallet warrants independent assessment of the funds' origin before crediting, not automatic acceptance." },
+          { text: 'Automatically reject the transfer since Travel Rule information is missing, with no further assessment', correct: false, feedback: "Incorrect. Automatic rejection without any risk assessment is disproportionate and not what FATF guidance requires — the correct response is a risk-based enhanced due diligence process, which may or may not conclude that the funds can be credited." },
+          { text: 'Ask the customer to resend the funds through a licensed VASP instead', correct: false, feedback: "Incorrect. This is not something the exchange can retrospectively control — the funds have already been sent from an unhosted wallet. The exchange must assess and decide on the transfer as received, through its own EDD process." },
+        ],
+      },
+      {
+        id: 3, title: 'Risk-Based Crediting Decision',
+        question: "Blockchain analytics shows the originating wallet has no adverse exposure (no sanctions, mixer, or darknet market links) but also no identifiable history — it's a newly created wallet funded once before this transfer. What is the appropriate decision?",
+        options: [
+          { text: 'Place a temporary hold on the funds pending receipt of the requested OTC counterparty documentation — a clean-but-unknown wallet with no prior history is not conclusive evidence of legitimacy for a transfer of this size', correct: true, feedback: "Correct. 'No adverse hits' is reassuring but not the same as 'verified legitimate' — a brand-new wallet with a single prior funding event provides no meaningful history to assess. For over £500,000, a proportionate response is to hold the funds pending the documentation already requested, rather than either crediting immediately or rejecting outright." },
+          { text: 'Credit the funds immediately since blockchain analytics found no adverse hits', correct: false, feedback: "Incorrect. Absence of known adverse links is a necessary but not sufficient basis for crediting a transfer of this size — a wallet with no meaningful transaction history provides limited assurance on its own, and the requested supporting documentation should still be obtained first." },
+          { text: 'Reject the transfer and terminate the customer relationship outright', correct: false, feedback: "Incorrect and premature. There is no adverse finding yet that would justify relationship termination — the appropriate step at this stage is a hold pending further documentation, not an outright rejection or exit before the investigation is complete." },
+          { text: 'Credit the funds but flag the account for review in 12 months', correct: false, feedback: "Incorrect. A 12-month deferred review does not address the immediate question of whether this specific £520,000 transfer should be credited now — the decision on this transaction needs to be made before, not after, crediting the funds." },
+        ],
+      },
+      {
+        id: 4, title: 'SAR Consideration',
+        question: "Meridian provides a signed OTC agreement, but it names a counterparty that cannot be independently verified to exist (no corporate registration found in any searched jurisdiction). How do you proceed?",
+        options: [
+          { text: 'This is a significant red flag — escalate to file an SAR, as an unverifiable counterparty for a £520,000 transaction combined with the unhosted-wallet origin and lack of independent corroboration meets reasonable grounds to suspect; maintain the hold on funds and consider whether to continue the relationship pending the outcome', correct: true, feedback: "Correct. A signed agreement naming a counterparty that appears not to exist in any searchable corporate registry is a serious red flag, not a resolution of the earlier concerns — it suggests the supporting documentation itself may be fabricated. This combination of factors meets the reasonable-grounds-to-suspect threshold and warrants an SAR." },
+          { text: 'Accept the signed agreement as sufficient evidence and release the funds', correct: false, feedback: "Incorrect. A signed document is not evidence of legitimacy if the named counterparty cannot be independently verified to exist — accepting it at face value here would mean crediting funds based on documentation that itself raises new suspicion." },
+          { text: 'Ask Meridian for a second, different explanation without escalating', correct: false, feedback: "Incorrect. Repeatedly requesting alternative explanations without escalating internally delays the required SAR assessment and risks tipping off the customer that their documentation has failed verification." },
+          { text: "Release the funds since the customer provided documentation, however unverifiable, and further checking exceeds the exchange's obligations", correct: false, feedback: "Incorrect. Providing documentation that fails basic verification does not discharge the exchange's due diligence obligations — quite the opposite, an unverifiable counterparty is exactly the kind of finding that should trigger escalation and an SAR, not closure of the inquiry." },
+        ],
+      },
+    ],
   },
 ]
 
@@ -618,6 +876,49 @@ Your task: analyse the alert and determine next steps.`,
     title: 'PSP: High Chargeback Rate — Card-Not-Present Fraud Signal',
     tags: ['Escalation'], sector: 'Fintech', premium: false,
     shortDesc: 'A business customer processing £385,000 in card-not-present payments has an 8.2% chargeback rate. Investigate the ML and fraud risk and determine reporting obligations.',
+    fullScenario: `MERCHANT MONITORING ALERT — PAYMENT SERVICE PROVIDER\n\nMerchant customer: Skyline Electronics Direct Ltd\nBusiness type: Online electronics retailer (card-not-present, e-commerce only)\nAccount tenure: 5 months\nMonthly processing volume: £385,000 (card-not-present transactions)\n\nAlert: Chargeback rate monitoring\n• Chargeback rate: 8.2% (industry average for electronics e-commerce: 0.5–1%; card scheme "excessive" threshold: typically 1.5–2%)\n• Chargeback reason codes: predominantly "fraudulent transaction — cardholder does not recognise"\n• Average transaction value: £850 (high-ticket items — laptops, phones)\n• Shipping addresses: high concentration to freight-forwarding addresses (goods reshipped internationally)\n• Merchant's own fraud controls: minimal (no AVS or CVV enforcement configured)\n\nYour task: assess the fraud and ML risk and determine the appropriate response.`,
+    steps: [
+      {
+        id: 1, title: 'Pattern Recognition',
+        question: "What does this chargeback pattern most likely indicate?",
+        options: [
+          { text: 'Card-not-present (CNP) fraud — likely stolen card data used to purchase high-value electronics, shipped to freight-forwarding addresses for resale or export, a common "card testing and cash-out" typology; the 8.2% rate is 8–16x the industry average and dominated by "fraudulent transaction" codes', correct: true, feedback: 'Correct. The combination of a chargeback rate far above industry norms, reason codes specifically indicating cardholder-unrecognised fraud (not product disputes or returns), high-ticket items, and shipment to freight-forwarding addresses is a textbook signature of stolen-card cash-out fraud, not a legitimate retail issue.' },
+          { text: "Normal customer dissatisfaction with product quality", correct: false, feedback: 'Incorrect. Product-quality disputes would show reason codes like "not as described" or "defective merchandise" — the reason codes here are overwhelmingly "fraudulent transaction, cardholder does not recognise," which points to unauthorised card use, not buyer dissatisfaction.' },
+          { text: 'Seasonal returns from a legitimate electronics retailer', correct: false, feedback: 'Incorrect. Returns are processed as refunds by the merchant, not chargebacks initiated by cardholders disputing a transaction they say they never made. The reason codes and the freight-forwarding shipping pattern are inconsistent with ordinary seasonal returns.' },
+          { text: "The merchant's own accounting error in processing refunds", correct: false, feedback: "Incorrect. An accounting error would not produce cardholder-initiated fraud disputes at 8x the industry average, nor would it correlate with a specific shipping pattern to freight-forwarding addresses — this is a fraud signal, not a bookkeeping issue." },
+        ],
+      },
+      {
+        id: 2, title: 'Investigation Steps',
+        question: "What should the PSP review to assess whether this is fraud only, or also a money laundering risk?",
+        options: [
+          { text: "Review whether the merchant itself may be complicit in a collusive scheme (processing fraudulent transactions and receiving payouts before chargebacks catch up), check the merchant's payout account and beneficial ownership for links to other flagged merchants, and assess whether the freight-forwarding pattern indicates an organised card-testing fraud ring using this merchant as a laundering vector", correct: true, feedback: "Correct. Beyond just the cardholder-level fraud, the PSP needs to assess merchant-level risk — a merchant that receives stolen-card proceeds as payouts (whether knowingly complicit or grossly negligent) is itself functioning as a laundering vector for those proceeds. This requires reviewing beneficial ownership, payout patterns, and links to other flagged merchant accounts." },
+          { text: 'Only review individual cardholder disputes one at a time with no merchant-level analysis', correct: false, feedback: 'Incorrect. Reviewing disputes individually misses the pattern entirely — the AML-relevant question is whether the merchant account itself is being used to process and cash out stolen-card proceeds, which only becomes visible at the aggregate, merchant level.' },
+          { text: 'Assume it is purely a fraud issue for the card schemes to handle, with no AML relevance to the PSP', correct: false, feedback: "Incorrect. Proceeds of card fraud being processed and paid out through a merchant account is itself a money laundering typology — the PSP has its own independent AML obligations here, separate from (and in addition to) the card schemes' fraud management programs." },
+          { text: 'Contact the freight-forwarding companies directly to request customer identities', correct: false, feedback: 'Incorrect and not the PSP\'s role. Freight forwarders are third parties with no CDD relationship to the PSP — the investigation should focus on the merchant account, its beneficial ownership, and its payout patterns, which are within the PSP\'s own visibility and authority.' },
+        ],
+      },
+      {
+        id: 3, title: 'Fraud vs. ML Reporting Obligations',
+        question: "The PSP confirms this pattern is consistent with a merchant either complicit in, or grossly negligent in preventing, CNP fraud used to launder proceeds from stolen card data. What reporting obligation applies?",
+        options: [
+          { text: 'Both a fraud escalation AND a SAR/STR obligation likely apply — report to the relevant card scheme fraud programs, and separately assess whether the pattern meets the SAR threshold for money laundering, since proceeds of card fraud being processed and paid out through the merchant account is an ML typology in its own right', correct: true, feedback: "Correct. These are two distinct, non-substitutable obligations. Card scheme reporting addresses the fraud/chargeback compliance side; the SAR/STR obligation addresses the separate legal requirement to report suspected money laundering. A firm that only does one has not discharged the other." },
+          { text: 'Only the card scheme needs to be notified, since this is fraud not money laundering', correct: false, feedback: 'Incorrect. Fraud and money laundering are not mutually exclusive — proceeds of fraud being processed through a merchant account and paid out squarely meets the definition of a predicate-offence-linked SAR trigger, independent of any card scheme reporting.' },
+          { text: "No reporting is needed since the merchant hasn't been proven complicit", correct: false, feedback: 'Incorrect. The SAR/STR threshold is reasonable grounds to suspect — not proof of complicity. Whether the merchant is knowingly involved or grossly negligent, the pattern of proceeds moving through the account meets the reporting threshold either way.' },
+          { text: "Only law enforcement needs to be contacted directly, bypassing the PSP's own SAR obligation", correct: false, feedback: 'Incorrect. The correct channel for suspected money laundering is the SAR/STR filed with the relevant FIU, not direct, informal contact with law enforcement — the FIU then determines how to disseminate the intelligence.' },
+        ],
+      },
+      {
+        id: 4, title: 'Account Action',
+        question: "What account action is most appropriate while the investigation and any SAR process proceed?",
+        options: [
+          { text: "Suspend the merchant's ability to process new transactions and hold payouts while completing the investigation, given the scale of the pattern and the risk that continued processing perpetuates fraud losses and potential ML exposure", correct: true, feedback: "Correct. An 8.2% chargeback rate on £385,000 monthly volume, tied to a suspected fraud/laundering scheme, represents ongoing and escalating risk. Suspending new transaction processing and holding payouts is a proportionate protective step while the investigation and any SAR determination proceed — allowing continued processing would compound both the fraud losses and the PSP's own regulatory exposure." },
+          { text: 'Continue normal processing, since chargebacks are a normal cost of doing business in e-commerce', correct: false, feedback: 'Incorrect. An 8–16x deviation from industry-average chargeback rates, combined with fraud-specific reason codes and a suspicious shipping pattern, is well beyond "normal cost of business" — continuing unrestricted processing here would expose the PSP to compounding fraud losses and ML risk.' },
+          { text: "Only reduce the merchant's processing limit by half as a partial measure", correct: false, feedback: 'Incorrect. A partial limit reduction does not adequately address a pattern this severe — it still allows a substantial volume of suspected fraud/laundering activity to continue processing while the investigation is ongoing.' },
+          { text: 'Terminate the merchant relationship immediately without completing the SAR assessment first', correct: false, feedback: "Incorrect. While termination may ultimately be the right outcome, it should follow (or at minimum proceed alongside) the SAR assessment — jumping straight to termination without completing that assessment risks losing the opportunity to properly document and report the suspected activity." },
+        ],
+      },
+    ],
   },
 ]
 
@@ -689,6 +990,49 @@ Your task: make the SAR and account action determinations for the cluster.`,
     title: 'MLRO: Regulatory Examination — FCA AML Supervisory Visit',
     tags: ['Regulatory'], sector: 'Fintech', premium: false,
     shortDesc: 'The FCA has notified an upcoming supervisory visit focusing on your EMI\'s transaction monitoring and SAR quality. Prepare the MLRO response file and rehearse the key examination areas.',
+    fullScenario: `REGULATORY EXAMINATION PREP — Guided Walkthrough\n\nThis simulation guides you through preparing for an FCA AML supervisory visit — a structured examination process EMIs (Electronic Money Institutions) and payment firms undergo under the FCA's AML/CTF supervisory remit.\n\nNotification received: The FCA has confirmed a 2-day on-site supervisory visit in 6 weeks, with a stated focus on: (1) transaction monitoring effectiveness, and (2) SAR/SMR quality and timeliness.\n\nMLRO: [Your name]\nFirm: Mid-sized EMI providing e-money accounts and card issuing to consumers and SMEs\n\nWork through each section to understand what the FCA will examine and how to prepare an effective response file.`,
+    steps: [
+      {
+        id: 1, title: 'Section 1: Pre-Visit Preparation',
+        question: "What should be the MLRO's first priority in the 6 weeks before the visit?",
+        options: [
+          { text: 'Conduct an internal gap analysis against the stated focus areas — pull a sample of recent alerts and SARs, assess whether monitoring rules are properly calibrated and whether SARs meet quality/timeliness standards, and remediate any gaps found before the FCA arrives', correct: true, feedback: 'Correct. The FCA has told you exactly what it will focus on. The most effective use of the preparation window is to self-audit against those two areas now, so any gaps are already identified and being remediated by the time examiners arrive — rather than being discovered live during the visit.' },
+          { text: 'Focus primarily on tidying policy documents and org charts, since those are what regulators typically review first', correct: false, feedback: "Incorrect. While documentation matters, the FCA has explicitly flagged transaction monitoring effectiveness and SAR quality as the focus — an internal gap analysis of actual operational performance in those two areas is a far higher-value use of the preparation time than polishing static documents." },
+          { text: "Wait until the FCA's visit to see what they focus on before preparing anything", correct: false, feedback: "Incorrect. The firm has already been told the two focus areas — waiting to react during the visit itself wastes the six-week preparation window and risks the FCA discovering unremediated gaps live." },
+          { text: 'Delegate all preparation to external counsel without internal review', correct: false, feedback: "Incorrect. External counsel can support the process, but the MLRO cannot delegate away ownership of understanding the firm's actual operational performance — the FCA will expect the MLRO personally to have a detailed, first-hand grasp of the monitoring and SAR findings." },
+        ],
+      },
+      {
+        id: 2, title: 'Section 2: Transaction Monitoring Effectiveness',
+        question: "The FCA will likely ask how the firm demonstrates its transaction monitoring rules are 'effective' rather than just 'present.' What evidence should the MLRO prepare?",
+        options: [
+          { text: 'Evidence of rule calibration and tuning — alert volumes, false-positive rates, periodic rule reviews based on typology trends, above/below-the-line testing, and examples of how monitoring rules have actually led to genuine SAR filings', correct: true, feedback: "Correct. 'Effectiveness' is demonstrated through evidence that the system is actively tuned and produces real outcomes — not just that it exists. FCA examiners specifically probe for false-positive management, periodic recalibration, and a track record connecting alerts to real SAR filings, which together show the system is doing genuine risk-based work." },
+          { text: "A copy of the monitoring system's vendor brochure describing its features", correct: false, feedback: "Incorrect. A vendor brochure describes theoretical capability, not how the firm has actually configured, tuned, and operated the system. The FCA is examining the firm's own governance and use of the tool, not the vendor's marketing material." },
+          { text: 'The total number of alerts generated last year, with no further analysis', correct: false, feedback: 'Incorrect. A raw alert count says nothing about quality — a high alert volume with an unmanaged false-positive rate and no rule tuning actually suggests weaker, not stronger, monitoring effectiveness.' },
+          { text: 'A statement that the system was purchased from a reputable vendor and is therefore presumed effective', correct: false, feedback: "Incorrect. Effectiveness cannot be presumed from vendor reputation — the FCA's supervisory approach specifically requires firms to demonstrate ongoing, evidenced calibration and outcome-tracking of their own monitoring programme." },
+        ],
+      },
+      {
+        id: 3, title: 'Section 3: SAR Quality and Timeliness',
+        question: "A sample review finds that while all SARs were filed within regulatory timeframes, several narratives are generic and lack transaction-level detail. What should the MLRO do before the visit?",
+        options: [
+          { text: 'Treat this as a genuine finding requiring remediation — timeliness alone does not satisfy FCA expectations; review and strengthen the SAR drafting process, and be prepared to discuss the gap transparently with examiners along with the remediation plan', correct: true, feedback: 'Correct. Regulators consistently respond far better to firms that self-identify issues with a credible fix already underway than to issues examiners discover themselves. Timeliness is only one dimension of SAR quality — narratives without specific transaction detail are far less useful to the NCA and are a genuine finding, not a minor stylistic issue.' },
+          { text: 'Since all SARs were filed on time, no further action is needed before the visit', correct: false, feedback: 'Incorrect. Timeliness and quality are separate dimensions. A SAR filed on time but lacking transaction-level detail still represents a quality gap that the FCA would flag, and leaving it unaddressed before the visit misses a clear opportunity for self-remediation.' },
+          { text: 'Avoid raising this internally to prevent drawing attention to it before the FCA visit', correct: false, feedback: "Incorrect. Suppressing a known finding internally does not make it disappear — it only ensures the firm is unprepared if the FCA's own sample review finds the same gap, which is a far worse outcome than proactive remediation." },
+          { text: 'Retroactively rewrite historical SAR narratives to add missing detail before the visit', correct: false, feedback: "Incorrect and improper. Rewriting historical SARs after the fact would misrepresent the contemporaneous record submitted to the NCA. The correct response is to fix the process going forward and be transparent about the historical gap, not alter past records." },
+        ],
+      },
+      {
+        id: 4, title: 'Section 4: During the Visit',
+        question: "During the visit, an examiner asks a direct question about a specific SAR where the MLRO knows the firm's response could have been faster. How should the MLRO respond?",
+        options: [
+          { text: 'Answer honestly and directly, explaining what happened, why there was a delay, and what has since been done to prevent recurrence', correct: true, feedback: 'Correct. FCA examiners consistently report that firms who are transparent about weaknesses and demonstrate credible remediation are treated far more favourably than firms who appear evasive or defensive. Misleading a regulator during a supervisory visit is itself a serious — and potentially separately actionable — regulatory matter, well beyond the underlying timing issue.' },
+          { text: "Minimise the delay and suggest it was within acceptable tolerances even if it wasn't", correct: false, feedback: "Incorrect. Misrepresenting facts to a regulator during a supervisory visit is a serious matter in its own right, independent of the underlying issue — and examiners are typically well-placed to test claims against the firm's own records." },
+          { text: 'Redirect the conversation to other, stronger areas of the AML programme', correct: false, feedback: "Incorrect. Deflecting a direct examiner question reads as evasiveness and typically prompts further, more skeptical scrutiny — a direct, honest answer to the specific question asked is the better approach." },
+          { text: 'Decline to answer and refer the examiner to written correspondence after the visit', correct: false, feedback: "Incorrect. Declining to answer a direct question the MLRO can answer, during an on-site visit specifically about this topic, is unlikely to be well-received and does not serve the firm's interests — cooperative, direct engagement is the expected standard." },
+        ],
+      },
+    ],
   },
 ]
 
