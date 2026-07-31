@@ -78,15 +78,35 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
+const MORE_INFO_SECTIONS = [
+  {
+    title: 'Who it\'s for',
+    desc: 'AML analysts, MLROs, BSA officers, and compliance managers who need fast, accurate regulatory answers without digging through dense guidance documents.',
+  },
+  {
+    title: 'How it works',
+    desc: 'An AI compliance co-pilot grounded in FATF 40 Recommendations, BSA, EU AML Directives, FinCEN and AUSTRAC guidance — plus realistic case simulations and CAMS exam prep to practise on.',
+  },
+  {
+    title: 'Why AmlIntel',
+    desc: 'Structured, regulation-backed answers instead of generic AI responses — every answer is grounded in real frameworks across multiple jurisdictions and industries.',
+  },
+]
+
 export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
+  const [moreInfoOpen, setMoreInfoOpen] = useState(false)
   const dropdownRef = useRef(null)
+  const moreInfoRef = useRef(null)
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setTopicsOpen(false)
+      }
+      if (moreInfoRef.current && !moreInfoRef.current.contains(e.target)) {
+        setMoreInfoOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -111,6 +131,53 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <a href="#features" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">What you get</a>
             <a href="#pricing" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Pricing</a>
             <a href="#experience" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</a>
+          </div>
+
+          {/* More info dropdown */}
+          <div className="relative" ref={moreInfoRef}>
+            <button
+              onClick={() => setMoreInfoOpen((v) => !v)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                moreInfoOpen
+                  ? 'bg-slate-800 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              More info
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${moreInfoOpen ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {moreInfoOpen && (
+              <div className="absolute top-full right-0 mt-3 w-[340px] max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6" style={{ zIndex: 9999 }}>
+                <div className="absolute -top-2 right-8 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
+
+                <div className="space-y-4">
+                  {MORE_INFO_SECTIONS.map((s) => (
+                    <div key={s.title}>
+                      <p className="text-sm font-semibold text-white mb-1">{s.title}</p>
+                      <p className="text-xs text-slate-400 leading-relaxed">{s.desc}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-slate-800">
+                  <button
+                    onClick={() => {
+                      setMoreInfoOpen(false)
+                      document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+                    }}
+                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                  >
+                    See full features →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Topics dropdown */}
