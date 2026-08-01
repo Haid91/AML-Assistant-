@@ -8,3 +8,13 @@ create table if not exists users (
   premium boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+create table if not exists program_drafts (
+  id uuid primary key,
+  user_id uuid not null unique references users(id),
+  business_name text,
+  intake jsonb not null,
+  draft_text text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);

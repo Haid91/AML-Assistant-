@@ -172,12 +172,14 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
+  const [tranche2Open, setTranche2Open] = useState(false)
   const dropdownRef = useRef(null)
   const moreInfoRef = useRef(null)
+  const tranche2Ref = useRef(null)
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -186,6 +188,9 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
       }
       if (moreInfoRef.current && !moreInfoRef.current.contains(e.target)) {
         setMoreInfoOpen(false)
+      }
+      if (tranche2Ref.current && !tranche2Ref.current.contains(e.target)) {
+        setTranche2Open(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -210,9 +215,69 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <a href="#features" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">What you get</a>
             <a href="#pricing" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Pricing</a>
             <a href="#experience" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</a>
-            <button onClick={onOpenCost} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cost</button>
-            <button onClick={onOpenSetupGuide} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Setup Guide</button>
-            <button onClick={onOpenEligibility} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Eligibility Check</button>
+          </div>
+
+          {/* Tranche 2 Setup dropdown */}
+          <div className="relative" ref={tranche2Ref}>
+            <button
+              onClick={() => setTranche2Open((v) => !v)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                tranche2Open
+                  ? 'bg-slate-800 text-white'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Tranche 2 Setup
+              <svg
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${tranche2Open ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {tranche2Open && (
+              <div className="absolute top-full right-0 mt-3 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
+                <div className="absolute -top-2 right-8 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
+
+                <button
+                  onClick={() => {
+                    setTranche2Open(false)
+                    onOpenEligibility?.()
+                  }}
+                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  Eligibility Check
+                </button>
+                <button
+                  onClick={() => {
+                    setTranche2Open(false)
+                    onOpenSetupGuide?.()
+                  }}
+                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  Setup Guide
+                </button>
+                <button
+                  onClick={() => {
+                    setTranche2Open(false)
+                    onOpenProgramBuilder?.()
+                  }}
+                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  AML Program Draft
+                </button>
+                <button
+                  onClick={() => {
+                    setTranche2Open(false)
+                    onOpenCost?.()
+                  }}
+                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                >
+                  Cost
+                </button>
+              </div>
+            )}
           </div>
 
           {/* More info dropdown */}

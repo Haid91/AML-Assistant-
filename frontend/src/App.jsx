@@ -15,6 +15,7 @@ import About from './components/About'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
+import ProgramBuilder from './components/ProgramBuilder'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -187,6 +188,18 @@ function App() {
         onGoHome={() => setView('landing')}
         onSignUp={() => setView('signup')}
         onOpenSetupGuide={() => setView('setupguide')}
+        onOpenProgramBuilder={() => setView('programbuilder')}
+      />
+    )
+  }
+
+  if (view === 'programbuilder') {
+    return (
+      <ProgramBuilder
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onGoHome={() => setView('landing')}
+        onSignUp={() => setView('signup')}
+        onUpgrade={handleUpgrade}
       />
     )
   }
@@ -292,6 +305,7 @@ function App() {
       onOpenCost={() => setView('cost')}
       onOpenSetupGuide={() => setView('setupguide')}
       onOpenEligibility={() => setView('eligibility')}
+      onOpenProgramBuilder={() => setView('programbuilder')}
     />
   )
 }

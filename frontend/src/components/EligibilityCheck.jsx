@@ -37,7 +37,7 @@ function BackButton({ onClick }) {
   )
 }
 
-export default function EligibilityCheck({ onGoHome, onSignUp, onOpenSetupGuide }) {
+export default function EligibilityCheck({ onGoHome, onSignUp, onOpenSetupGuide, onOpenProgramBuilder }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [services, setServices] = useState([])
@@ -203,8 +203,11 @@ export default function EligibilityCheck({ onGoHome, onSignUp, onOpenSetupGuide 
             </div>
 
             <div className="flex flex-wrap gap-3 mb-4">
-              <button onClick={onOpenSetupGuide} className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
-                See the setup guide →
+              <button onClick={onOpenProgramBuilder} className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
+                Draft my AML/CTF Program →
+              </button>
+              <button onClick={onOpenSetupGuide} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
+                See the setup guide
               </button>
               <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
                 Sign up free

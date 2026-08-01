@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import Anthropic from '@anthropic-ai/sdk';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +29,14 @@ const chatLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
+
+const programDraftLimiter = rateLimit({
+  windowMs: 30 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many draft requests. Please try again later.' },
 })
 
 function asyncRoute(handler) {
@@ -92,6 +100,10 @@ async function sendResetEmail(toEmail, name, resetUrl) {
 }
 
 const PREMIUM_EMAILS = new Set(['haidershahid3.16@live.com'])
+
+function isPremiumUser(user) {
+  return !!(user.premium || PREMIUM_EMAILS.has(user.email))
+}
 
 function hashPassword(password) {
   return bcrypt.hashSync(password, 10)
@@ -333,6 +345,49 @@ RESPONSE STYLE:
 
 IMPORTANT DISCLAIMER: Always include a brief disclaimer for highly specific legal/compliance decisions that a qualified compliance professional or legal counsel should be consulted for advice specific to their circumstances and jurisdiction.`
 
+// ── AML/CTF Program draft system prompt ───────────────────────────────────────
+const PROGRAM_DRAFT_SYSTEM_PROMPT = `You are an AML/CTF compliance drafting assistant. Given a Business Profile describing an Australian Tranche 2 reporting entity (lawyer/conveyancer, accountant/bookkeeper, real estate agent, trust & company service provider, or precious metals/stones dealer), produce a first-pass draft AML/CTF Program tailored to that business, grounded in the AML/CTF Act 2006 (Cth) and AML/CTF Rules.
+
+OUTPUT FORMAT — MANDATORY:
+Output plain text only. Do not use markdown syntax (no #, no **, no backticks). Use ALL-CAPS section headers and numbered subsections, with blank lines between subsections, so the document reads clearly as plain text.
+
+Structure the document in exactly this order:
+
+PART A — GOVERNANCE & RISK-BASED FRAMEWORK
+1. Risk Appetite Statement
+2. Enterprise-Wide Risk Assessment (EWRA) Summary — reason from the specific Business Profile fields provided (industry, services, client types, delivery channels) to identify and rate the business's actual ML/TF risk factors. Do not use generic filler; reference the submitted details directly.
+3. AML/CTF Compliance Officer — role, seniority, and responsibilities (note whether the profile indicates one is already appointed)
+4. Staff Training Program — cadence and content, tailored to team size
+5. Independent Review — required cycle and what a review should check
+
+PART B — CUSTOMER IDENTIFICATION PROCEDURES
+6. Customer Due Diligence (CDD) Procedures by Risk Tier — standard, and when to escalate
+7. Enhanced Due Diligence (EDD) Triggers — specific to this business's client types and services
+8. Record-Keeping — what to retain and for how long (7 years)
+9. Ongoing Monitoring & Reporting Reminder — SMR (Section 41) and TTR (Section 43) obligations and timeframes
+
+Close with a section titled DISCLAIMER containing 2-3 sentences stating plainly that this is an AI-generated first-pass draft based only on the information provided, is a starting point for building a compliant program, is not legal advice, and must be reviewed and finalised by a qualified AML/CTF professional or lawyer before being relied on or submitted to AUSTRAC.
+
+Be specific and reference the submitted Business Profile throughout rather than writing generic boilerplate — a business with no compliance officer yet should get a section that says so and explains what to do next; a business with client types including overseas/international clients should get EDD guidance that reflects that.`
+
+function buildBusinessProfileText(intake) {
+  const {
+    businessName, industry, services, staffSize,
+    clientTypes, deliveryChannels, hasComplianceOfficer, hasRiskAssessment,
+  } = intake || {}
+  return `Business Profile
+- Business name: ${businessName || 'Not provided'}
+- Industry: ${industry || 'Not provided'}
+- Designated services provided: ${Array.isArray(services) && services.length ? services.join(', ') : 'Not provided'}
+- Staff size: ${staffSize || 'Not provided'}
+- Client types: ${Array.isArray(clientTypes) && clientTypes.length ? clientTypes.join(', ') : 'Not provided'}
+- Delivery channels: ${Array.isArray(deliveryChannels) && deliveryChannels.length ? deliveryChannels.join(', ') : 'Not provided'}
+- AML/CTF Compliance Officer already appointed: ${hasComplianceOfficer ? 'Yes' : 'No'}
+- Risk assessment already completed: ${hasRiskAssessment ? 'Yes' : 'No'}
+
+Draft a first-pass AML/CTF Program (Part A and Part B) for this business, following the mandatory structure and grounding every section in these specific details.`
+}
+
 // ── Fallback responses (used when no API key is configured) ──────────────────
 const SMR_SAR_DRAFT_TEMPLATE = `SUSPICIOUS MATTER REPORT (SMR) / SUSPICIOUS ACTIVITY REPORT (SAR)
 
@@ -472,6 +527,53 @@ app.post('/chat', chatLimiter, async (req, res) => {
     res.status(500).json({ reply: 'The AI service encountered an error. Please try again in a moment.' })
   }
 })
+
+// ── AML/CTF Program draft endpoints ───────────────────────────────────────────
+app.post('/program-draft', programDraftLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const intake = req.body?.intake
+  if (!intake || typeof intake !== 'object') {
+    return res.status(400).json({ error: 'Business intake details are required' })
+  }
+
+  if (!anthropic) {
+    return res.status(503).json({ error: 'AI program drafting is not available right now. Please try again later.' })
+  }
+
+  try {
+    const profileText = buildBusinessProfileText(intake)
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 16000,
+      system: PROGRAM_DRAFT_SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: profileText }],
+    })
+
+    const draftText = response.content[0]?.text || ''
+    if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
+
+    const businessName = intake.businessName || null
+    await saveProgramDraft({ id: crypto.randomUUID(), userId: user.id, businessName, intake, draftText })
+    res.json({ draft: { businessName, intake, draftText } })
+  } catch (err) {
+    console.error('Claude API error (program draft):', err.message)
+    if (err.status === 401) {
+      return res.status(500).json({ error: 'Invalid API key. Please check your ANTHROPIC_API_KEY in backend/.env and restart the server.' })
+    }
+    res.status(500).json({ error: 'The AI service encountered an error while drafting your program. Please try again in a moment.' })
+  }
+}))
+
+app.get('/program-draft', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const draft = await getProgramDraft(user.id)
+  res.json({ draft })
+}))
 
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'AML Compliance Assistant API', aiEnabled: !!anthropic })
