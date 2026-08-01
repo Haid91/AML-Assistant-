@@ -6,6 +6,7 @@ const INDUSTRIES = [
   { id: 'realestate', label: 'Real Estate Agents' },
   { id: 'tcsp', label: 'Trust & Company Service Providers' },
   { id: 'bullion', label: 'Dealers in Precious Metals & Stones' },
+  { id: 'other', label: 'Other Tranche 2 Professionals' },
 ]
 
 const PREMIUM_MONTHLY = 49.99
