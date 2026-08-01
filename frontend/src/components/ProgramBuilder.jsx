@@ -59,7 +59,7 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade }) {
+export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, onOpenTraining }) {
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
   const [businessName, setBusinessName] = useState('')
@@ -248,6 +248,18 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade }) 
               Regenerate
             </button>
           </div>
+
+          {draft.intake?.industry === 'accountant' && (
+            <div className="print:hidden mt-8 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-sm mb-1">Now train your team</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs">Practise real Accountant &amp; TCSP CDD scenarios — nominee directors, opaque company formation, and the red flags that trip up newly regulated firms.</p>
+              </div>
+              <button onClick={onOpenTraining} className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
+                Practise Accountant &amp; TCSP scenarios →
+              </button>
+            </div>
+          )}
         </div>
       </div>
     )

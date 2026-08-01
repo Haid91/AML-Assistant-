@@ -200,6 +200,7 @@ function App() {
         onGoHome={() => setView('landing')}
         onSignUp={() => setView('signup')}
         onUpgrade={handleUpgrade}
+        onOpenTraining={() => setView(user ? 'training' : 'signup')}
       />
     )
   }
