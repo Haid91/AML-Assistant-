@@ -54,3 +54,16 @@ export async function saveProgramDraft({ id, userId, businessName, intake, draft
     [id, userId, businessName, intake, draftText]
   )
 }
+
+export async function createSession(token, email) {
+  await pool.query('INSERT INTO sessions (token, email) VALUES ($1, $2)', [token, email])
+}
+
+export async function getSessionEmail(token) {
+  const { rows } = await pool.query('SELECT email FROM sessions WHERE token = $1', [token])
+  return rows[0]?.email || null
+}
+
+export async function deleteSession(token) {
+  await pool.query('DELETE FROM sessions WHERE token = $1', [token])
+}

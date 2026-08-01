@@ -18,3 +18,9 @@ create table if not exists program_drafts (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+create table if not exists sessions (
+  token uuid primary key,
+  email text not null,
+  created_at timestamptz not null default now()
+);

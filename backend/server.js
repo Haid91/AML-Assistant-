@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import Anthropic from '@anthropic-ai/sdk';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, createSession, getSessionEmail, deleteSession } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -72,10 +72,9 @@ const anthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY
   : null
 
 // ── Sessions / reset tokens ───────────────────────────────────────────────────
-// Users are persisted in Postgres (see db.js). Sessions and reset tokens stay
-// in-memory — they're short-lived and resetting them on restart just means
-// signed-in users log in again.
-const sessions = new Map()    // token → email
+// Users and sessions are persisted in Postgres (see db.js) so signed-in users
+// stay signed in across server restarts. Reset tokens stay in-memory — they're
+// short-lived, and losing one on restart just means requesting a new reset link.
 const resetTokens = new Map() // token → { email, expiresAt }
 
 // ── Email / SMTP ──────────────────────────────────────────────────────────────
@@ -220,7 +219,7 @@ app.post('/auth/register', authLimiter, asyncRoute(async (req, res) => {
     throw err
   }
   const token = crypto.randomUUID()
-  sessions.set(token, lowerEmail)
+  await createSession(token, lowerEmail)
   res.json({ token, user: { id, name, email: lowerEmail, premium } })
 }))
 
@@ -237,20 +236,20 @@ app.post('/auth/login', authLimiter, asyncRoute(async (req, res) => {
     await updateUserPassword(user.email, hashPassword(password))
   }
   const token = crypto.randomUUID()
-  sessions.set(token, user.email)
+  await createSession(token, user.email)
   res.json({ token, user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
 }))
 
-app.post('/auth/logout', (req, res) => {
+app.post('/auth/logout', asyncRoute(async (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '')
-  if (token) sessions.delete(token)
+  if (token) await deleteSession(token)
   res.json({ success: true })
-})
+}))
 
 async function getUserFromAuth(req) {
   const token = req.headers.authorization?.replace('Bearer ', '')
   if (!token) return null
-  const email = sessions.get(token)
+  const email = await getSessionEmail(token)
   if (!email) return null
   return getUserByEmail(email)
 }
