@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react'
 
 const INDUSTRIES = [
-  { id: 'banking', label: 'Banking' },
-  { id: 'law', label: 'Law' },
-  { id: 'crypto', label: 'Crypto' },
-  { id: 'fintech', label: 'Fintech' },
-  { id: 'other', label: 'Other' },
+  { id: 'lawyers', label: 'Lawyers & Conveyancers' },
+  { id: 'accountants', label: 'Accountants' },
+  { id: 'realestate', label: 'Real Estate Agents' },
+  { id: 'tcsp', label: 'Trust & Company Service Providers' },
+  { id: 'bullion', label: 'Dealers in Precious Metals & Stones' },
 ]
 
 const PREMIUM_MONTHLY = 49.99
@@ -43,7 +43,7 @@ function BackButton({ onClick }) {
 }
 
 export default function CostCalculator({ onGoHome, onSignUp, onSignIn }) {
-  const [industry, setIndustry] = useState('banking')
+  const [industry, setIndustry] = useState('lawyers')
   const [people, setPeople] = useState(1)
   const [needs, setNeeds] = useState([])
 
@@ -60,7 +60,7 @@ export default function CostCalculator({ onGoHome, onSignUp, onSignIn }) {
     return { annualTotal: total, monthlyEquivalent: total / 12 }
   }, [needsPremium, people])
 
-  const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.label || 'Banking'
+  const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.label || 'Lawyers & Conveyancers'
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
