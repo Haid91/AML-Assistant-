@@ -14,6 +14,7 @@ import AccountSettings from './components/AccountSettings'
 import About from './components/About'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
+import EligibilityCheck from './components/EligibilityCheck'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -180,6 +181,16 @@ function App() {
     )
   }
 
+  if (view === 'eligibility') {
+    return (
+      <EligibilityCheck
+        onGoHome={() => setView('landing')}
+        onSignUp={() => setView('signup')}
+        onOpenSetupGuide={() => setView('setupguide')}
+      />
+    )
+  }
+
   if (view === 'signup') {
     return (
       <SignUp
@@ -280,6 +291,7 @@ function App() {
       onOpenAbout={() => setView('about')}
       onOpenCost={() => setView('cost')}
       onOpenSetupGuide={() => setView('setupguide')}
+      onOpenEligibility={() => setView('eligibility')}
     />
   )
 }

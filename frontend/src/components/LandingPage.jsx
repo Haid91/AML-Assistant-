@@ -47,7 +47,7 @@ const FEATURES = [
       </svg>
     ),
     title: 'Tranche 2 program setup',
-    desc: 'A free step-by-step guide to standing up your AML/CTF program — AUSTRAC enrolment, appointing a compliance officer, your risk assessment, and Part A/B drafting — plus dedicated training scenarios for lawyers, accountants, real estate agents, and TCSPs newly captured by the 2024 reforms.',
+    desc: 'A free step-by-step guide to standing up your AML/CTF program — AUSTRAC enrolment, appointing a compliance officer, your risk assessment, and Part A/B drafting — plus dedicated training scenarios for lawyers, accountants, real estate agents, and TCSPs now captured by Tranche 2, in force since 1 July 2026.',
     span: true,
   },
 ]
@@ -88,7 +88,91 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide }) {
+const ENFORCEMENT_CASES = [
+  {
+    entity: 'Commonwealth Bank',
+    year: '2018',
+    amount: '$700M',
+    desc: 'Penalty for over 53,000 contraventions of the AML/CTF Act, including failures to report threshold transactions on time and inadequate ongoing customer due diligence.',
+  },
+  {
+    entity: 'Westpac',
+    year: '2020',
+    amount: '$1.3B',
+    desc: "Australia's largest ever civil penalty, for over 23 million breaches including failures to report international funds transfers and inadequate monitoring of transactions linked to child exploitation risks.",
+  },
+  {
+    entity: 'Crown Resorts',
+    year: '2023',
+    amount: '$450M',
+    desc: 'Penalty for failing to properly assess and manage money laundering risk across its casino operations, including inadequate customer due diligence on high-risk patrons.',
+  },
+]
+
+const SECTORS = [
+  {
+    title: 'Legal',
+    desc: 'Lawyers, solicitors & conveyancers',
+    bullets: [
+      'Designated services include property settlements, trust account management, and company/trust formation',
+      'CDD required before or during retainer, with EDD for high-risk matters',
+      'Legal professional privilege doesn\'t exempt AML/CTF reporting obligations',
+    ],
+  },
+  {
+    title: 'Real Estate',
+    desc: 'Agents, property managers & auctioneers',
+    bullets: [
+      'Buying or selling real property on a client\'s behalf is a designated service',
+      'Verify source of funds for high-value or cash-heavy transactions',
+      'Watch for red flags like third-party payments and rapid on-sales',
+    ],
+  },
+  {
+    title: 'Accountants',
+    desc: 'Accountants, tax & BAS agents, bookkeepers',
+    bullets: [
+      'Managing client funds or financial assets brings you into scope',
+      'CDD failures in company formation are a common first-year finding',
+      'Dedicated Accountant & TCSP training scenarios available in AmlIntel',
+    ],
+  },
+  {
+    title: 'Conveyancers & TCSPs',
+    desc: 'Trust & company service providers',
+    bullets: [
+      'Forming, operating, or managing companies and trusts is a designated service',
+      'Must look through nominee directors and opaque structures to identify beneficial owners',
+      'Registered office and nominee services carry elevated ML/TF risk',
+    ],
+  },
+  {
+    title: 'Jewellers & Bullion Dealers',
+    desc: 'Precious metals & stones dealers',
+    bullets: [
+      'High-value cash transactions in precious metals/stones are designated services',
+      'Threshold transaction reporting applies to qualifying cash transactions',
+      'Structuring (splitting transactions to avoid reporting) is a key red flag',
+    ],
+  },
+]
+
+const REG_FAQS = [
+  {
+    q: 'Who needs to comply with AUSTRAC AML/CTF regulations?',
+    a: 'Any business providing a "designated service" under the AML/CTF Act 2006 is a reporting entity. This has always covered banks, remittance providers, and casinos, and since the Tranche 2 reforms came into force on 1 July 2026, it now also covers lawyers and conveyancers, accountants, real estate agents, trust and company service providers, and dealers in precious metals and stones.',
+  },
+  {
+    q: 'What happens if I don\'t comply?',
+    a: 'AUSTRAC can take civil and criminal enforcement action. Maximum penalties are up to $36.4 million per contravention for companies and $7.28 million for individuals. Non-compliance also carries reputational and operational risk — AUSTRAC has pursued major enforcement actions against Australian banks and casinos for AML/CTF program failures.',
+  },
+  {
+    q: 'Do I need a lawyer to set up my AML/CTF program?',
+    a: 'Not necessarily — AUSTRAC provides free guidance, and many businesses build a compliant program using guides like AmlIntel\'s setup walkthrough. That said, this is educational guidance, not legal advice, and firms with complex structures or higher-risk client bases should get advice from a qualified AML/CTF professional.',
+  },
+]
+
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
@@ -128,6 +212,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
             <a href="#experience" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</a>
             <button onClick={onOpenCost} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Cost</button>
             <button onClick={onOpenSetupGuide} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Setup Guide</button>
+            <button onClick={onOpenEligibility} className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Eligibility Check</button>
           </div>
 
           {/* More info dropdown */}
@@ -355,6 +440,45 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-6">
             Fictional scenarios for educational purposes only. Not legal advice.
           </p>
+          <button
+            onClick={onOpenEligibility}
+            className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
+          >
+            Not sure if Tranche 2 applies to you? Take the free 30-second eligibility check →
+          </button>
+        </div>
+      </section>
+
+      {/* Cost of non-compliance */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-xs text-orange-600 dark:text-orange-400 uppercase tracking-widest font-medium mb-3">The cost of getting it wrong</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Non-compliance is expensive</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+              AUSTRAC has a track record of major enforcement action against businesses with inadequate AML/CTF programs.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+            {ENFORCEMENT_CASES.map((c) => (
+              <div key={c.entity} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
+                <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">{c.amount}</p>
+                <p className="font-semibold text-sm mb-1">{c.entity} · {c.year}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{c.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
+            <p className="text-sm text-orange-700 dark:text-orange-300 leading-relaxed">
+              Maximum civil penalties are now up to <strong>$36.4 million per contravention</strong> for companies and <strong>$7.28 million</strong> for individuals (100,000 / 20,000 penalty units at $364/unit, effective 1 July 2026).
+            </p>
+            <button
+              onClick={onOpenEligibility}
+              className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+            >
+              Check if this applies to you →
+            </button>
+          </div>
         </div>
       </section>
 
@@ -379,6 +503,41 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 </div>
                 <h3 className="font-semibold text-lg mb-2">{f.title}</h3>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Built for your Tranche 2 sector */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">Built for your sector</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Tailored to Tranche 2 industries</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+              Guidance and training scoped to the designated services your industry actually provides.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            {SECTORS.map((s) => (
+              <div key={s.title} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col">
+                <h3 className="font-semibold text-lg mb-0.5">{s.title}</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">{s.desc}</p>
+                <ul className="space-y-2.5 mb-5 flex-1">
+                  {s.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      <span className="text-blue-500 mt-0.5 shrink-0">•</span>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={onOpenSetupGuide}
+                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors text-left"
+                >
+                  View setup guide →
+                </button>
               </div>
             ))}
           </div>
@@ -544,6 +703,24 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 <p className="text-2xl font-bold text-blue-600 mb-1">{item.stat}</p>
                 <p className="font-semibold text-sm mb-2">{item.label}</p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Regulatory FAQ */}
+      <section className="py-24 px-6 bg-slate-50 dark:bg-slate-800">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">FAQ</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Common questions</h2>
+          </div>
+          <div className="space-y-4">
+            {REG_FAQS.map((f) => (
+              <div key={f.q} className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-6">
+                <h3 className="font-semibold text-sm mb-2">{f.q}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{f.a}</p>
               </div>
             ))}
           </div>

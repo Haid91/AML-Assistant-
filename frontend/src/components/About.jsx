@@ -47,10 +47,10 @@ export default function About({ onGoHome, onSignUp, onSignIn, onOpenSetupGuide, 
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
             AML analysts, MLROs, BSA officers, and compliance managers who need fast, accurate regulatory answers
             without digging through dense guidance documents — whether you're investigating a case, drafting an
-            SMR/SAR, or preparing for the CAMS exam. It's also built for firms newly captured by Australia's 2024
-            Tranche 2 reforms — lawyers and conveyancers, accountants, real estate agents, trust and company
-            service providers, and dealers in precious metals and stones — who are standing up an AML/CTF program
-            for the first time.
+            SMR/SAR, or preparing for the CAMS exam. It's also built for firms now captured by Australia's
+            Tranche 2 reforms, in force since 1 July 2026 — lawyers and conveyancers, accountants, real estate
+            agents, trust and company service providers, and dealers in precious metals and stones — who are
+            standing up an AML/CTF program for the first time.
           </p>
         </section>
 
@@ -69,7 +69,7 @@ export default function About({ onGoHome, onSignUp, onSignIn, onOpenSetupGuide, 
         <section>
           <h2 className="text-xl font-bold mb-2">Setting up your AML/CTF program</h2>
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
-            If your firm has just been captured by the Tranche 2 reforms, AmlIntel has two things to help you get
+            If your firm has been captured by the Tranche 2 reforms, AmlIntel has two things to help you get
             started: a free step-by-step setup guide covering enrolment, appointing a compliance officer, your
             risk assessment, and drafting your Part A & B program — and dedicated Accountant & TCSP training
             scenarios covering the CDD failures that most commonly trip up newly regulated firms, like nominee
