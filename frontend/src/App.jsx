@@ -16,6 +16,7 @@ import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
 import ProgramBuilder from './components/ProgramBuilder'
+import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -30,6 +31,7 @@ function App() {
   const [settingsTab, setSettingsTab] = useState('profile')
   const [user, setUser] = useState(null)
   const [selectedIndustry, setSelectedIndustry] = useState(null)
+  const [selectedSectorGuide, setSelectedSectorGuide] = useState(null)
   const [resetToken, setResetToken] = useState(null)
 
   useEffect(() => {
@@ -177,7 +179,21 @@ function App() {
         user={user}
         onGoHome={() => setView('landing')}
         onSignUp={() => setView('signup')}
-        onOpenTraining={() => setView(user ? 'training' : 'signup')}
+        onOpenEligibility={() => setView('eligibility')}
+        onOpenProgramBuilder={() => setView('programbuilder')}
+        onOpenSectorGuide={(id) => { setSelectedSectorGuide(id); setView('sectorguide') }}
+      />
+    )
+  }
+
+  if (view === 'sectorguide') {
+    return (
+      <SectorGuide
+        sector={selectedSectorGuide}
+        onGoHome={() => setView('landing')}
+        onOpenSetupGuide={() => setView('setupguide')}
+        onOpenEligibility={() => setView('eligibility')}
+        onOpenProgramBuilder={() => setView('programbuilder')}
       />
     )
   }
@@ -307,6 +323,7 @@ function App() {
       onOpenSetupGuide={() => setView('setupguide')}
       onOpenEligibility={() => setView('eligibility')}
       onOpenProgramBuilder={() => setView('programbuilder')}
+      onOpenSectorGuide={(id) => { setSelectedSectorGuide(id); setView('sectorguide') }}
     />
   )
 }

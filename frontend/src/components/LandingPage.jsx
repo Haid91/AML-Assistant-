@@ -111,6 +111,7 @@ const ENFORCEMENT_CASES = [
 
 const SECTORS = [
   {
+    id: 'lawyer',
     title: 'Legal',
     desc: 'Lawyers, solicitors & conveyancers',
     bullets: [
@@ -120,6 +121,7 @@ const SECTORS = [
     ],
   },
   {
+    id: 'realestate',
     title: 'Real Estate',
     desc: 'Agents, property managers & auctioneers',
     bullets: [
@@ -129,6 +131,7 @@ const SECTORS = [
     ],
   },
   {
+    id: 'accountant',
     title: 'Accountants',
     desc: 'Accountants, tax & BAS agents, bookkeepers',
     bullets: [
@@ -138,6 +141,7 @@ const SECTORS = [
     ],
   },
   {
+    id: 'tcsp',
     title: 'Conveyancers & TCSPs',
     desc: 'Trust & company service providers',
     bullets: [
@@ -147,6 +151,7 @@ const SECTORS = [
     ],
   },
   {
+    id: 'bullion',
     title: 'Jewellers & Bullion Dealers',
     desc: 'Precious metals & stones dealers',
     bullets: [
@@ -172,7 +177,7 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [camsOpen, setCamsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
@@ -598,10 +603,10 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   ))}
                 </ul>
                 <button
-                  onClick={onOpenSetupGuide}
+                  onClick={() => onOpenSectorGuide?.(s.id)}
                   className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors text-left"
                 >
-                  View setup guide →
+                  View sector guide →
                 </button>
               </div>
             ))}
