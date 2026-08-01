@@ -39,6 +39,14 @@ const programDraftLimiter = rateLimit({
   message: { error: 'Too many draft requests. Please try again later.' },
 })
 
+const estimateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again later.' },
+})
+
 function asyncRoute(handler) {
   return async (req, res) => {
     try {
@@ -92,6 +100,37 @@ async function sendResetEmail(toEmail, name, resetUrl) {
         <p style="margin:0 0 24px;color:#475569;font-size:15px">Hi ${name}, we received a request to reset your AmlIntel password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
         <a href="${resetUrl}" style="display:inline-block;padding:13px 28px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px">Reset Password</a>
         <p style="margin:28px 0 0;color:#94a3b8;font-size:13px">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
+        <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
+        <p style="margin:0;color:#94a3b8;font-size:12px">AML Compliance Assistant</p>
+      </div>
+    `,
+  })
+}
+
+async function sendEstimateEmail(toEmail, { industryLabel, people, annualTotal, monthlyEquivalent }) {
+  const transporter = createTransporter()
+  const summary = `${industryLabel} · ${people} ${people === 1 ? 'person' : 'people'} · $${annualTotal.toFixed(2)}/year ($${monthlyEquivalent.toFixed(2)}/month)`
+  if (!transporter) {
+    console.log(`\n📧 Cost estimate (configure SMTP_PASS in .env to send real emails):\n   To: ${toEmail}\n   ${summary}\n`)
+    return
+  }
+  await transporter.sendMail({
+    from: `"AmlIntel" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
+    to: toEmail,
+    subject: 'Your AmlIntel cost estimate',
+    html: `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
+        <div style="margin-bottom:24px">
+          <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">Your AmlIntel cost estimate</h2>
+        <p style="margin:0 0 20px;color:#475569;font-size:15px">Here's the Premium plan estimate you requested:</p>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px">
+          <p style="margin:0 0 4px;color:#64748b;font-size:13px">${industryLabel} · ${people} ${people === 1 ? 'person' : 'people'}</p>
+          <p style="margin:0;color:#0f172a;font-size:28px;font-weight:700">$${annualTotal.toFixed(2)} <span style="font-size:14px;font-weight:500;color:#64748b">/ year</span></p>
+          <p style="margin:2px 0 0;color:#64748b;font-size:13px">$${monthlyEquivalent.toFixed(2)} / month equivalent</p>
+        </div>
+        <p style="margin:0 0 24px;color:#94a3b8;font-size:13px">This is an illustrative estimate, not a quote.</p>
         <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
         <p style="margin:0;color:#94a3b8;font-size:12px">AML Compliance Assistant</p>
       </div>
@@ -573,6 +612,43 @@ app.get('/program-draft', asyncRoute(async (req, res) => {
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
   const draft = await getProgramDraft(user.id)
   res.json({ draft })
+}))
+
+// ── Cost estimate email ───────────────────────────────────────────────────────
+const COST_INDUSTRIES = {
+  lawyers: 'Lawyers & Conveyancers',
+  accountants: 'Accountants',
+  realestate: 'Real Estate Agents',
+  tcsp: 'Trust & Company Service Providers',
+  bullion: 'Dealers in Precious Metals & Stones',
+  other: 'Other Tranche 2 Professionals',
+}
+const COST_PREMIUM_MONTHLY = 49.99
+
+app.post('/email-estimate', estimateLimiter, asyncRoute(async (req, res) => {
+  const { email, industry, people } = req.body
+  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid email address' })
+  }
+  const industryLabel = COST_INDUSTRIES[industry]
+  if (!industryLabel) {
+    return res.status(400).json({ error: 'Invalid industry' })
+  }
+  const peopleCount = Number(people)
+  if (!Number.isInteger(peopleCount) || peopleCount < 1 || peopleCount > 500) {
+    return res.status(400).json({ error: 'Invalid team size' })
+  }
+
+  const annualTotal = COST_PREMIUM_MONTHLY * 12 * peopleCount
+  const monthlyEquivalent = annualTotal / 12
+
+  try {
+    await sendEstimateEmail(email.trim(), { industryLabel, people: peopleCount, annualTotal, monthlyEquivalent })
+  } catch (err) {
+    console.error('Failed to send estimate email:', err.message)
+    console.log(`Estimate (fallback): ${email.trim()} — ${industryLabel}, ${peopleCount} people, $${annualTotal.toFixed(2)}/year`)
+  }
+  res.json({ success: true })
 }))
 
 app.get('/health', (_req, res) => {

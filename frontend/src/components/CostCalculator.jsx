@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { API_URL } from '../config'
 import Navbar from './Navbar'
 
 const INDUSTRIES = [
@@ -14,46 +15,67 @@ const PREMIUM_MONTHLY = 49.99
 const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 
-const NEEDS = [
-  { id: 'assistant', label: 'AI compliance assistant', desc: 'Ask questions and draft SMR/SAR narratives instantly' },
-  { id: 'cams', label: 'Full CAMS exam prep', desc: 'All 20 questions per chapter, not just the free preview' },
-  { id: 'unlimited', label: 'Unlimited daily questions', desc: 'No daily cap on assistant usage' },
+const FEATURES = [
+  'AI-drafted AML/CTF Program (Part A & B)',
+  'AI compliance assistant for CDD, EDD & SMR guidance',
+  'Free Eligibility Check & Setup Guide',
+  'Unlimited questions — no daily cap',
 ]
 
 const FAQS = [
   {
     q: 'How much does AmlIntel cost?',
-    a: 'The core training platform — Analyst and MLRO case simulations across Banking, Law, Crypto, and Fintech, plus the Ownership Structure Simulation — is free. Premium adds the AI compliance assistant and full CAMS exam prep for $49.99/month, with a 7-day free trial.',
+    a: `Premium is $${PREMIUM_MONTHLY}/month per person, with a 7-day free trial. It includes the AI compliance assistant for CDD, EDD, and SMR guidance, plus AI-drafted AML/CTF Program generation.`,
   },
   {
     q: 'What do I get for free?',
-    a: 'All Analyst and MLRO training modules across every industry, a 6-of-20 question preview per CAMS chapter, and the Beginner-level Ownership Structure Simulation scenarios — no credit card required.',
+    a: 'The Eligibility Check and Setup Guide are both free — no card required. Premium adds the AI compliance assistant and AI-drafted AML/CTF Program generation.',
   },
   {
-    q: 'Is this cheaper than a compliance consultant or training course?',
-    a: `For most individuals, yes. A private AML/CTF training course or part-time consultant commonly runs $${CONSULTANT_LOW.toLocaleString()}–$${CONSULTANT_HIGH.toLocaleString()} per year. AmlIntel Premium is $${(PREMIUM_MONTHLY * 12).toFixed(2)}/year per person — this is an illustrative comparison, not a quote.`,
+    q: 'Is this cheaper than a compliance consultant?',
+    a: `For most small teams, yes. A private AML/CTF consultant commonly runs $${CONSULTANT_LOW.toLocaleString()}–$${CONSULTANT_HIGH.toLocaleString()} per year. This is an illustrative comparison, not a quote — larger teams should compare against per-seat Premium pricing directly.`,
   },
 ]
 
 export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const [industry, setIndustry] = useState('lawyers')
-  const [people, setPeople] = useState(1)
-  const [needs, setNeeds] = useState([])
-
-  const toggleNeed = (id) => {
-    setNeeds((prev) => (prev.includes(id) ? prev.filter((n) => n !== id) : [...prev, id]))
-  }
-
-  const needsPremium = needs.length > 0
-  const plan = needsPremium ? 'Premium' : 'Free'
+  const [people, setPeople] = useState(3)
+  const [activeClients, setActiveClients] = useState(40)
+  const [email, setEmail] = useState('')
+  const [sendState, setSendState] = useState('idle') // idle | loading | sent | error
+  const [sendError, setSendError] = useState('')
 
   const { annualTotal, monthlyEquivalent } = useMemo(() => {
-    if (!needsPremium) return { annualTotal: 0, monthlyEquivalent: 0 }
     const total = PREMIUM_MONTHLY * 12 * people
     return { annualTotal: total, monthlyEquivalent: total / 12 }
-  }, [needsPremium, people])
+  }, [people])
 
   const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.label || 'Lawyers & Conveyancers'
+  const savings = CONSULTANT_LOW - annualTotal
+
+  const handleSendEstimate = async (e) => {
+    e.preventDefault()
+    if (!email.trim()) { setSendError('Please enter your email address.'); return }
+    setSendState('loading')
+    setSendError('')
+    try {
+      const res = await fetch(`${API_URL}/email-estimate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), industry, people }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setSendError(data.error || 'Something went wrong. Please try again.')
+        setSendState('error')
+        return
+      }
+      setSendState('sent')
+    } catch {
+      setSendError('Unable to connect to the server. Please try again.')
+      setSendState('error')
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
@@ -69,7 +91,6 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
         onSignOut={onSignOut}
         onOpenSettings={onOpenSettings}
         onOpenAbout={onOpenAbout}
-        onOpenCost={onOpenCost}
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
@@ -83,25 +104,25 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           </svg>
           Cost calculator
         </span>
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">What will AML compliance training actually cost you?</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">Estimate your AML/CTF compliance cost</h1>
         <p className="text-slate-500 dark:text-slate-400 text-base">
-          Adjust a few details to see your recommended plan and estimated annual cost with AmlIntel.
+          Tell us about your firm to see your recommended plan and estimated annual cost with AmlIntel.
         </p>
       </div>
 
       {/* Calculator */}
       <div className="max-w-4xl mx-auto px-6 pb-16 grid md:grid-cols-2 gap-6 items-start">
-        {/* Form */}
+        {/* Left: firm details */}
         <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
           <div className="flex items-center gap-2 mb-5">
             <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <h2 className="font-semibold">Tell us about your needs</h2>
+            <h2 className="font-semibold">Tell us about your firm</h2>
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Industry</label>
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Business type</label>
             <select
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
@@ -113,7 +134,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
 
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-slate-600 dark:text-slate-300">People who need access</label>
+              <label className="text-sm font-medium text-slate-600 dark:text-slate-300">People in your firm</label>
               <span className="text-sm font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 px-2.5 py-0.5 rounded-lg">{people}</span>
             </div>
             <input
@@ -125,46 +146,33 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
               <span>1</span>
               <span>20+</span>
             </div>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">Used to estimate per-seat Premium cost.</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Do you need any of these?</label>
-            <div className="space-y-2">
-              {NEEDS.map((n) => (
-                <button
-                  key={n.id}
-                  onClick={() => toggleNeed(n.id)}
-                  className={`w-full text-left px-4 py-3 rounded-xl border transition-colors ${
-                    needs.includes(n.id)
-                      ? 'border-orange-400 bg-orange-50 dark:bg-orange-500/10'
-                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 mt-0.5 ${needs.includes(n.id) ? 'bg-orange-500 border-orange-500' : 'border-slate-300 dark:border-slate-600'}`}>
-                      {needs.includes(n.id) && (
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                        </svg>
-                      )}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-800 dark:text-white">{n.label}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{n.desc}</p>
-                    </div>
-                  </div>
-                </button>
-              ))}
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Total active clients</label>
+              <span className="text-sm font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 px-2.5 py-0.5 rounded-lg">{activeClients}</span>
             </div>
+            <input
+              type="range" min="1" max="500" value={activeClients}
+              onChange={(e) => setActiveClients(Number(e.target.value))}
+              className="w-full accent-orange-500"
+            />
+            <div className="flex justify-between text-xs text-slate-400 mt-1">
+              <span>1</span>
+              <span>500+</span>
+            </div>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">For context only — doesn't affect price.</p>
           </div>
         </div>
 
-        {/* Result */}
+        {/* Right: recommended plan */}
         <div className="bg-orange-50 dark:bg-orange-500/5 border border-orange-200 dark:border-orange-500/20 rounded-2xl p-6">
           <div className="flex items-start justify-between mb-1">
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Recommended plan</p>
-              <span className="inline-block text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-500/20 px-3 py-1 rounded-full">{plan}</span>
+              <span className="inline-block text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-500/20 px-3 py-1 rounded-full">Premium</span>
             </div>
             <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -176,47 +184,45 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
             <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/ year</span>
           </div>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">
-            {needsPremium ? `$${monthlyEquivalent.toFixed(2)} / month equivalent` : 'No cost, no card required'}
+            ${monthlyEquivalent.toFixed(2)} / month equivalent
           </p>
           <p className="text-slate-400 dark:text-slate-500 text-xs mb-5">
-            Based on {people} {people === 1 ? 'person' : 'people'} in {industryLabel}{needsPremium ? '' : ' on the Free plan'}.
+            Based on {people} {people === 1 ? 'person' : 'people'} in {industryLabel} and {activeClients} active clients.
           </p>
 
-          {needsPremium && (
-            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
-              <p className="text-sm font-semibold mb-3">Cost breakdown</p>
-              <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-2">
-                <span>Premium subscription × {people}</span>
-                <span>${annualTotal.toFixed(2)}</span>
-              </div>
-              <div className="border-t border-slate-100 dark:border-slate-700 mt-2 pt-2 flex justify-between text-sm font-bold">
-                <span>Estimated annual total</span>
-                <span>${annualTotal.toFixed(2)}</span>
-              </div>
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
+            <p className="text-sm font-semibold mb-3">Cost breakdown</p>
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-2">
+              <span>Annual subscription × {people}</span>
+              <span>${annualTotal.toFixed(2)}</span>
             </div>
-          )}
+            <div className="border-t border-slate-100 dark:border-slate-700 mt-2 pt-2 flex justify-between text-sm font-bold">
+              <span>Estimated annual total</span>
+              <span>${annualTotal.toFixed(2)}</span>
+            </div>
+          </div>
 
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
             <div className="flex items-center justify-between gap-3 mb-2">
               <div>
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">AmlIntel</p>
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">AmlIntel Premium</p>
                 <p className="text-sm font-bold">${annualTotal.toFixed(2)} / year</p>
               </div>
               <div className="text-right">
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Private consultant / course</p>
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Traditional consultant</p>
                 <p className="text-sm font-bold">${CONSULTANT_LOW.toLocaleString()}–${CONSULTANT_HIGH.toLocaleString()} / year</p>
               </div>
             </div>
-            <p className="text-[11px] text-slate-400 dark:text-slate-500">Illustrative example only — not a quote or market guarantee.</p>
+            {savings > 0 && (
+              <p className="text-sm font-semibold text-orange-600 dark:text-orange-400 mt-2">
+                You save at least ${savings.toFixed(2)} / year
+              </p>
+            )}
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">Illustrative example only — not a quote or market guarantee.</p>
           </div>
 
           <ul className="space-y-2 mb-6">
-            {[
-              'All Analyst & MLRO training modules',
-              'Ownership Structure Simulation',
-              needsPremium ? 'AI compliance assistant, unlimited questions' : '6-of-20 CAMS questions per chapter',
-              needsPremium && 'Full CAMS exam prep — all 20 questions',
-            ].filter(Boolean).map((f) => (
+            {FEATURES.map((f) => (
               <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                 <svg className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
@@ -226,22 +232,61 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
             ))}
           </ul>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 mb-5">
             <button
               onClick={onSignUp}
               className="flex-1 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
             >
-              {needsPremium ? 'Start free trial →' : 'Sign up free →'}
+              Start free trial →
             </button>
             <button
-              onClick={onSignIn}
-              className="flex-1 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl font-semibold text-sm transition-colors"
+              onClick={onOpenEligibility}
+              className="flex-1 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
             >
-              Sign in
+              Book free compliance check
             </button>
           </div>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center mt-3">
-            Indicative estimate, not a quote. For full details, see the <button onClick={onGoHome} className="text-orange-500 hover:text-orange-400 underline">pricing section</button>.
+
+          <div className="border-t border-orange-200 dark:border-orange-500/20 pt-4">
+            {sendState === 'sent' ? (
+              <p className="text-sm text-orange-700 dark:text-orange-300 flex items-center gap-2">
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                Estimate sent to {email}.
+              </p>
+            ) : (
+              <form onSubmit={handleSendEstimate}>
+                <p className="text-sm font-semibold mb-2 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Email this estimate
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => { setEmail(e.target.value); setSendError('') }}
+                    placeholder="Work email address"
+                    className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-orange-500 rounded-xl px-4 py-2.5 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 transition-colors"
+                  />
+                  <button
+                    type="submit"
+                    disabled={sendState === 'loading'}
+                    className="px-5 py-2.5 bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 disabled:opacity-50 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+                  >
+                    {sendState === 'loading' ? 'Sending…' : 'Send'}
+                  </button>
+                </div>
+                {sendError && <p className="text-xs text-red-500 dark:text-red-400 mt-2">{sendError}</p>}
+              </form>
+            )}
+          </div>
+
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center mt-4">
+            Indicative estimate in AUD, not a quote. For exact plan details, see the{' '}
+            <button onClick={() => onNavigateSection?.('pricing')} className="text-orange-500 hover:text-orange-400 underline">pricing section</button>.
           </p>
         </div>
       </div>
