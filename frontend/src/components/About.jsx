@@ -1,3 +1,5 @@
+import Navbar from './Navbar'
+
 const FEATURES = [
   {
     title: 'Realistic case guidance',
@@ -17,19 +19,26 @@ const FEATURES = [
   },
 ]
 
-export default function About({ onGoHome, onSignUp, onSignIn, onOpenSetupGuide, user }) {
+export default function About({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-      {/* Navbar */}
-      <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-        <button onClick={onGoHome} className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-          <span className="font-semibold text-sm">Intel</span>
-        </button>
-        <button onClick={onGoHome} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-          ← Back to home
-        </button>
-      </nav>
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+      />
 
       {/* Hero */}
       <div className="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">

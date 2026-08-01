@@ -1,7 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import ThemeToggle from './ThemeToggle'
-import ProfileMenu from './ProfileMenu'
-import Logo from './Logo'
+import { useState, useEffect } from 'react'
+import Navbar from './Navbar'
 
 const FEATURES = [
   {
@@ -50,42 +48,6 @@ const FEATURES = [
     desc: 'A free step-by-step guide to standing up your AML/CTF program — AUSTRAC enrolment, appointing a compliance officer, your risk assessment, and Part A/B drafting — plus dedicated training scenarios for lawyers, accountants, real estate agents, and TCSPs now captured by Tranche 2, in force since 1 July 2026.',
     span: true,
   },
-]
-
-
-const GLOBAL_TOPICS = [
-  'KYC / CDD / EDD',
-  'Suspicious Activity Reports',
-  'Currency Transaction Reports',
-  'FATF Recommendations',
-  'Bank Secrecy Act (BSA)',
-  'Beneficial Ownership',
-  'OFAC Sanctions Screening',
-  'Politically Exposed Persons',
-  'Structuring & Smurfing',
-  'Transaction Monitoring',
-  'Trade-Based ML (TBML)',
-  'Correspondent Banking',
-  'Shell Companies',
-  'Three Stages of Money Laundering',
-]
-
-const AUSTRAC_TOPICS = [
-  'What is AUSTRAC',
-  'AML/CTF Act 2006',
-  'AML/CTF Program (Part A & B)',
-  'Suspicious Matter Reports (SMRs)',
-  'Threshold Transaction Reports (TTRs)',
-  'International Funds Transfer Instructions (IFTIs)',
-  'Reporting Entities & Designated Services',
-  'Enterprise-Wide Risk Assessment (EWRA)',
-  'Ongoing Customer Due Diligence (OCDD)',
-  'Digital Currency Exchange (DCE)',
-  'Remittance Sector Obligations',
-  'Fintel Alliance',
-  'Tipping Off Prohibition',
-  'AUSTRAC E-Learning Modules',
-  'AUSTRAC Enforcement Actions',
 ]
 
 const ENFORCEMENT_CASES = [
@@ -177,251 +139,36 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide }) {
-  const [topicsOpen, setTopicsOpen] = useState(false)
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
   const [camsOpen, setCamsOpen] = useState(false)
-  const [moreInfoOpen, setMoreInfoOpen] = useState(false)
-  const [tranche2Open, setTranche2Open] = useState(false)
-  const dropdownRef = useRef(null)
-  const moreInfoRef = useRef(null)
-  const tranche2Ref = useRef(null)
 
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setTopicsOpen(false)
-      }
-      if (moreInfoRef.current && !moreInfoRef.current.contains(e.target)) {
-        setMoreInfoOpen(false)
-      }
-      if (tranche2Ref.current && !tranche2Ref.current.contains(e.target)) {
-        setTranche2Open(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    if (!scrollTarget) return
+    const el = document.getElementById(scrollTarget)
+    el?.scrollIntoView({ behavior: 'smooth' })
+    onScrollHandled?.()
+  }, [scrollTarget, onScrollHandled])
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-
-          {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold tracking-tight text-white">AML</div>
-            <span className="font-semibold text-sm">Intel</span>
-          </div>
-
-          {/* Nav links */}
-          <div className="flex items-center gap-6">
-            <a href="#features" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">What you get</a>
-            <a href="#pricing" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Pricing</a>
-            <a href="#experience" className="text-sm text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</a>
-          </div>
-
-          {/* Tranche 2 Setup dropdown */}
-          <div className="relative" ref={tranche2Ref}>
-            <button
-              onClick={() => setTranche2Open((v) => !v)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                tranche2Open
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              Tranche 2 Setup
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${tranche2Open ? 'rotate-180' : ''}`}
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {tranche2Open && (
-              <div className="absolute top-full right-0 mt-3 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
-                <div className="absolute -top-2 right-8 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
-
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenEligibility?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Eligibility Check
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSetupGuide?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Setup Guide
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenProgramBuilder?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  AML Program Draft
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenCost?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Cost
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* More info dropdown */}
-          <div className="relative" ref={moreInfoRef}>
-            <button
-              onClick={() => setMoreInfoOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                moreInfoOpen
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              More info
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${moreInfoOpen ? 'rotate-180' : ''}`}
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {moreInfoOpen && (
-              <div className="absolute top-full right-0 mt-3 w-48 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
-                <div className="absolute -top-2 right-8 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
-
-                <button
-                  onClick={() => {
-                    setMoreInfoOpen(false)
-                    onOpenAbout?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  About
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Topics dropdown */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              onClick={() => setTopicsOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                topicsOpen
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
-              }`}
-            >
-              Topics
-              <svg
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${topicsOpen ? 'rotate-180' : ''}`}
-                fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {topicsOpen && (
-              <div className="absolute top-full right-0 mt-3 w-[580px] max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-6" style={{ zIndex: 9999 }}>
-                {/* Arrow tip */}
-                <div className="absolute -top-2 right-6 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
-
-                <div className="grid grid-cols-2 gap-x-8 gap-y-0.5">
-                  {/* Global AML */}
-                  <div>
-                    <p className="text-xs text-blue-400 uppercase tracking-widest font-semibold mb-3">Global AML</p>
-                    {GLOBAL_TOPICS.map((topic) => (
-                      <button
-                        key={topic}
-                        onClick={() => { setTopicsOpen(false); onStart() }}
-                        className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
-                      >
-                        {topic}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* AUSTRAC */}
-                  <div>
-                    <p className="text-xs text-blue-400 uppercase tracking-widest font-semibold mb-3">AUSTRAC Guidance</p>
-                    {AUSTRAC_TOPICS.map((topic) => (
-                      <button
-                        key={topic}
-                        onClick={() => { setTopicsOpen(false); onStart() }}
-                        className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
-                      >
-                        {topic}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                  <p className="text-xs text-slate-500">29 topics · FATF-aligned · AUSTRAC guidance</p>
-                  <button
-                    onClick={() => { setTopicsOpen(false); onStart() }}
-                    className="text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
-                  >
-                    Open assistant →
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Theme toggle + Auth buttons */}
-          <ThemeToggle className="mr-1" />
-          {user ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-400 hidden sm:block">Hi, {user.name.split(' ')[0]}</span>
-              <button onClick={onOpenChat} title="Open AI Assistant" className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
-                <Logo size={36} />
-              </button>
-              <ProfileMenu
-                user={user}
-                variant="dark"
-                onGoToTraining={onOpenTraining}
-                onOpenSettings={() => onOpenSettings('profile')}
-                onSignOut={onSignOut}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={onSignIn}
-                className="px-4 py-2 text-sm text-slate-300 hover:text-white transition-colors"
-              >
-                Sign in
-              </button>
-              <button
-                onClick={onSignUp}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors"
-              >
-                Sign up free →
-              </button>
-            </div>
-          )}
-        </div>
-      </nav>
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+      />
 
       {/* CAMS strip */}
       <div className="bg-violet-950/70 border-b border-violet-800/40">

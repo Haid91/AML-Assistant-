@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../config'
+import Navbar from './Navbar'
 
 const INDUSTRIES = [
   { id: 'lawyer', label: 'Lawyer or Conveyancer' },
@@ -35,23 +36,11 @@ const DELIVERY_CHANNELS = [
 
 const STEP_COUNT = 5
 
-function BackButton({ onClick }) {
+function Nav(props) {
   return (
-    <button onClick={onClick} className="flex items-center gap-2.5">
-      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-      <span className="font-semibold text-sm">Intel</span>
-    </button>
-  )
-}
-
-function Nav({ onGoHome }) {
-  return (
-    <nav className="print:hidden border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-      <BackButton onClick={onGoHome} />
-      <button onClick={onGoHome} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-        ← Back to home
-      </button>
-    </nav>
+    <div className="print:hidden">
+      <Navbar {...props} />
+    </div>
   )
 }
 
@@ -59,7 +48,8 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, onOpenTraining }) {
+export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onUpgrade }) {
+  const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility }
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
   const [businessName, setBusinessName] = useState('')
@@ -149,7 +139,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   if (phase === 'checking') {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-        <Nav onGoHome={onGoHome} />
+        <Nav {...navProps} />
       </div>
     )
   }
@@ -157,7 +147,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   if (!user) {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-        <Nav onGoHome={onGoHome} />
+        <Nav {...navProps} />
         <div className="max-w-md mx-auto px-6 pt-24 text-center">
           <h1 className="text-2xl font-bold mb-3">Sign up to draft your AML/CTF Program</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mb-8">
@@ -174,7 +164,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   if (!user.premium) {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-        <Nav onGoHome={onGoHome} />
+        <Nav {...navProps} />
         <div className="max-w-md mx-auto px-8 pt-20 text-center">
           <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
             <svg className="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,7 +201,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   if (phase === 'result' && draft) {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-        <Nav onGoHome={onGoHome} />
+        <Nav {...navProps} />
         <div className="max-w-3xl mx-auto px-6 pt-12 pb-20">
           <div className="print:hidden mb-8">
             <h1 className="text-2xl font-bold mb-1">{draft.businessName || 'Your'} AML/CTF Program Draft</h1>
@@ -268,7 +258,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   if (phase === 'loading') {
     return (
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-        <Nav onGoHome={onGoHome} />
+        <Nav {...navProps} />
         <div className="max-w-md mx-auto px-6 pt-32 text-center">
           <div className="w-10 h-10 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6" />
           <h1 className="text-lg font-bold mb-2">Drafting your AML/CTF Program…</h1>
@@ -281,7 +271,7 @@ export default function ProgramBuilder({ user, onGoHome, onSignUp, onUpgrade, on
   // phase === 'form'
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-      <Nav onGoHome={onGoHome} />
+      <Nav {...navProps} />
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Draft your AML/CTF Program</h1>

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import Navbar from './Navbar'
 
 const INDUSTRIES = [
   { id: 'lawyers', label: 'Lawyers & Conveyancers' },
@@ -34,16 +35,7 @@ const FAQS = [
   },
 ]
 
-function BackButton({ onClick }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5">
-      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-      <span className="font-semibold text-sm">Intel</span>
-    </button>
-  )
-}
-
-export default function CostCalculator({ onGoHome, onSignUp, onSignIn }) {
+export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const [industry, setIndustry] = useState('lawyers')
   const [people, setPeople] = useState(1)
   const [needs, setNeeds] = useState([])
@@ -65,13 +57,23 @@ export default function CostCalculator({ onGoHome, onSignUp, onSignIn }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-      {/* Navbar */}
-      <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-        <BackButton onClick={onGoHome} />
-        <button onClick={onGoHome} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-          ← Back to home
-        </button>
-      </nav>
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+      />
 
       {/* Header */}
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-8 text-center">

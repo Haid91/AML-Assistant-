@@ -1,4 +1,5 @@
 import { Calculator, Scale, Home, Building, Gem } from 'lucide-react'
+import Navbar from './Navbar'
 
 const SECTORS = {
   accountant: {
@@ -140,15 +141,6 @@ const SECTORS = {
   },
 }
 
-function BackButton({ onClick }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5">
-      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-      <span className="font-semibold text-sm">Intel</span>
-    </button>
-  )
-}
-
 function Section({ title, items }) {
   return (
     <section className="mb-10">
@@ -165,18 +157,34 @@ function Section({ title, items }) {
   )
 }
 
-export default function SectorGuide({ sector, onGoHome, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function SectorGuide({ sector, user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const data = SECTORS[sector] || SECTORS.accountant
   const Icon = data.icon
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-      <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-        <BackButton onClick={onGoHome} />
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+      />
+      <div className="border-b border-slate-200 dark:border-slate-800 px-6 py-2.5">
         <button onClick={onOpenSetupGuide} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
           ← Back to setup guide
         </button>
-      </nav>
+      </div>
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-10">
         <div className="flex items-center gap-3 mb-5">

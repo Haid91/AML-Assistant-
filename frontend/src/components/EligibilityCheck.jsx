@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Navbar from './Navbar'
 
 const INDUSTRIES = [
   { id: 'lawyer', label: 'Lawyer or Conveyancer', desc: 'Lawyers, solicitors, and licensed conveyancers providing designated services like property settlements and trust or company services' },
@@ -28,16 +29,7 @@ const OBLIGATIONS = [
   'Keep records for 7 years',
 ]
 
-function BackButton({ onClick }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5">
-      <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-      <span className="font-semibold text-sm">Intel</span>
-    </button>
-  )
-}
-
-export default function EligibilityCheck({ onGoHome, onSignUp, onOpenSetupGuide, onOpenProgramBuilder }) {
+export default function EligibilityCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenProgramBuilder }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [services, setServices] = useState([])
@@ -68,12 +60,22 @@ export default function EligibilityCheck({ onGoHome, onSignUp, onOpenSetupGuide,
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
-      <nav className="border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-        <BackButton onClick={onGoHome} />
-        <button onClick={onGoHome} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
-          ← Back to home
-        </button>
-      </nav>
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+      />
 
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">
         {!result && (

@@ -33,6 +33,7 @@ function App() {
   const [selectedIndustry, setSelectedIndustry] = useState(null)
   const [selectedSectorGuide, setSelectedSectorGuide] = useState(null)
   const [resetToken, setResetToken] = useState(null)
+  const [scrollTarget, setScrollTarget] = useState(null)
 
   useEffect(() => {
     const stored = localStorage.getItem('aml_user')
@@ -121,6 +122,28 @@ function App() {
     setView('landing')
   }
 
+  const navigateToSection = (id) => {
+    setScrollTarget(id)
+    setView('landing')
+  }
+
+  const navProps = {
+    onGoHome: () => setView('landing'),
+    onNavigateSection: navigateToSection,
+    onStart: () => user ? goHome(user) : setView('signup'),
+    onSignIn: () => setView('signin'),
+    onSignUp: () => setView('signup'),
+    onOpenChat: () => goHome(user),
+    onOpenTraining: () => setView('training'),
+    onSignOut: handleSignOut,
+    onOpenSettings: openSettings,
+    onOpenAbout: () => setView('about'),
+    onOpenCost: () => setView('cost'),
+    onOpenSetupGuide: () => setView('setupguide'),
+    onOpenEligibility: () => setView('eligibility'),
+    onOpenProgramBuilder: () => setView('programbuilder'),
+  }
+
   if (view === 'signin') {
     return (
       <SignIn
@@ -154,11 +177,8 @@ function App() {
   if (view === 'about') {
     return (
       <About
+        {...navProps}
         user={user}
-        onGoHome={() => setView('landing')}
-        onSignUp={() => setView('signup')}
-        onSignIn={() => setView('signin')}
-        onOpenSetupGuide={() => setView('setupguide')}
       />
     )
   }
@@ -166,9 +186,8 @@ function App() {
   if (view === 'cost') {
     return (
       <CostCalculator
-        onGoHome={() => setView('landing')}
-        onSignUp={() => setView('signup')}
-        onSignIn={() => setView('signin')}
+        {...navProps}
+        user={user}
       />
     )
   }
@@ -176,11 +195,8 @@ function App() {
   if (view === 'setupguide') {
     return (
       <SetupGuide
+        {...navProps}
         user={user}
-        onGoHome={() => setView('landing')}
-        onSignUp={() => setView('signup')}
-        onOpenEligibility={() => setView('eligibility')}
-        onOpenProgramBuilder={() => setView('programbuilder')}
         onOpenSectorGuide={(id) => { setSelectedSectorGuide(id); setView('sectorguide') }}
       />
     )
@@ -189,11 +205,9 @@ function App() {
   if (view === 'sectorguide') {
     return (
       <SectorGuide
+        {...navProps}
+        user={user}
         sector={selectedSectorGuide}
-        onGoHome={() => setView('landing')}
-        onOpenSetupGuide={() => setView('setupguide')}
-        onOpenEligibility={() => setView('eligibility')}
-        onOpenProgramBuilder={() => setView('programbuilder')}
       />
     )
   }
@@ -201,10 +215,8 @@ function App() {
   if (view === 'eligibility') {
     return (
       <EligibilityCheck
-        onGoHome={() => setView('landing')}
-        onSignUp={() => setView('signup')}
-        onOpenSetupGuide={() => setView('setupguide')}
-        onOpenProgramBuilder={() => setView('programbuilder')}
+        {...navProps}
+        user={user}
       />
     )
   }
@@ -212,11 +224,9 @@ function App() {
   if (view === 'programbuilder') {
     return (
       <ProgramBuilder
+        {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
-        onGoHome={() => setView('landing')}
-        onSignUp={() => setView('signup')}
         onUpgrade={handleUpgrade}
-        onOpenTraining={() => setView(user ? 'training' : 'signup')}
       />
     )
   }
@@ -310,20 +320,11 @@ function App() {
 
   return (
     <LandingPage
+      {...navProps}
       user={user}
-      onStart={() => user ? goHome(user) : setView('signup')}
-      onSignIn={() => setView('signin')}
-      onSignUp={() => setView('signup')}
-      onOpenChat={() => goHome(user)}
-      onOpenTraining={() => setView('training')}
-      onSignOut={handleSignOut}
-      onOpenSettings={openSettings}
-      onOpenAbout={() => setView('about')}
-      onOpenCost={() => setView('cost')}
-      onOpenSetupGuide={() => setView('setupguide')}
-      onOpenEligibility={() => setView('eligibility')}
-      onOpenProgramBuilder={() => setView('programbuilder')}
       onOpenSectorGuide={(id) => { setSelectedSectorGuide(id); setView('sectorguide') }}
+      scrollTarget={scrollTarget}
+      onScrollHandled={() => setScrollTarget(null)}
     />
   )
 }
