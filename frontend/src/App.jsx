@@ -13,6 +13,7 @@ import ResetPassword from './components/ResetPassword'
 import AccountSettings from './components/AccountSettings'
 import About from './components/About'
 import CostCalculator from './components/CostCalculator'
+import SetupGuide from './components/SetupGuide'
 import { API_URL } from './config'
 
 const OWNER_EMAILS = new Set(['haidershahid3.16@live.com'])
@@ -153,6 +154,7 @@ function App() {
         onGoHome={() => setView('landing')}
         onSignUp={() => setView('signup')}
         onSignIn={() => setView('signin')}
+        onOpenSetupGuide={() => setView('setupguide')}
       />
     )
   }
@@ -163,6 +165,17 @@ function App() {
         onGoHome={() => setView('landing')}
         onSignUp={() => setView('signup')}
         onSignIn={() => setView('signin')}
+      />
+    )
+  }
+
+  if (view === 'setupguide') {
+    return (
+      <SetupGuide
+        user={user}
+        onGoHome={() => setView('landing')}
+        onSignUp={() => setView('signup')}
+        onOpenTraining={() => setView(user ? 'training' : 'signup')}
       />
     )
   }
@@ -266,6 +279,7 @@ function App() {
       onOpenSettings={openSettings}
       onOpenAbout={() => setView('about')}
       onOpenCost={() => setView('cost')}
+      onOpenSetupGuide={() => setView('setupguide')}
     />
   )
 }

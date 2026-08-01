@@ -17,7 +17,7 @@ const FEATURES = [
   },
 ]
 
-export default function About({ onGoHome, onSignUp, onSignIn, user }) {
+export default function About({ onGoHome, onSignUp, onSignIn, onOpenSetupGuide, user }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
       {/* Navbar */}
@@ -47,7 +47,10 @@ export default function About({ onGoHome, onSignUp, onSignIn, user }) {
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
             AML analysts, MLROs, BSA officers, and compliance managers who need fast, accurate regulatory answers
             without digging through dense guidance documents — whether you're investigating a case, drafting an
-            SMR/SAR, or preparing for the CAMS exam.
+            SMR/SAR, or preparing for the CAMS exam. It's also built for firms newly captured by Australia's 2024
+            Tranche 2 reforms — lawyers and conveyancers, accountants, real estate agents, trust and company
+            service providers, and dealers in precious metals and stones — who are standing up an AML/CTF program
+            for the first time.
           </p>
         </section>
 
@@ -57,10 +60,27 @@ export default function About({ onGoHome, onSignUp, onSignIn, user }) {
             The AI assistant is powered by Anthropic's Claude and grounded in FATF 40 Recommendations, the Bank
             Secrecy Act, EU AML Directives, FinCEN guidance, and AUSTRAC's AML/CTF Act — so answers are structured
             and regulation-backed rather than generic. Alongside the assistant, AmlIntel includes realistic case
-            simulations across Banking, Law, Crypto, and Fintech for both Analyst and MLRO roles, an Ownership
-            Structure Simulation for practising UBO/beneficial-ownership analysis, and a full CAMS Sixth Edition
-            exam-prep module.
+            simulations across Banking, Law, Crypto, Fintech, and Accountant & TCSP for both Analyst and MLRO
+            roles, an Ownership Structure Simulation for practising UBO/beneficial-ownership analysis, and a full
+            CAMS Sixth Edition exam-prep module.
           </p>
+        </section>
+
+        <section>
+          <h2 className="text-xl font-bold mb-2">Setting up your AML/CTF program</h2>
+          <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+            If your firm has just been captured by the Tranche 2 reforms, AmlIntel has two things to help you get
+            started: a free step-by-step setup guide covering enrolment, appointing a compliance officer, your
+            risk assessment, and drafting your Part A & B program — and dedicated Accountant & TCSP training
+            scenarios covering the CDD failures that most commonly trip up newly regulated firms, like nominee
+            director red flags and opaque company formation requests.
+          </p>
+          <button
+            onClick={onOpenSetupGuide}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 font-medium transition-colors"
+          >
+            View the setup guide →
+          </button>
         </section>
 
         <section>

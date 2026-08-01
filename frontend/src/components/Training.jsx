@@ -1036,11 +1036,214 @@ Your task: make the SAR and account action determinations for the cluster.`,
   },
 ]
 
+const ACCOUNTANT_ANALYST_CASES = [
+  {
+    id: 'aa1', number: 'Part 1',
+    title: 'Company Formation: Opaque Offshore Structure Request',
+    tags: ['Escalation'], sector: 'Accountant', premium: false,
+    shortDesc: 'An intermediary asks the firm to incorporate a company with a nominee director and refuses to disclose the ultimate beneficial owner. Work through the TCSP CDD requirements.',
+    fullScenario: `NEW CLIENT INSTRUCTION — For CDD Review\n\nClient: Mr. Andrew Pearce (acting as intermediary/introducer)\nService requested: Incorporate "Meridian Trading Solutions Pty Ltd" and arrange for a nominee director and nominee shareholder\nStated purpose: "International trading company for a client who values privacy"\n\nDetails provided so far:\n• Mr. Pearce says he is acting on behalf of an undisclosed overseas principal\n• He requests the firm's own staff member act as nominee director\n• Mr. Pearce declines to name the beneficial owner, citing "client confidentiality"\n• Initial capital: $50,000 to be wired from an account in a jurisdiction not yet disclosed\n\nYour task: assess the CDD requirements before agreeing to provide this company formation and nominee service.`,
+    steps: [
+      {
+        id: 1, title: 'Initial CDD Assessment',
+        question: 'What is the correct first step before agreeing to provide this service?',
+        options: [
+          { text: "Identify and verify the ultimate beneficial owner behind Mr. Pearce's undisclosed principal — as a Tranche 2 TCSP, the firm must identify the beneficial owner of any company it helps form, and cannot rely on an intermediary's refusal to disclose that information", correct: true, feedback: 'Correct. Trust and company service providers are squarely captured by the 2024 Tranche 2 reforms specifically because company formation is a recognised ML vector for concealing beneficial ownership. The firm cannot proceed without identifying the natural person(s) who ultimately own or control the new company.' },
+          { text: 'Proceed with incorporation since Mr. Pearce himself has been identified', correct: false, feedback: "Incorrect. Identifying the intermediary who is making the request does not satisfy the obligation to identify the beneficial owner of the company being formed — Mr. Pearce is acting on someone else's behalf, and that someone else is who must be identified." },
+          { text: 'Ask AUSTRAC for permission to proceed without knowing the beneficial owner', correct: false, feedback: "Incorrect. AUSTRAC does not grant case-by-case exemptions from beneficial ownership identification — this is a fundamental, non-waivable CDD requirement, not something a regulator can pre-approve around." },
+          { text: 'Proceed since client confidentiality legally prevents disclosure of the beneficial owner', correct: false, feedback: 'Incorrect. Professional confidentiality obligations do not override the statutory requirement to identify beneficial owners before providing designated services — this is a common misunderstanding that does not hold up under the AML/CTF Act.' },
+        ],
+      },
+      {
+        id: 2, title: 'Beneficial Ownership Look-Through',
+        question: "Mr. Pearce eventually says the principal is 'a Cayman Islands trust,' but declines to name the trustee, settlor, or beneficiaries. Is this sufficient to proceed?",
+        options: [
+          { text: 'No — naming a trust without identifying its settlor, trustee, and beneficiaries does not satisfy beneficial ownership requirements; the firm must look through the trust to the natural persons in each role, exactly as for any trust structure', correct: true, feedback: 'Correct. A trust is not a natural person and cannot itself be a UBO. Regardless of where the trust is established, the firm must identify the settlor, trustee(s), and beneficiaries — the same look-through principle that applies to every trust structure.' },
+          { text: 'Yes — once a legal entity or arrangement is named, no further look-through is required', correct: false, feedback: 'Incorrect. Naming an entity or arrangement is only the first step — beneficial ownership rules specifically require looking through legal structures to the natural persons who ultimately control or benefit from them.' },
+          { text: 'Yes — offshore trusts administered by regulated professional trustees are exempt from look-through', correct: false, feedback: 'Incorrect. There is no such exemption. Professional or regulated trustee status does not remove the requirement to identify the settlor, trustee, and beneficiaries.' },
+          { text: 'No, but only because the Cayman Islands is a higher-risk jurisdiction — a trust in a low-risk jurisdiction would not need look-through', correct: false, feedback: 'Incorrect. Jurisdiction affects the risk rating and depth of EDD applied, but the requirement to look through any trust to its settlor, trustee, and beneficiaries applies regardless of jurisdiction.' },
+        ],
+      },
+      {
+        id: 3, title: 'Nominee Director Risk',
+        question: "What is the specific AML risk of the firm's own staff member acting as nominee director for an undisclosed principal?",
+        options: [
+          { text: 'The arrangement would place the firm in a position of exercising legal control over a company on behalf of someone it cannot identify — this is a classic mechanism for concealing beneficial ownership, and the firm itself would be facilitating it', correct: true, feedback: 'Correct. Nominee director arrangements are legitimate when the underlying principal is known and verified — the risk here is specifically that the firm would be lending its own legal control to a structure built around an undisclosed owner, which is precisely the opacity beneficial ownership rules exist to prevent.' },
+          { text: 'There is no real risk provided the staff member is experienced and trustworthy', correct: false, feedback: "Incorrect. The risk does not depend on the staff member's personal trustworthiness — it depends on whether the underlying principal has been identified, which at this point it has not." },
+          { text: 'Nominee director arrangements are illegal, so this cannot be discussed further regardless of disclosure', correct: false, feedback: 'Incorrect. Nominee arrangements are legal and common in many jurisdictions when the principal is properly identified and disclosed — the issue here is specifically the lack of disclosure, not the nominee mechanism itself.' },
+          { text: 'The risk only materialises if the company later becomes insolvent', correct: false, feedback: 'Incorrect. The AML risk exists at the point the firm agrees to act for an unidentified principal — it does not depend on any future financial outcome of the company.' },
+        ],
+      },
+      {
+        id: 4, title: 'Final Decision',
+        question: "Mr. Pearce says that if the firm won't provide the nominee director service without disclosure, he'll take his business elsewhere. How should the firm respond?",
+        options: [
+          { text: 'Decline to provide the company formation and nominee director service — the firm cannot discharge its CDD obligations without identifying the beneficial owner, and the risk of facilitating concealment of ownership outweighs the loss of this engagement', correct: true, feedback: 'Correct. No commercial pressure can override the firm\'s statutory obligation to identify beneficial owners. Losing the engagement is the correct and lawful outcome when a client or intermediary refuses to provide required CDD information.' },
+          { text: 'Proceed reluctantly and apply Enhanced Due Diligence after the company has been formed', correct: false, feedback: 'Incorrect. EDD is applied to manage elevated risk on an identified customer — it cannot substitute for the baseline requirement to identify the beneficial owner before providing the service in the first place.' },
+          { text: 'Proceed, but document Mr. Pearce\'s refusal on file as protection for the firm', correct: false, feedback: "Incorrect. Documenting a refusal does not discharge the firm's CDD obligation — the firm would still be providing company formation and nominee services to an unidentified principal, which is the substantive problem." },
+          { text: 'Refer Mr. Pearce to a different firm without further consideration', correct: false, feedback: 'Incorrect as a complete response. Simply passing the client along does not address whether the firm should itself consider the pattern (refusal to identify a beneficial owner for a nominee arrangement) as a red flag warranting internal escalation.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'aa2', number: 'Part 2',
+    title: 'Accountant: Unexplained Cash Income on Tax Return',
+    tags: ['Escalation'], sector: 'Accountant', premium: false,
+    shortDesc: 'A long-standing bookkeeping client wants a sudden $186,000 in cash deposits recorded as "consulting income" with no supporting documentation. Investigate before lodging the return.',
+    fullScenario: `ONGOING CLIENT — For Review\n\nClient: Marcus Webb, sole trader, "Webb Handyman Services"\nService: Bookkeeping and annual tax return preparation, 4 years' engagement\nHistorical declared income: ~$45,000/year (cash and card payments from small residential jobs)\n\nThis year's activity:\n• 18 cash deposits totalling $186,000 over 6 months\n• Marcus says the deposits are for "a big consulting contract" but provides no invoices, contracts, or client names\n• He asks you to record the amount as "consulting income" on his tax return\n• When pressed for details, Marcus becomes evasive and says "just put it through, I'll get you the paperwork later"\n\nYour task: assess whether you can prepare and lodge this return as instructed.`,
+    steps: [
+      {
+        id: 1, title: "Assessing the Request",
+        question: "What is the immediate concern with Marcus's request?",
+        options: [
+          { text: "The $186,000 in cash deposits is grossly inconsistent with his declared business history, and he has provided no verifiable documentation — recording it as 'consulting income' without supporting evidence risks the firm facilitating the disguising of the funds' true origin", correct: true, feedback: "Correct. Deposits over four times Marcus's typical annual income, described only verbally and with no supporting invoices or client details, is a clear inconsistency that must be resolved before the firm processes the figures — regardless of the eventual tax treatment." },
+          { text: "There is no concern, since the income will be reported and taxed either way", correct: false, feedback: "Incorrect. Paying tax on funds does not establish that they are legitimately earned — this is a common misconception. The AML concern is about the unexplained origin of the funds, which tax payment does not resolve." },
+          { text: "This is only a concern if it is later found the consulting contract didn't exist", correct: false, feedback: "Incorrect. The concern arises now, from the pattern itself — an unusually large, undocumented cash inflow inconsistent with the client's history — not retrospectively if the story is later disproven." },
+          { text: "This is not an AML concern since accountants are only responsible for tax compliance", correct: false, feedback: "Incorrect. As a Tranche 2 reporting entity, the firm has AML/CTF obligations that are distinct from, and in addition to, its tax compliance responsibilities under the Tax Practitioners Board." },
+        ],
+      },
+      {
+        id: 2, title: 'Documentation Standard',
+        question: 'What should the firm require before including this income on the return?',
+        options: [
+          { text: "Verifiable supporting documentation — contracts, invoices, correspondence, or bank records from the paying parties — sufficient to substantiate that the cash genuinely originates from the consulting work described", correct: true, feedback: "Correct. The firm needs independent, verifiable evidence connecting the cash to the stated consulting work — not just Marcus's account of events. This is standard source-of-funds verification applied to an unusual and unexplained income pattern." },
+          { text: "A signed statement from Marcus confirming the funds are legitimate", correct: false, feedback: "Incorrect. Self-declarations carry no independent evidentiary value — a client attempting to disguise the source of funds would simply sign such a statement." },
+          { text: "Nothing further — cash income is common for sole traders in this line of work", correct: false, feedback: "Incorrect. While cash income is common for handyman services generally, $186,000 is more than four times Marcus's typical annual income and described as an entirely different type of work ('consulting') — this specific pattern warrants documentation regardless of how common cash income is in general." },
+          { text: "Only bank statements showing the deposits", correct: false, feedback: "Incorrect. Bank statements confirm the deposits occurred but say nothing about where the cash actually came from — the firm needs evidence of the underlying source, not just the movement of funds." },
+        ],
+      },
+      {
+        id: 3, title: 'Client Refuses Documentation',
+        question: "Marcus says he 'doesn't keep paperwork like that' and insists the firm lodge the return as-is. What should the firm do?",
+        options: [
+          { text: 'Decline to lodge the return as instructed and escalate internally for an AML assessment — reasonable grounds to suspect may be forming given the unexplained, undocumented, and inconsistent cash income', correct: true, feedback: "Correct. An unresolved, undocumented, and materially inconsistent income pattern that the client refuses to substantiate is exactly the kind of red flag that requires internal escalation to assess whether an SMR is warranted — the firm should not simply process the figures as given." },
+          { text: "Lodge the return anyway, since accurate record-keeping is the client's legal responsibility, not the accountant's", correct: false, feedback: "Incorrect. While clients are responsible for their own records, the firm has independent professional and AML obligations that are not discharged simply by shifting responsibility to the client." },
+          { text: "Lodge the return but note internally that documentation is outstanding", correct: false, feedback: "Incorrect. Merely noting the gap on file does not address the underlying suspicion — if reasonable grounds to suspect are forming, the firm needs to actively assess and potentially report, not just document the shortfall." },
+          { text: "Terminate the client relationship immediately without further assessment", correct: false, feedback: "Incorrect as an immediate first step. The firm should complete an internal AML assessment — including considering whether an SMR is required — before deciding on the future of the relationship, rather than exiting without that assessment." },
+        ],
+      },
+      {
+        id: 4, title: 'SMR Consideration',
+        question: 'After internal review, there is no plausible explanation for the cash income pattern. What is the appropriate next step?',
+        options: [
+          { text: "Escalate to the firm's AML/CTF compliance officer to assess whether reasonable grounds to suspect exist and whether an SMR should be filed with AUSTRAC — the unexplained, undocumented, and inconsistent cash pattern is a recognised red flag for placement-stage money laundering", correct: true, feedback: 'Correct. This pattern — a sudden, large, undocumented cash inflow wildly inconsistent with declared income, with no plausible explanation provided despite being asked — meets the reasonable-grounds-to-suspect threshold and should be escalated for an SMR determination.' },
+          { text: 'Report the matter to the ATO instead of AUSTRAC', correct: false, feedback: 'Incorrect. Suspicious matter reporting for AML/CTF purposes goes to AUSTRAC, Australia\'s financial intelligence unit — not the ATO, which is a separate regulator with a different mandate.' },
+          { text: "Confront Marcus directly and demand a full explanation before taking any other action", correct: false, feedback: 'Incorrect. Directly confronting the client before completing the internal escalation risks tipping off, and the correct sequence is to escalate internally to the compliance officer first, who can then determine the appropriate next steps.' },
+          { text: "Simply decline to act for Marcus in future, with no reporting", correct: false, feedback: 'Incorrect. Ending the relationship does not discharge the obligation to assess and, if warranted, report reasonable grounds to suspect — declining to act further is a separate decision from the SMR consideration.' },
+        ],
+      },
+    ],
+  },
+]
+
+const ACCOUNTANT_MLRO_CASES = [
+  {
+    id: 'am1', number: '1.',
+    title: 'MLRO: TCSP Review — Unverified Change of Director',
+    tags: ['Regulatory'], sector: 'Accountant', premium: false,
+    shortDesc: 'An existing TCSP client\'s sole director changes to an unverified individual who won\'t respond to identity requests. Assess the company-takeover risk and make the MLRO determination.',
+    fullScenario: `ANALYST ESCALATION — For MLRO Review\n\nClient: Ashford Group Holdings Ltd (existing TCSP client, 2 years' engagement — the firm provides registered office and company secretarial services)\nTrigger: Annual company statement lodgement reveals the sole director has changed to a newly-appointed individual, Mr. Rahim Osei, who has no prior connection to the company on file\n\nAnalyst findings:\n• Mr. Osei was appointed director 3 weeks ago via a resolution signed by the previous director, who has since resigned\n• The firm has never met or verified Mr. Osei's identity\n• The company's registered address (provided by the firm) has received no other correspondence for Mr. Osei\n• A request to Mr. Osei for identity documents has gone unanswered for 2 weeks\n• The company's bank signatories have not yet been updated to reflect the change\n\nYour task: determine the appropriate MLRO response.`,
+    steps: [
+      {
+        id: 1, title: 'Assessing the Change',
+        question: 'What is the primary concern raised by this change in directorship?',
+        options: [
+          { text: 'An unverified individual has been appointed sole director and has not responded to identity verification requests — this is a classic pattern for company takeover fraud or installing a nominee to obscure control, and the firm cannot continue providing services to an unverified controller', correct: true, feedback: 'Correct. The combination of a sudden, unexplained director change, no prior connection to the company, and non-response to identity requests is a well-documented company-takeover/hijacking pattern — the firm must treat this as a serious CDD failure requiring immediate action, not routine corporate housekeeping.' },
+          { text: 'Minimal concern, since director changes are a routine corporate event', correct: false, feedback: 'Incorrect. While director changes are routine on their face, the unresponsiveness to identity verification combined with no prior connection to the company and the departing director\'s resignation make this pattern materially different from routine succession.' },
+          { text: "Concern only if the company's bank accounts show unusual activity", correct: false, feedback: "Incorrect. The CDD failure itself — an unverified individual now controlling the company — is the immediate issue, independent of whether transaction activity has yet occurred through the firm's or bank's visibility." },
+          { text: "Concern only because Mr. Osei's name is unfamiliar to the firm", correct: false, feedback: 'Incorrect and an inappropriate basis for concern. The actual issue is the total absence of verification and the non-response to requests — not the individual\'s identity or name itself.' },
+        ],
+      },
+      {
+        id: 2, title: 'Ongoing Service Provision',
+        question: "The firm continues to provide registered office and secretarial services while awaiting Mr. Osei's response. Is this appropriate?",
+        options: [
+          { text: 'Ongoing services should be paused or restricted until identity is verified — continuing to service a company controlled by an unverified individual risks facilitating whatever purpose the change in control serves', correct: true, feedback: 'Correct. Continuing to lend the firm\'s registered office and company secretarial services to a company with an unverified controller — especially one not responding to verification requests — creates real exposure to facilitating fraud or laundering. Services should be paused pending resolution.' },
+          { text: "Appropriate, since the firm's TCSP services don't involve directly handling the company's funds", correct: false, feedback: "Incorrect. TCSP obligations — including registered office and company secretarial roles — carry AML/CTF responsibilities for the company's controllers regardless of whether the firm directly handles client funds." },
+          { text: 'Appropriate — simply flag the file for review at next year\'s annual statement', correct: false, feedback: 'Incorrect. This is not a routine annual-review matter; the pattern warrants immediate escalation and action, not deferral to the next scheduled review cycle.' },
+          { text: "Appropriate, since the signed resignation resolution is sufficient legal documentation of the change", correct: false, feedback: "Incorrect. The legal formality of a resolution documenting the director change does not satisfy the firm's own, separate CDD obligation to independently verify the new director's identity." },
+        ],
+      },
+      {
+        id: 3, title: 'Identifying the Typology',
+        question: 'What specific typology should the MLRO consider given this pattern?',
+        options: [
+          { text: "Company takeover ('hijacking') fraud — control of a company is fraudulently transferred, often via forged resolutions or exploiting a registered agent's processes, to misuse the company's credit history, bank accounts, or legal identity before the fraud is detected", correct: true, feedback: 'Correct. This is a well-documented typology specifically targeting companies with registered agents and TCSPs — a dormant or under-monitored company is taken over via a fraudulent director change, then used to establish credit, open accounts, or conduct transactions under a legitimate-looking corporate identity.' },
+          { text: 'Standard succession planning that has simply not yet been finalised', correct: false, feedback: 'Incorrect. This framing dismisses the specific red flags present — no prior connection to the company, non-response to verification, and the previous director\'s resignation — which are inconsistent with ordinary planned succession.' },
+          { text: 'Tax avoidance through a change in beneficial tax residency', correct: false, feedback: "Incorrect. Nothing in the facts relates to tax residency — the pattern concerns unverified control of the company, not a tax planning arrangement." },
+          { text: "A data entry error by the previous director when lodging the annual statement", correct: false, feedback: 'Incorrect. A data entry error would not explain the pattern of non-response to identity verification requests over multiple weeks, combined with the previous director\'s resignation.' },
+        ],
+      },
+      {
+        id: 4, title: 'MLRO Determination',
+        question: 'After 4 weeks of no response from Mr. Osei, what should the MLRO decide?',
+        options: [
+          { text: 'Terminate the registered office/company secretarial engagement and file an SMR — the combination of an unverified new controller, non-response to repeated CDD requests, and the company-takeover fraud profile meets reasonable grounds to suspect', correct: true, feedback: 'Correct. After a month of unresolved, unverified control and no cooperation with identity requests, the firm has both a CDD failure it cannot cure and a pattern consistent with a recognised fraud typology — termination and an SMR are the appropriate outcomes.' },
+          { text: 'Wait a further 3 months before taking any action', correct: false, feedback: 'Incorrect. Four weeks of non-response to a straightforward identity verification request, combined with the other red flags, already supports a decision — further delay is not warranted and extends the firm\'s exposure.' },
+          { text: 'Terminate the engagement but do not file an SMR since no funds have moved through the firm', correct: false, feedback: 'Incorrect. The SMR obligation is based on reasonable grounds to suspect, not on whether funds have specifically moved through the firm — the unresolved CDD failure and takeover-fraud pattern already meet that threshold.' },
+          { text: 'Continue the engagement but require Mr. Osei to provide ID before next year\'s annual statement', correct: false, feedback: 'Incorrect. This inappropriately extends an unresolved, unverified control situation for up to a year — the firm needs to resolve or exit the relationship now, not defer verification to the next compliance cycle.' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'am2', number: '2.',
+    title: 'MLRO: First-Year AML/CTF Program Implementation Review',
+    tags: ['Regulatory'], sector: 'Accountant', premium: false,
+    shortDesc: 'Walk through your firm\'s first annual review of its AML/CTF Program since becoming an AUSTRAC reporting entity under the 2024 Tranche 2 reforms.',
+    fullScenario: `FIRST-YEAR AML/CTF PROGRAM REVIEW — Guided Walkthrough\n\nThis simulation guides you through your firm's first annual review of its AML/CTF Program since becoming a reporting entity under the 2024 Tranche 2 reforms.\n\nFirm: 12-partner accounting and company secretarial practice, newly enrolled with AUSTRAC this year\nMLRO: [Your name] (newly appointed AML/CTF Compliance Officer)\n\nWork through each section to understand what a first-year review should cover.`,
+    steps: [
+      {
+        id: 1, title: 'Section 1: Enrolment & Governance',
+        question: 'The firm enrolled with AUSTRAC 8 months ago, but the AML/CTF Program was only formally approved by the partners 2 months ago. Is this a concern for the review?',
+        options: [
+          { text: 'Yes — the firm should have had an approved Program in place before providing any designated services as a reporting entity; the gap should be documented as a finding, with client work conducted in that window reviewed retrospectively for compliance', correct: true, feedback: 'Correct. Enrolling with AUSTRAC without an approved AML/CTF Program already in place leaves a period where designated services were provided without the required governance framework — this is exactly the kind of implementation gap a first-year review exists to catch and remediate.' },
+          { text: 'No concern, since enrolment itself demonstrates the firm\'s intent to comply', correct: false, feedback: 'Incorrect. Enrolment is a registration step, not a substitute for having an approved, operational AML/CTF Program — the intent to comply doesn\'t address the fact that services were provided during an 8-month gap without one.' },
+          { text: 'No concern, since AUSTRAC allows a 12-month grace period after enrolment before a program is required', correct: false, feedback: 'Incorrect. There is no blanket grace period of this kind — reporting entities are expected to have their Program in place to govern the designated services they provide.' },
+          { text: 'Only relevant if a client complaint was received during the gap period', correct: false, feedback: 'Incorrect. The governance gap is a compliance finding in its own right, independent of whether any client complaint happened to arise during that window.' },
+        ],
+      },
+      {
+        id: 2, title: 'Section 2: Risk Assessment Coverage',
+        question: "The firm's EWRA covers its company formation and registered office services but doesn't address its bookkeeping and tax return services. Is this adequate?",
+        options: [
+          { text: 'No — the EWRA must cover all designated services within the AML/CTF obligation, including bookkeeping/tax services where they involve activities captured by the Tranche 2 reforms, not just company formation and registered office work', correct: true, feedback: 'Correct. An Enterprise-Wide Risk Assessment that only covers some of the firm\'s in-scope services leaves a genuine gap — every designated service the firm provides needs to be assessed, even if the resulting risk rating and controls differ by service line.' },
+          { text: 'Adequate, since bookkeeping is inherently lower risk and can be excluded from the EWRA', correct: false, feedback: 'Incorrect. A risk-based approach means applying proportionate controls to lower-risk services — it does not mean omitting them from the risk assessment altogether.' },
+          { text: 'Adequate, since tax services are already regulated separately by the Tax Practitioners Board', correct: false, feedback: "Incorrect. TPB regulation is a separate, parallel professional obligation — it doesn't substitute for the firm's own AML/CTF risk assessment of services that fall within its Tranche 2 obligations." },
+          { text: 'Adequate as long as company formation is covered, since it is the highest-risk service', correct: false, feedback: 'Incorrect. All in-scope designated services need EWRA coverage — covering only the highest-risk one leaves other in-scope services unassessed.' },
+        ],
+      },
+      {
+        id: 3, title: 'Section 3: Staff Training Completion',
+        question: '6 of the firm\'s 12 partners and 3 of 8 support staff have completed AML/CTF training. What should the first-year review recommend?',
+        options: [
+          { text: 'Mandate 100% completion with a firm deadline — with only half of partners and roughly a third of support staff trained, this is a material gap for a firm in its first year of the obligation and should be escalated with a clear remediation timeline', correct: true, feedback: 'Correct. AML/CTF training is a mandatory obligation for relevant employees, not a gradual rollout — a completion rate this low, particularly among partners who make client-acceptance decisions, is a significant first-year finding requiring a firm deadline.' },
+          { text: 'Accept the current completion rate since it is the first year and staff are still adjusting', correct: false, feedback: 'Incorrect. The training obligation applies from the point the firm becomes a reporting entity — it is not phased in gradually to allow for an adjustment period.' },
+          { text: 'Recommend training only for the 6 partners who haven\'t completed it, since support staff don\'t need AML training', correct: false, feedback: "Incorrect. Support staff involved in delivering designated services also need training appropriate to their role — the gap among support staff is a finding too, not just among partners." },
+          { text: 'Note the gap informally without a partner-level deadline', correct: false, feedback: 'Incorrect. Given the scale of the shortfall — roughly half of partners and two-thirds of support staff untrained — this warrants formal escalation with a firm deadline, not an informal note.' },
+        ],
+      },
+      {
+        id: 4, title: 'Section 4: Independent Review Scheduling',
+        question: "When should the firm schedule its first independent review of the AML/CTF Program?",
+        options: [
+          { text: 'Within 3 years of the program\'s approval at the latest — but given this is a newly implemented program in a newly regulated sector, an earlier review (e.g. 12-18 months) is prudent to catch implementation gaps like the ones already found here, rather than waiting the full 3 years', correct: true, feedback: 'Correct. The 3-year mark is a maximum, not a target — for a brand-new program in a sector still adjusting to first-time AML/CTF obligations, bringing the independent review forward is a sensible way to catch and fix implementation gaps early rather than letting them persist for years.' },
+          { text: 'Exactly 3 years from AUSTRAC enrolment, regardless of when the Program was approved', correct: false, feedback: "Incorrect anchor point. The review cycle should be tied to the Program's approval and implementation, not the enrolment date, and 3 years is the maximum interval — not a fixed target to aim for regardless of circumstances." },
+          { text: 'No independent review is required for firms below a certain size', correct: false, feedback: 'Incorrect. There is no size-based exemption from the independent review requirement — it applies to reporting entities regardless of firm size.' },
+          { text: 'Only if AUSTRAC specifically requests one', correct: false, feedback: "Incorrect. Scheduling periodic independent review is a proactive obligation on the reporting entity — it is not contingent on AUSTRAC making a specific request." },
+        ],
+      },
+    ],
+  },
+]
+
 const CASES_BY_INDUSTRY = {
   banking: { analyst: ANALYST_CASES, mlro: MLRO_CASES },
   law:     { analyst: LAW_ANALYST_CASES,    mlro: LAW_MLRO_CASES    },
   crypto:  { analyst: CRYPTO_ANALYST_CASES, mlro: CRYPTO_MLRO_CASES },
   fintech: { analyst: FINTECH_ANALYST_CASES, mlro: FINTECH_MLRO_CASES },
+  accountant: { analyst: ACCOUNTANT_ANALYST_CASES, mlro: ACCOUNTANT_MLRO_CASES },
 }
 
 const INDUSTRY_LABELS = {
@@ -1048,6 +1251,7 @@ const INDUSTRY_LABELS = {
   law:     'Law',
   crypto:  'Crypto',
   fintech: 'Fintech',
+  accountant: 'Accountant / TCSPs',
 }
 
 const CAMS_MODULES = [
@@ -2200,6 +2404,7 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
               { id: 'law',     label: 'Law' },
               { id: 'crypto',  label: 'Crypto' },
               { id: 'fintech', label: 'Fintech' },
+              { id: 'accountant', label: 'Accountant / TCSPs' },
             ].map((ind) => (
               <button
                 key={ind.id}
