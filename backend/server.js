@@ -47,6 +47,14 @@ const estimateLimiter = rateLimit({
   message: { error: 'Too many requests. Please try again later.' },
 })
 
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many messages. Please try again later.' },
+})
+
 function asyncRoute(handler) {
   return async (req, res) => {
     try {
@@ -133,6 +141,37 @@ async function sendEstimateEmail(toEmail, { industryLabel, people, annualTotal, 
         <p style="margin:0 0 24px;color:#94a3b8;font-size:13px">This is an illustrative estimate, not a quote.</p>
         <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
         <p style="margin:0;color:#94a3b8;font-size:12px">AML Compliance Assistant</p>
+      </div>
+    `,
+  })
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+}
+
+async function sendContactEmail({ name, email, subject, message }) {
+  const transporter = createTransporter()
+  const inboxAddress = process.env.EMAIL_FROM || process.env.SMTP_USER
+  if (!transporter) {
+    console.log(`\n📧 Contact message (configure SMTP_PASS in .env to send real emails):\n   From: ${name} <${email}>\n   Subject: ${subject}\n   Message: ${message}\n`)
+    return
+  }
+  await transporter.sendMail({
+    from: `"AmlIntel Contact Form" <${inboxAddress}>`,
+    to: inboxAddress,
+    replyTo: email,
+    subject: `[Contact] ${subject}`,
+    html: `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
+        <div style="margin-bottom:24px">
+          <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">New contact form message</h2>
+        <p style="margin:0 0 4px;color:#475569;font-size:14px"><strong>From:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p>
+        <p style="margin:0 0 20px;color:#475569;font-size:14px"><strong>Subject:</strong> ${escapeHtml(subject)}</p>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;white-space:pre-wrap;color:#0f172a;font-size:14px">${escapeHtml(message)}</div>
+        <p style="margin:0;color:#94a3b8;font-size:12px">Reply directly to this email to respond to ${escapeHtml(name)}.</p>
       </div>
     `,
   })
@@ -647,6 +686,31 @@ app.post('/email-estimate', estimateLimiter, asyncRoute(async (req, res) => {
   } catch (err) {
     console.error('Failed to send estimate email:', err.message)
     console.log(`Estimate (fallback): ${email.trim()} — ${industryLabel}, ${peopleCount} people, $${annualTotal.toFixed(2)}/year`)
+  }
+  res.json({ success: true })
+}))
+
+// ── Contact form ───────────────────────────────────────────────────────────────
+app.post('/contact', contactLimiter, asyncRoute(async (req, res) => {
+  const { name, email, subject, message } = req.body
+  if (!name || typeof name !== 'string' || !name.trim() || name.trim().length > 200) {
+    return res.status(400).json({ error: 'Please enter your name' })
+  }
+  if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({ error: 'Please enter a valid email address' })
+  }
+  if (!subject || typeof subject !== 'string' || !subject.trim() || subject.trim().length > 200) {
+    return res.status(400).json({ error: 'Please enter a subject' })
+  }
+  if (!message || typeof message !== 'string' || !message.trim() || message.trim().length > 5000) {
+    return res.status(400).json({ error: 'Please enter a message (max 5000 characters)' })
+  }
+
+  try {
+    await sendContactEmail({ name: name.trim(), email: email.trim(), subject: subject.trim(), message: message.trim() })
+  } catch (err) {
+    console.error('Failed to send contact email:', err.message)
+    console.log(`Contact message (fallback): ${name.trim()} <${email.trim()}> — ${subject.trim()}: ${message.trim()}`)
   }
   res.json({ success: true })
 }))

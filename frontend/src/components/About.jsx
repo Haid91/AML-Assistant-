@@ -19,7 +19,7 @@ const FEATURES = [
   },
 ]
 
-export default function About({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function About({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
       <Navbar
@@ -34,6 +34,7 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
         onSignOut={onSignOut}
         onOpenSettings={onOpenSettings}
         onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
         onOpenCost={onOpenCost}
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenEligibility={onOpenEligibility}

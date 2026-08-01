@@ -157,7 +157,7 @@ function Section({ title, items }) {
   )
 }
 
-export default function SectorGuide({ sector, user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function SectorGuide({ sector, user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const data = SECTORS[sector] || SECTORS.accountant
   const Icon = data.icon
 
@@ -175,6 +175,7 @@ export default function SectorGuide({ sector, user, onGoHome, onNavigateSection,
         onSignOut={onSignOut}
         onOpenSettings={onOpenSettings}
         onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
         onOpenCost={onOpenCost}
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenEligibility={onOpenEligibility}

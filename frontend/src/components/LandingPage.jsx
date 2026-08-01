@@ -139,7 +139,7 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
+export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
   const [camsOpen, setCamsOpen] = useState(false)
 
   useEffect(() => {
@@ -164,6 +164,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
         onSignOut={onSignOut}
         onOpenSettings={onOpenSettings}
         onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
         onOpenCost={onOpenCost}
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenEligibility={onOpenEligibility}

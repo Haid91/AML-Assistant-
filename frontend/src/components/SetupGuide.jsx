@@ -91,7 +91,7 @@ const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 const PREMIUM_MONTHLY = 49.99
 
-export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide }) {
+export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans scroll-smooth">
       <Navbar
@@ -106,6 +106,7 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
         onSignOut={onSignOut}
         onOpenSettings={onOpenSettings}
         onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
         onOpenCost={onOpenCost}
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}

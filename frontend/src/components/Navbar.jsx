@@ -38,7 +38,7 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
   const [tranche2Open, setTranche2Open] = useState(false)
@@ -173,6 +173,15 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
                 className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
               >
                 About
+              </button>
+              <button
+                onClick={() => {
+                  setMoreInfoOpen(false)
+                  onOpenContact?.()
+                }}
+                className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+              >
+                Contact
               </button>
             </div>
           )}
