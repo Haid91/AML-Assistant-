@@ -14,6 +14,7 @@ import AccountSettings from './components/AccountSettings'
 import About from './components/About'
 import Contact from './components/Contact'
 import AustracEnrolment from './components/AustracEnrolment'
+import SmrGuide from './components/SmrGuide'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
@@ -142,6 +143,7 @@ function App() {
     onOpenAbout: () => setView('about'),
     onOpenContact: () => setView('contact'),
     onOpenAustracEnrolment: () => setView('austracEnrolment'),
+    onOpenSmrGuide: () => setView('smrGuide'),
     onOpenCost: () => setView('cost'),
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
@@ -199,6 +201,15 @@ function App() {
   if (view === 'austracEnrolment') {
     return (
       <AustracEnrolment
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'smrGuide') {
+    return (
+      <SmrGuide
         {...navProps}
         user={user}
       />

@@ -91,7 +91,7 @@ const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 const PREMIUM_MONTHLY = 49.99
 
-export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment }) {
+export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans scroll-smooth">
       <Navbar
@@ -110,6 +110,7 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
         onOpenCost={onOpenCost}
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenSmrGuide={onOpenSmrGuide}
       />
 
       {/* Hero */}
@@ -192,6 +193,14 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
                       className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
                     >
                       See the full step-by-step walkthrough →
+                    </button>
+                  )}
+                  {step.id === 'monitoring' && (
+                    <button
+                      onClick={onOpenSmrGuide}
+                      className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
+                    >
+                      See the full SMR filing walkthrough →
                     </button>
                   )}
                 </div>
