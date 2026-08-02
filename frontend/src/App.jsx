@@ -55,17 +55,22 @@ function App() {
 
   const goHome = (u) => setView(isPremium(u) ? 'chat' : 'training')
 
+  // Users without a role/industry set yet need to go through onboarding
+  // before reaching Training or the Assistant — triggered on demand (e.g.
+  // "Go to Training") rather than forced immediately on sign-in.
+  const enterApp = (u) => {
+    if (!u?.role) { setView('industryselect'); return }
+    goHome(u)
+  }
+
+  const enterTraining = (u) => {
+    if (!u?.role) { setView('industryselect'); return }
+    setView('training')
+  }
+
   const handleSignIn = (userData) => {
     setUser(userData)
-    const saved = localStorage.getItem('aml_user')
-    const parsed = saved ? JSON.parse(saved) : {}
-    // New users: go through industry → simulation → role select
-    // Returning users with role already set: go straight home
-    if (parsed.role) {
-      goHome(userData)
-    } else {
-      setView('industryselect')
-    }
+    setView('landing')
   }
 
   const handleIndustrySelect = (industry) => {
@@ -135,11 +140,11 @@ function App() {
   const navProps = {
     onGoHome: () => setView('landing'),
     onNavigateSection: navigateToSection,
-    onStart: () => user ? goHome(user) : setView('signup'),
+    onStart: () => user ? enterApp(user) : setView('signup'),
     onSignIn: () => setView('signin'),
     onSignUp: () => setView('signup'),
-    onOpenChat: () => goHome(user),
-    onOpenTraining: () => setView('training'),
+    onOpenChat: () => enterApp(user),
+    onOpenTraining: () => enterTraining(user),
     onSignOut: handleSignOut,
     onOpenSettings: openSettings,
     onOpenAbout: () => setView('about'),
@@ -366,7 +371,7 @@ function App() {
         user={user ? { ...user, premium: isPremium(user) } : user}
         onBack={() => setView('landing')}
         onSignOut={handleSignOut}
-        onOpenTraining={() => setView('training')}
+        onOpenTraining={() => enterTraining(user)}
         onUpgrade={handleUpgrade}
         onOpenSettings={openSettings}
       />
