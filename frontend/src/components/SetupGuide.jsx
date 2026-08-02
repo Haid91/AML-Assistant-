@@ -91,7 +91,7 @@ const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 const PREMIUM_MONTHLY = 49.99
 
-export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide }) {
+export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans scroll-smooth">
       <Navbar
@@ -186,6 +186,14 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
                       <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{step.ifMissed}</p>
                     </div>
                   </div>
+                  {step.id === 'enrol' && (
+                    <button
+                      onClick={onOpenAustracEnrolment}
+                      className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
+                    >
+                      See the full step-by-step walkthrough →
+                    </button>
+                  )}
                 </div>
               )
             })}

@@ -13,6 +13,7 @@ import ResetPassword from './components/ResetPassword'
 import AccountSettings from './components/AccountSettings'
 import About from './components/About'
 import Contact from './components/Contact'
+import AustracEnrolment from './components/AustracEnrolment'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
@@ -140,6 +141,7 @@ function App() {
     onOpenSettings: openSettings,
     onOpenAbout: () => setView('about'),
     onOpenContact: () => setView('contact'),
+    onOpenAustracEnrolment: () => setView('austracEnrolment'),
     onOpenCost: () => setView('cost'),
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
@@ -188,6 +190,15 @@ function App() {
   if (view === 'contact') {
     return (
       <Contact
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'austracEnrolment') {
+    return (
+      <AustracEnrolment
         {...navProps}
         user={user}
       />

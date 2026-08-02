@@ -29,7 +29,7 @@ const OBLIGATIONS = [
   'Keep records for 7 years',
 ]
 
-export default function EligibilityCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenProgramBuilder }) {
+export default function EligibilityCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenProgramBuilder, onOpenAustracEnrolment }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [services, setServices] = useState([])
@@ -76,6 +76,7 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
         onOpenCost={onOpenCost}
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenAustracEnrolment={onOpenAustracEnrolment}
       />
 
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">

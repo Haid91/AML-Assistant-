@@ -19,7 +19,7 @@ const FEATURES = [
   },
 ]
 
-export default function About({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder }) {
+export default function About({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
       <Navbar
@@ -39,6 +39,7 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
         onOpenSetupGuide={onOpenSetupGuide}
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenAustracEnrolment={onOpenAustracEnrolment}
       />
 
       {/* Hero */}
