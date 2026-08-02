@@ -51,7 +51,7 @@ const STEPS = [
   },
 ]
 
-export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment }) {
+export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -91,6 +91,8 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
         onOpenAustracEnrolment={onOpenAustracEnrolment}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

@@ -91,7 +91,7 @@ const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 const PREMIUM_MONTHLY = 49.99
 
-export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide }) {
+export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans scroll-smooth">
       <Navbar
@@ -111,6 +111,8 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
         onOpenSmrGuide={onOpenSmrGuide}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
       />
 
       {/* Hero */}
@@ -201,6 +203,22 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
                       className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
                     >
                       See the full SMR filing walkthrough →
+                    </button>
+                  )}
+                  {step.id === 'officer' && (
+                    <button
+                      onClick={onOpenComplianceOfficer}
+                      className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
+                    >
+                      See the full appointment guide →
+                    </button>
+                  )}
+                  {step.id === 'risk-assessment' && (
+                    <button
+                      onClick={onOpenRiskAssessment}
+                      className="mt-4 sm:ml-12 text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
+                    >
+                      Assess your risk →
                     </button>
                   )}
                 </div>

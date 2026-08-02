@@ -37,7 +37,7 @@ const FAQS = [
   },
 ]
 
-export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide }) {
+export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment }) {
   const [industry, setIndustry] = useState('lawyers')
   const [people, setPeople] = useState(3)
   const [activeClients, setActiveClients] = useState(40)
@@ -97,6 +97,8 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
         onOpenProgramBuilder={onOpenProgramBuilder}
         onOpenAustracEnrolment={onOpenAustracEnrolment}
         onOpenSmrGuide={onOpenSmrGuide}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
       />
 
       {/* Header */}

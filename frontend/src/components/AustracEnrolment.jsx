@@ -51,7 +51,7 @@ const STEPS = [
   },
 ]
 
-export default function AustracEnrolment({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSmrGuide }) {
+export default function AustracEnrolment({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -91,6 +91,8 @@ export default function AustracEnrolment({ user, onGoHome, onNavigateSection, on
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
         onOpenSmrGuide={onOpenSmrGuide}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

@@ -15,6 +15,8 @@ import About from './components/About'
 import Contact from './components/Contact'
 import AustracEnrolment from './components/AustracEnrolment'
 import SmrGuide from './components/SmrGuide'
+import ComplianceOfficerGuide from './components/ComplianceOfficerGuide'
+import RiskAssessmentTool from './components/RiskAssessmentTool'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
@@ -144,6 +146,8 @@ function App() {
     onOpenContact: () => setView('contact'),
     onOpenAustracEnrolment: () => setView('austracEnrolment'),
     onOpenSmrGuide: () => setView('smrGuide'),
+    onOpenComplianceOfficer: () => setView('complianceOfficer'),
+    onOpenRiskAssessment: () => setView('riskAssessment'),
     onOpenCost: () => setView('cost'),
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
@@ -210,6 +214,24 @@ function App() {
   if (view === 'smrGuide') {
     return (
       <SmrGuide
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'complianceOfficer') {
+    return (
+      <ComplianceOfficerGuide
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'riskAssessment') {
+    return (
+      <RiskAssessmentTool
         {...navProps}
         user={user}
       />
