@@ -258,12 +258,41 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           <p className="text-xs text-slate-400 dark:text-slate-500 mt-6">
             Fictional scenarios for educational purposes only. Not legal advice.
           </p>
-          <button
-            onClick={onOpenEligibility}
-            className="inline-flex items-center gap-2 mt-8 text-sm font-medium text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors"
-          >
-            Not sure if Tranche 2 applies to you? Take the free 30-second eligibility check →
-          </button>
+        </div>
+      </section>
+
+      {/* Choose your path */}
+      <section className="pb-20 px-6">
+        <div className="max-w-4xl mx-auto grid sm:grid-cols-2 gap-5">
+          <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7">
+            <div className="w-11 h-11 rounded-xl bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-5">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-lg mb-2">AML professional?</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Case simulations, CAMS exam prep, and an AI assistant grounded in FATF, BSA, and AUSTRAC guidance.
+            </p>
+            <button onClick={() => onNavigateSection?.('features')} className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors">
+              See what's inside →
+            </button>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7">
+            <div className="w-11 h-11 rounded-xl bg-orange-50 dark:bg-orange-900/30 border border-orange-100 dark:border-orange-800 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-5">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h3 className="font-semibold text-lg mb-2">Tranche 2 business?</h3>
+            <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-5">
+              Lawyers, accountants, real estate agents, and more now need an AML/CTF program. Find out if this applies to you.
+            </p>
+            <button onClick={onOpenEligibility} className="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors">
+              Check if this applies to you →
+            </button>
+          </div>
         </div>
       </section>
 
