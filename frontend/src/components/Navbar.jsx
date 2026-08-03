@@ -145,8 +145,6 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             )}
           </div>
 
-          <button onClick={onOpenTraining} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
-
           {/* Tranche 2 Setup dropdown */}
           <div className="relative" ref={tranche2Ref}>
             <button
@@ -245,6 +243,8 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
               </div>
             )}
           </div>
+
+          <button onClick={onOpenTraining} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
 
           {/* More info dropdown */}
           <div className="relative" ref={moreInfoRef}>
