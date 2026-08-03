@@ -57,14 +57,18 @@ function App() {
 
   // Users without a role/industry set yet need to go through onboarding
   // before reaching Training or the Assistant — triggered on demand (e.g.
-  // "Go to Training") rather than forced immediately on sign-in.
+  // "Go to Training") rather than forced immediately on sign-in. Signed-out
+  // visitors are sent to sign up first, since onboarding requires a real
+  // account (it's saved against the signed-in user).
   const enterApp = (u) => {
-    if (!u?.role) { setView('industryselect'); return }
+    if (!u) { setView('signup'); return }
+    if (!u.role) { setView('industryselect'); return }
     goHome(u)
   }
 
   const enterTraining = (u) => {
-    if (!u?.role) { setView('industryselect'); return }
+    if (!u) { setView('signup'); return }
+    if (!u.role) { setView('industryselect'); return }
     setView('training')
   }
 
