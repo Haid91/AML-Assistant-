@@ -3047,6 +3047,243 @@ const CAMS_MODULES = [
         ],
         explanation: "The events that warrant a full enterprise-wide reassessment are the ones that actually change what risk the institution is exposed to: new products, new delivery technology for existing products, and mergers/acquisitions all bring genuinely new customers, channels, or jurisdictions into scope. Reorganizing the compliance department or changing which manager oversees a product line doesn't change the underlying risk itself.",
       },
+      {
+        id: 41, title: 'Implementing New Customer Information Laws',
+        question: "A government has instituted new anti-money laundering laws which require all financial institutions to obtain certain information from its customers. Which step should an institution located in this jurisdiction take to ensure compliance?",
+        options: [
+          { text: 'Change procedures to require that the necessary information is obtained', correct: false, feedback: 'Updating procedures alone, without also updating the systems that support them or training the staff who apply them, leaves a real gap between what the policy says and what actually happens.' },
+          { text: 'Change procedures and systems as necessary and provide employee training', correct: true, feedback: "Correct. Genuine compliance with a new legal requirement needs all three legs in place together — updated procedures, the systems to actually capture and support the new information requirement, and staff trained to apply it correctly. Any one of these alone leaves a gap." },
+          { text: 'Send a notice to customers asking them to provide the necessary information', correct: false, feedback: 'Simply asking customers, without a procedural and systems framework to collect, verify, and record the information, is not a compliance program.' },
+          { text: 'Change systems to ensure the required information is automatically obtained from all customers', correct: false, feedback: 'Systems changes alone, without updated procedures and trained staff to handle exceptions and verification, are not sufficient on their own.' },
+        ],
+      },
+      {
+        id: 42, title: 'Legal Risks of Inadequate Privacy Policies', selectCount: 2,
+        question: "What are two legal risks of having inadequate privacy policies and procedures?",
+        options: [
+          { text: 'Diminished reputation', correct: false },
+          { text: 'Incurring regulatory sanctions', correct: true },
+          { text: 'Charges of deceptive business practices', correct: true },
+          { text: 'Higher marketing and public relations costs', correct: false },
+        ],
+        explanation: "Both are genuine legal exposures: regulators can directly sanction an institution for inadequate privacy controls, and mishandling customer data in ways that don't match what customers were told can expose the institution to deceptive-practices claims. Reputational damage and higher PR costs are real business consequences, but they are commercial fallout, not legal risks in themselves.",
+      },
+      {
+        id: 43, title: 'Identifying PEPs (Basel CDD Paper)',
+        question: "What is the appropriate compliance control for identifying politically exposed persons (PEPs) according to the Basel Committee's paper on Customer Due Diligence for Banks?",
+        options: [
+          { text: 'Determining that a local figure is a PEP', correct: false, feedback: "Assessing only 'local' figures misses the point — PEP status includes foreign officials too, and this option doesn't describe a control, just a narrow judgment call." },
+          { text: 'Reviewing when a relationship is established', correct: false, feedback: "A one-time check at onboarding misses PEP status that arises later — someone can become a PEP well after the account was opened." },
+          { text: 'Reviewing relationships at account opening and on a periodic basis', correct: true, feedback: "Correct. PEP status can change at any point during a relationship — someone can be appointed to a prominent public role years after becoming a customer — so Basel's guidance calls for checking at onboarding and then periodically throughout the relationship, not just once." },
+          { text: 'Requiring that the customer discloses that they are a PEP or an associate of a PEP', correct: false, feedback: "Relying on self-disclosure alone is not an adequate control — a bank needs to actively screen for PEP status rather than depend on the customer to volunteer it." },
+        ],
+      },
+      {
+        id: 44, title: 'When to Update the Risk Assessment',
+        question: "When should the anti-money laundering risk assessment be updated?",
+        options: [
+          { text: 'Every two years', correct: false, feedback: "A fixed calendar schedule alone isn't the trigger — the risk assessment needs to respond to actual changes in the business, not just the passage of time." },
+          { text: 'After a merger or acquisition', correct: true, feedback: "Correct. A merger or acquisition can bring in entirely new customer bases, products, and jurisdictions overnight — exactly the kind of material change that makes the existing risk assessment out of date and requires it to be refreshed." },
+          { text: 'When the board of directors changes', correct: false, feedback: "A change in board composition doesn't itself change the institution's underlying risk exposure." },
+          { text: 'When instructed to by the Financial Action Task Force', correct: false, feedback: "FATF doesn't issue direct instructions to individual institutions — that role belongs to national regulators, and even then, the real trigger is a change in the business itself." },
+        ],
+      },
+      {
+        id: 45, title: "Basel's Essential KYC Standard",
+        question: "What is an essential element of Know Your Customer (KYC) standards according to the Basel Committee's Customer Due Diligence for Banks paper?",
+        options: [
+          { text: 'Annual staff training', correct: false, feedback: 'Training is important to an overall AML program, but it is not the specific KYC standards element the Basel paper identifies.' },
+          { text: 'A customer acceptance policy', correct: true, feedback: "Correct. A clear customer acceptance policy — defining who the bank will and won't take on as a customer, and under what conditions — is one of Basel's core KYC pillars, since it's the first control point where risk is actually screened before a relationship even begins." },
+          { text: 'The same KYC requirements must be applied in all cases', correct: false, feedback: "This directly contradicts the risk-based approach — Basel's guidance calls for KYC intensity to vary with risk, not be applied uniformly." },
+          { text: 'All completed KYC documents must be reviewed by a senior manager not involved in the account opening process', correct: false, feedback: "Universal senior-manager review of every KYC file isn't a standard Basel requirement — that level of scrutiny is reserved for higher-risk relationships." },
+        ],
+      },
+      {
+        id: 46, title: 'What Actually Triggers a Reassessment',
+        question: "A new compliance officer is reviewing the bank's anti-money laundering program and notices that the risk assessment was completed six months ago. Since that time, the bank acquired another financial institution, re-named the internal records group, and streamlined cash handling procedures. Which factor causes the compliance officer to update the bank's risk assessment?",
+        options: [
+          { text: 'The bank acquired another institution', correct: true, feedback: "Correct. An acquisition brings in a new customer base, potentially new products, and new geographic exposure — a genuine change in risk profile. Renaming an internal department and streamlining internal cash handling procedures are operational, not risk-profile, changes." },
+          { text: 'The internal records group has been re-named', correct: false, feedback: "A department rename is a purely administrative change with no bearing on the bank's actual risk exposure." },
+          { text: 'The cash handling procedures were streamlined', correct: false, feedback: "Making an existing internal process more efficient doesn't change what customers, products, or geographies the bank is exposed to." },
+          { text: 'The risk assessment was completed six months ago', correct: false, feedback: "Six months is not inherently stale — the timing itself isn't the trigger; a material business change is." },
+        ],
+      },
+      {
+        id: 47, title: 'Independent Review — Conflict of Interest',
+        question: "A bank is preparing for its anti-money laundering independent review, which is performed every two years under the direction of the compliance officer. The bank's corporate audit department will conduct the review. The compliance officer will review the final report before it is released to the Board of Directors. What is the issue with this situation?",
+        options: [
+          { text: 'Independent reviews must be performed annually', correct: false, feedback: "There is no universal requirement that independent reviews happen annually — a two-year cycle can be appropriate depending on the institution's risk profile." },
+          { text: 'The review must be performed by a group outside of the bank', correct: false, feedback: "An internal audit department can be an appropriate reviewer, provided it is genuinely independent of the function being reviewed — the problem here is elsewhere." },
+          { text: 'The final report must be presented directly to the board of directors', correct: false, feedback: "The board should ultimately see the report, but that alone isn't the core problem in this scenario." },
+          { text: 'There is a conflict of interest with the management of the review process', correct: true, feedback: "Correct. Having the compliance officer — the very person responsible for the program being reviewed — direct the review and screen the final report before the board sees it undermines the independence the review is supposed to provide. An independent review needs to reach the board without being filtered by the function it's assessing." },
+        ],
+      },
+      {
+        id: 48, title: 'Ultimate Responsibility for the BSA/AML Program',
+        question: "Who has the ultimate responsibility within a bank for ensuring that the bank has a comprehensive and effective Bank Secrecy Act / anti-money laundering (BSA/AML) program and oversight framework that is reasonably designed to ensure compliance with applicable regulations?",
+        options: [
+          { text: 'Senior management', correct: false, feedback: "Senior management implements and executes the program day-to-day, but ultimate responsibility for its adequacy sits a level above them." },
+          { text: 'Board of directors', correct: true, feedback: "Correct. The board of directors bears ultimate responsibility for the AML program's overall adequacy and effectiveness — it can delegate execution to senior management and the compliance officer, but accountability for the framework as a whole stays at the board level." },
+          { text: 'Business line managers', correct: false, feedback: "Business line managers are responsible for compliance within their own units, not for the institution's overall program." },
+          { text: 'BSA/AML compliance officer', correct: false, feedback: "The compliance officer manages the program's day-to-day operation, but does not hold ultimate institutional responsibility — that rests with the board." },
+        ],
+      },
+      {
+        id: 49, title: 'Orientation Training for New Tellers',
+        question: "A compliance officer provides an overview of the bank's anti-money laundering program to a group of new tellers during employee orientation. Which training element should be delivered to this audience?",
+        options: [
+          { text: 'Results of recent risk assessments', correct: false, feedback: 'Full risk assessment results are a management/compliance-level document, not front-line orientation content for new tellers.' },
+          { text: 'Large cash transaction reporting procedures', correct: true, feedback: "Correct. Tellers are the ones actually handling cash transactions day to day, so understanding large cash transaction reporting procedures is directly relevant, practical knowledge they need from day one — exactly the kind of role-specific content orientation training should prioritize." },
+          { text: "The financial institution's surprise cash audit policy", correct: false, feedback: 'Internal audit policy details are an operational control matter for management, not front-line new-hire training content.' },
+          { text: 'Past check fraud losses incurred by the financial institution', correct: false, feedback: "Historical loss figures aren't useful, actionable training content for a new teller's day-to-day responsibilities." },
+        ],
+      },
+      {
+        id: 50, title: 'How CDD Should Be Implemented',
+        question: "A compliance officer at a small community bank has been asked to review existing customer onboarding policies and procedures to ensure they adequately address anti-money laundering risks. How should customer due diligence be implemented?",
+        options: [
+          { text: 'With an annual compliance review and approval of customers', correct: false, feedback: "A single annual check-in doesn't reflect the ongoing, dynamic nature CDD is supposed to have." },
+          { text: 'With a one-time event conducted at initial customer onboarding', correct: false, feedback: "Treating CDD as a one-time onboarding exercise ignores the fact that customer risk and behaviour can change over the life of the relationship." },
+          { text: "As an ongoing activity that may vary commensurate with the risk profile of the customer", correct: true, feedback: "Correct. CDD isn't a single event — it's continuous and risk-based, meaning the intensity and frequency of review should scale with how risky the customer actually is, from light-touch for low-risk customers to frequent, in-depth review for higher-risk ones." },
+          { text: 'As applicable to customers that pose higher money laundering or terrorist financing risk', correct: false, feedback: "CDD applies to all customers at some level — it's the intensity that scales with risk, not whether it applies at all." },
+        ],
+      },
+      {
+        id: 51, title: 'Job Descriptions and AML Responsibility',
+        question: "Findings from a regulatory examination report state that the job descriptions of personnel outside of the compliance department do not include references to anti-money laundering responsibilities. Which action should the firm take?",
+        options: [
+          { text: 'Update all job descriptions to include anti-money laundering responsibilities', correct: true, feedback: "Correct. A genuine culture of compliance means AML responsibility is embedded into how every relevant role is actually defined, not siloed to the compliance department alone — updating job descriptions makes that expectation explicit and formal for staff across the institution." },
+          { text: 'Respond that only compliance personnel have anti-money laundering responsibilities', correct: false, feedback: "This directly contradicts the whole premise of an institution-wide AML culture — front-line and business staff have real AML responsibilities too." },
+          { text: 'Send an email to all staff stating that personnel must observe the anti-money laundering policy', correct: false, feedback: "An email reminder doesn't formally embed the responsibility into how roles are actually defined and evaluated." },
+          { text: 'Reply that a description of anti-money laundering responsibilities is included in the annual training', correct: false, feedback: "Training content doesn't substitute for the job description itself reflecting the expectation — the regulator's finding was specifically about the job descriptions." },
+        ],
+      },
+      {
+        id: 52, title: 'Reviewing Onboarding After a Peer Enforcement Action',
+        question: "A compliance officer at a large financial institution has been tasked by senior management to lead a team in an internal review and potential revision of the institution's customer onboarding program following a regulatory enforcement action of another institution. Which step should the compliance officer perform first?",
+        options: [
+          { text: "Reviewing the institution's risk assessment", correct: true, feedback: "Correct. Before revising any specific onboarding procedure, the compliance officer needs to understand the institution's current risk profile as reflected in its risk assessment — that's the foundation everything else (training updates, EDD procedures, verification fixes) should be built on and measured against." },
+          { text: 'Revising training materials for frontline staff', correct: false, feedback: "Updating training before understanding the actual risk picture risks training staff on the wrong priorities." },
+          { text: 'Conducting enhanced due diligence on high risk customers', correct: false, feedback: "Jumping straight to EDD on existing customers skips the foundational step of understanding whether — and where — the onboarding program actually has gaps." },
+          { text: 'Resolving substantive discrepancies in customer verification', correct: false, feedback: "Fixing individual verification discrepancies is a downstream fix, not the right starting point for a program-level review." },
+        ],
+      },
+      {
+        id: 53, title: 'Basel CDD — Corporate Account Opening',
+        question: "What does the Basel Committee's Customer Due Diligence for Banks paper suggest that a bank needs to have in place when establishing an account for a corporate business entity?",
+        options: [
+          { text: 'An understanding of the structure of the company', correct: true, feedback: "Correct. Before opening a corporate account, a bank needs to genuinely understand the company's structure — its ownership, control, and organizational layout — since that's what makes it possible to identify the real beneficial owners and assess the actual risk behind the entity." },
+          { text: 'A policy requiring all identified beneficial owners to undergo a national police check', correct: false, feedback: "A blanket criminal-record check on every beneficial owner isn't a standard Basel requirement — due diligence is risk-based, not a uniform background-check mandate." },
+          { text: 'A process to ensure that the approval of senior management is obtained prior to opening the account', correct: false, feedback: "Senior management approval is reserved for higher-risk relationships (like PEPs), not a blanket requirement for every ordinary corporate account." },
+          { text: "A fee structure that reflects the bank's costs in monitoring the risks associated with the entity's business activities", correct: false, feedback: "Pricing/fee structure is a commercial matter, not a CDD control Basel's guidance addresses." },
+        ],
+      },
+      {
+        id: 54, title: 'Leadership Oversight of New Products',
+        question: "Since its last regulatory examination, a financial institution has aggressively grown by adding profitable new products and services. The institution has not historically received regulatory criticism regarding its anti-money laundering compliance program. However, a recent regulatory examination cited significant deficiencies in the anti-money laundering program that were attributed primarily to the lack of oversight by the institution's leadership in implementing adequate controls over the new products and services. Which area of internal control should leadership first address to correct the weaknesses in the program?",
+        options: [
+          { text: 'Anti-money laundering training', correct: false, feedback: "Training staff on controls that haven't yet been properly designed for the new products puts the cart before the horse." },
+          { text: 'Anti-money laundering policy', correct: false, feedback: "Policy documents should reflect what the risk assessment says needs to be controlled — updating policy before understanding the actual new risk is premature." },
+          { text: 'Money laundering risk assessment', correct: true, feedback: "Correct. The root cause here is that leadership didn't properly assess the risk introduced by the new products and services before rolling them out — fixing the risk assessment first is what should drive every other downstream fix, from policy to training to staffing." },
+          { text: 'Anti-money laundering compliance staff', correct: false, feedback: "Adding or restructuring staff without first understanding the actual new risk exposure doesn't address the root cause identified in the exam findings." },
+        ],
+      },
+      {
+        id: 55, title: 'Stale Refresher Training', selectCount: 2,
+        question: "The new compliance officer has reviewed the bank's anti-money laundering training program. The program consists of online training for all new employees within 30 days of hire date and annual refresher training to all employees, plus specialized training for higher-risk products and customers. Over the last year, there have been no regulatory changes and no new products or services introduced. The compliance officer wants to propose that the annual refresher training is still current and can be delivered unchanged to all employees. Which two critical pieces of information could be missed by taking this approach?",
+        options: [
+          { text: 'Any new trends, developments, or risks', correct: true },
+          { text: "Results of the previous year's risk assessment", correct: false },
+          { text: 'Changes to internal policies, procedures, and processes', correct: true },
+          { text: 'Links to enforcement actions identifying violations in other financial institutions', correct: false },
+        ],
+        explanation: "Even without regulatory changes or new products, the threat landscape and the institution's own internal procedures can still evolve — new typologies emerge constantly, and internal policies get refined over the course of a year for reasons unrelated to regulation. Assuming 'no external change' means 'no training update needed' misses both of these internal, ongoing sources of change.",
+      },
+      {
+        id: 56, title: 'Highest Unmitigated Risk From a Stale Assessment',
+        question: "After review of the financial institution's enterprise-wide anti-money laundering risk assessment, the new compliance officer identifies several deficiencies that need attention. Which deficiency could lead to the highest potential for unmitigated risk?",
+        options: [
+          { text: 'The risk assessment is several years old and does not cover all current products and services', correct: true, feedback: "Correct. A risk assessment that's fallen years out of date and doesn't even cover current products means the institution has entire areas of its actual business running with no documented risk understanding or controls at all — a genuine, un-mitigated blind spot, worse than any of the other listed process inefficiencies." },
+          { text: 'The risk assessment is revisited too frequently, thereby diverting critical resources from other compliance tasks', correct: false, feedback: "Reassessing too often is a resourcing inefficiency, not a source of unmitigated risk — if anything it means the assessment stays current." },
+          { text: 'The risk assessment is managed by a different team from the previous assessment, therefore disrupting continuity of institutional knowledge', correct: false, feedback: "A change in the managing team is a continuity concern worth addressing, but it doesn't leave actual products or services uncovered by any risk analysis." },
+          { text: 'The risk assessment does not anticipate potential risks even though the financial institution has no immediate plans involving those risks', correct: false, feedback: "Not anticipating risks that aren't currently relevant to the business is a reasonable scoping choice, not a genuine gap." },
+        ],
+      },
+      {
+        id: 57, title: 'Multi-Country Enterprise-Wide Program', selectCount: 3,
+        question: "A compliance officer is tasked with implementing an enterprise-wide anti-money laundering program for a bank, which operates in multiple countries. Not all the bank's products and services are available in all countries. Which three factors should be considered as part of the approach?",
+        options: [
+          { text: 'The types of customers serviced by the bank', correct: true },
+          { text: 'The customer onboarding platform that will be used', correct: false },
+          { text: 'The extent of anti-money laundering regulations in the various countries', correct: true },
+          { text: 'The anti-money laundering risk posed by the products and services offered by the bank', correct: true },
+          { text: 'The amount of resources needed to implement the anti-money laundering program in the countries', correct: false },
+        ],
+        explanation: "A genuinely enterprise-wide program has to account for who the bank actually serves, what it actually sells them (and the risk that comes with it), and the regulatory landscape of every country it operates in — those three define the real risk picture. The specific onboarding technology platform and implementation resourcing are operational execution details, not factors that shape the risk-based design of the program itself.",
+      },
+      {
+        id: 58, title: 'PEP Employee Review Red Flag',
+        question: "An anti-money laundering officer is conducting employee reviews. Which employee action warrants enhanced due diligence?",
+        options: [
+          { text: "The teller reviews customer profiles and makes notations of personal information to reportedly become familiar with bank customers", correct: true, feedback: "Correct. A teller compiling personal notes on customers outside of any legitimate business purpose is an unusual and potentially concerning pattern — it can indicate the employee is gathering information for improper use, such as facilitating fraud or tipping off a customer, and warrants a closer look." },
+          { text: 'The private banker has recently taken long vacations which caused staff members to fall behind in their work to help cover bank duties', correct: false, feedback: "This is actually the reverse of the classic 'avoiding vacation' red flag — someone who does take extended leave is generally less concerning, not more." },
+          { text: 'The branch manager reviews the daily hold report and releases holds on non-cash items once the bank receives credit from the paying bank', correct: false, feedback: 'Releasing holds once payment has actually cleared is a normal, appropriate part of a branch manager\'s operational duties.' },
+          { text: 'The bank chief executive officer lives in a lavish home and has requested the board to approve a membership payment at an exclusive country club', correct: false, feedback: "A board-approved perquisite for a CEO, disclosed and authorized through proper channels, is standard executive compensation practice, not a red flag in itself." },
+        ],
+      },
+      {
+        id: 59, title: 'Wolfsberg — Authorized Signatories', selectCount: 3,
+        question: "The compliance officer for a private bank has been tasked with reviewing the procedure for authorized signatories on customer accounts to ensure it is in line with relevant Wolfsberg Anti-Money Laundering Principles for Private Banking. Which three statements from the procedure are in line with Wolfsberg?",
+        options: [
+          { text: 'Where the Authorized Signatory is not a lawyer or accountant, due diligence as to the source of funds and wealth of the Authorized Signatory should be undertaken', correct: false },
+          { text: 'The responsible private banker must establish the identity of a holder of general powers over an account (e.g. a signatory for the account) and, as appropriate, verify that identity', correct: true },
+          { text: 'Where due diligence has been satisfactorily completed on all authorized signers, the responsible private banker may reduce the due diligence performed on the account holder and/or beneficial owner', correct: false },
+          { text: "The responsible private banker must obtain the necessary documentation establishing the authorized signer's authority to act on behalf of the account holder or beneficial owner (e.g. a Power of Attorney)", correct: true },
+          { text: 'If an individual has signing authority over an account but does not act on a professional basis as a manager of funds, the responsible private banker must understand and document the relationship between that authorized signer, the account holder, and, if different, the beneficial owner of the account', correct: true },
+        ],
+        explanation: "Wolfsberg's principles require identifying and verifying anyone with general signing power, documenting their actual legal authority to act (like a Power of Attorney), and understanding the real relationship between a non-professional signatory and the account holder. Due diligence on the signatory should never come at the cost of reduced scrutiny on the account holder or beneficial owner — those are separate, non-substitutable checks.",
+      },
+      {
+        id: 60, title: 'Correspondent Banking — Senior Management Approval',
+        question: "Which action should financial institutions with cross-border correspondent banking activity be required to perform according to the Financial Action Task Force 40 Recommendations?",
+        options: [
+          { text: 'Gather a list of their politically exposed customers', correct: false, feedback: 'PEP identification is a separate, general CDD obligation — it is not the specific correspondent banking control FATF Recommendation 13 requires.' },
+          { text: 'Identify natural persons who own or control more than 5%', correct: false, feedback: 'Beneficial ownership thresholds relate to general CDD requirements, not the specific correspondent banking control called for here.' },
+          { text: 'Obtain senior management approval before establishing the relationship', correct: true, feedback: "Correct. FATF Recommendation 13 specifically requires senior management sign-off before entering into a new correspondent banking relationship — reflecting how much risk these relationships can carry, since a single correspondent account can be a gateway for an entire respondent bank's customer base." },
+          { text: "Obtain a third-party independent review of the respondent's anti-money laundering program", correct: false, feedback: "The correspondent bank must assess the respondent's AML controls itself, but there's no requirement for an independent third-party review specifically." },
+        ],
+      },
+      {
+        id: 61, title: 'Onboarding a New PEP Segment', selectCount: 2,
+        question: "A financial institution has expanded its scope of services so that it is attracting the business of politically exposed persons (PEPs) who had previously never been part of the customer base. Which two courses of action should the compliance officer include in the institution's procedures for considering PEPs as customers?",
+        options: [
+          { text: 'Conduct enhanced ongoing monitoring of the business relationship', correct: true },
+          { text: 'Expedite due diligence when a PEP is pre-approved by a member of senior management', correct: false },
+          { text: 'Obtain appropriate senior management approval for establishing a business relationship with a PEP from a high-risk country', correct: false },
+          { text: 'Take adequate measures to establish the source of wealth and source of funds which are involved in the business relationship or occasional transaction', correct: true },
+        ],
+        explanation: "Once PEPs become part of the customer base, the two non-negotiable procedures are ongoing enhanced monitoring for the life of the relationship, and genuinely establishing the source of wealth and funds involved — not just a one-time check. Senior management approval is a real requirement too, but specifically for higher-risk PEPs, not a blanket rule for all PEP relationships, and 'expediting' due diligence based on pre-approval defeats the purpose of EDD.",
+      },
+      {
+        id: 62, title: 'Bypassing EDD',
+        question: "Enhanced due diligence (EDD) may be bypassed for which situation?",
+        options: [
+          { text: "On-boarding a branch or majority-owned subsidiary of an EU or US financial institution located in a high-risk third country that fully complies with group-wide policies and procedures", correct: true, feedback: "Correct. When the entity being onboarded is itself a branch or majority-owned subsidiary of a well-regulated EU or US institution, and it fully complies with that institution's group-wide AML policies, the location-based risk is already substantially mitigated by the parent's own controls — allowing EDD to reasonably be bypassed in that narrow case." },
+          { text: 'On-boarding a subsidiary in a high-risk country with a complex ownership structure of a long-standing and reputable customer based in the EU or US', correct: false, feedback: "A complex ownership structure in a high-risk country still carries real risk regardless of how long-standing or reputable the parent customer is — EDD would still be warranted here." },
+          { text: 'On-boarding a casino headquartered in the EU or US that is part of an international hotel chain, provides less than 50% of overall revenue and that fully complies with group-wide policies and procedures', correct: false, feedback: 'Casinos remain an inherently higher-risk designated sector regardless of what share of a parent group\'s revenue they represent — EDD would still apply.' },
+          { text: 'On-boarding a reputable Politically Exposed Person (PEP) from the EU onto the wealth management arm of a US financial institution (FI)', correct: false, feedback: "PEP status itself triggers EDD requirements regardless of reputation — EDD cannot be bypassed simply because a PEP is considered reputable." },
+        ],
+      },
+      {
+        id: 63, title: 'Understanding the Customer Risk Profile',
+        question: "To understand if the customer operates in line with the firm's risk appetite for a specific industry segment, a financial institution (FI) must:",
+        options: [
+          { text: 'obtain the name and address, country identification number and date of birth of a non-customer who purchases a monetary instrument', correct: false, feedback: 'This describes a specific record-keeping requirement for non-customer monetary instrument purchases — it doesn\'t address building an understanding of an actual customer\'s risk profile.' },
+          { text: 'obtain identifying information for beneficial owners through a completed certification form from the individual opening the account on behalf of the legal entity customer', correct: false, feedback: 'Beneficial ownership certification is part of onboarding a legal entity, but it doesn\'t by itself build the broader understanding of how the customer\'s activity should look relative to risk appetite.' },
+          { text: "obtain sufficient customer information to understand the nature and purpose of customer relationships for the purpose of developing a customer risk profile", correct: true, feedback: "Correct. Genuinely understanding whether a customer fits the firm's risk appetite requires enough information about the actual nature and purpose of the relationship to build a real risk profile — not just identity data, but context about what the customer does and why they need the relationship." },
+          { text: 'obtain the name, date of birth for an individual, address and identification number from each customer before opening the account', correct: false, feedback: 'This is basic identity verification (CIP) — necessary, but it doesn\'t on its own build the risk-profile understanding the question is asking about.' },
+        ],
+      },
     ],
   },
   {
