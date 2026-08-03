@@ -74,9 +74,9 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
 
         {/* Center nav cluster */}
         <div className="flex items-center justify-center gap-4">
-          <button onClick={() => onNavigateSection?.('features')} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">What you get</button>
-          <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
-          <button onClick={() => onNavigateSection?.('experience')} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">Real-world experience</button>
+          <button onClick={() => onNavigateSection?.('features')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">What you get</button>
+          <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
+          <button onClick={() => onNavigateSection?.('experience')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Real-world experience</button>
 
           {/* Topics dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -244,7 +244,7 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             )}
           </div>
 
-          <button onClick={onOpenTraining} className="text-[13px] text-slate-400 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
+          <button onClick={onOpenTraining} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
 
           {/* More info dropdown */}
           <div className="relative" ref={moreInfoRef}>
