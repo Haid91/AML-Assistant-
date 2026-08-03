@@ -1461,6 +1461,233 @@ const CAMS_MODULES = [
           { text: 'Converting criminal cash into casino chips and redeeming them as winnings', correct: false, feedback: 'This is the casino chip conversion technique. Cuckoo smurfing is specifically about exploiting legitimate international payment expectations to deposit criminal cash into unknowing recipients\' accounts.' },
         ],
       },
+      {
+        id: 21, title: 'Broker-Dealer Red Flags', selectCount: 2,
+        question: "A customer opens a corporate account with a broker-dealer on behalf of several beneficial owners, with a stated long-term investment goal. The customer deposits $25.5 million into the account and three days later transfers $5 million to an overseas bank. Shortly thereafter, the customer begins making numerous purchases of pesos. The compliance officer receives a query regarding the movement of funds. Within a month of account opening, the customer depletes the account. Which two red flags should prompt the firm's compliance officer to take action?",
+        options: [
+          { text: 'The new account deposit is $25.5 million', correct: false },
+          { text: 'A corporate account is opened on behalf of several beneficial owners', correct: false },
+          { text: 'The compliance officer receives the query regarding the movement of funds', correct: true },
+          { text: "The customer's stated investment goal is not reflective of account activity", correct: true },
+        ],
+        explanation: "The size of the deposit and having multiple beneficial owners aren't inherently suspicious on their own. What matters is the mismatch: an outside query about the fund movements, and activity (rapid overseas transfers, peso purchases, full depletion within a month) that contradicts the account's stated long-term investment purpose — a classic sign the stated purpose is a cover story.",
+      },
+      {
+        id: 22, title: 'Casino Chip Structuring', selectCount: 2,
+        question: "A customer brings $15,000 worth of chips into a casino and plays various games. The customer redeems all the remaining chips and requests a wire transfer of the proceeds to an unrelated third party. What are two red flags that indicate money laundering?",
+        options: [
+          { text: 'Customer redeeming all remaining chips', correct: false },
+          { text: 'Playing various games before cashing out', correct: false },
+          { text: 'Bringing $15,000 worth of chips into the casino', correct: true },
+          { text: 'Requesting a wire transfer to an unrelated third party', correct: true },
+        ],
+        explanation: "A large cash-equivalent buy-in ($15,000, near common reporting thresholds) combined with a payout directed to someone who isn't the customer are the two elements that don't fit ordinary gambling behaviour. Playing games and redeeming chips are what every gambler does — the size of the buy-in and the third-party payout are what warrant scrutiny.",
+      },
+      {
+        id: 23, title: 'Unusual Account Activity', selectCount: 2,
+        question: "In the summer, an institution identifies AML concerns regarding a customer's account activity. The customer, an ice cream parlor, has deposited a lot of checks drawn on banks in foreign countries, sent a large number of high-dollar international wires to different countries, made cash deposits of a few hundred dollars every few days, and written multiple checks for a few hundred dollars to the same dozen payees every two weeks. Which two transaction types warrant investigation?",
+        options: [
+          { text: 'Regular cash deposits', correct: false },
+          { text: 'The wires to foreign countries', correct: true },
+          { text: 'Repeated checks to the same payees', correct: false },
+          { text: 'Checks drawn on banks in foreign countries', correct: true },
+        ],
+        explanation: "A small seasonal ice cream parlor has no plausible business reason to be sending high-dollar international wires or receiving foreign-drawn checks — those two patterns are completely inconsistent with the stated business. The small recurring cash deposits and repeat local payee checks are exactly what you'd expect from a real neighbourhood business.",
+      },
+      {
+        id: 24, title: 'Accountants Laundering Money', selectCount: 3,
+        question: "Which three methods are commonly used by an accountant to launder money?",
+        options: [
+          { text: 'Representing a client in court', correct: false },
+          { text: 'Understating income to take a tax loss', correct: false },
+          { text: 'Overstating income to hide excess cash', correct: true },
+          { text: 'Acting as a conduit for transferring cash between accounts', correct: true },
+          { text: 'Acting as a designee for someone who wishes to hide their identity', correct: true },
+        ],
+        explanation: "Accountants who launder money misuse the trust and access their role gives them: inflating declared income to explain away illicit cash, moving money between accounts on a client's behalf, and standing in as a nominee to hide the real owner's identity. Representing clients in court is a legal function, not a financial one, and understating income to reduce tax is evasion — a different crime, not a laundering technique in itself.",
+      },
+      {
+        id: 25, title: 'Broker-Dealer Physical Certificates', selectCount: 2,
+        question: "What are two reasons physical securities certificates present a money laundering risk to broker-dealers?",
+        options: [
+          { text: 'The trade information on a physical certificate can be easily altered', correct: false },
+          { text: 'Physical certificates do not expire and may be held by the owner for perpetuity', correct: false },
+          { text: 'There is little information readily available to the broker confirming the source of the funds', correct: true },
+          { text: 'Physical certificates may be provided to nominees for deposit or settled in off-market transactions', correct: true },
+        ],
+        explanation: "Physical certificates sit outside the electronic clearing system, so a broker has limited visibility into who really funded the purchase and can be handed to a nominee or settled off-market — both of which break the audit trail a broker would normally rely on to understand a transaction's origin.",
+      },
+      {
+        id: 26, title: 'Trade-Based ML — Silk Flowers', selectCount: 2,
+        question: "An automotive parts company in South America sends multiple $500,000 wire transfers per week to a company in Asia referencing payment for silk flower shipments. Research reveals the receiving company is registered in the British Virgin Islands with no available ownership information. What are two red flags that indicate trade-based money laundering?",
+        options: [
+          { text: 'The transaction involves the use of front (or shell) companies', correct: true },
+          { text: 'The packaging is inconsistent with the commodity or shipping method', correct: false },
+          { text: 'Significant discrepancies appear between the description of the commodity on the bill of lading and the invoice', correct: false },
+          { text: "The type of commodity being shipped appears inconsistent with the exporter or importer's regular business activities", correct: true },
+        ],
+        explanation: "An automotive parts company has no business reason to be paying for silk flower shipments — the stated trade purpose doesn't match either party's actual business. Combined with an offshore recipient whose beneficial ownership can't be established, this is a textbook case of trade documentation being used purely as a wire-transfer justification.",
+      },
+      {
+        id: 27, title: 'PEP-Linked Corporate Structure', selectCount: 2,
+        question: "A corporate services provider in an EU country has a prospect from an African country who deals in oil and gas. The prospect intends to develop an oil terminal in his home country with a $75 million loan secured by a third party — a trust formed in a Caribbean island with a holding company based in a European secrecy haven. A young woman is presented as the ultimate beneficial owner, having gained her wealth through a fitness studio in her home country. What are two red flags that could indicate money laundering or financing of terrorism?",
+        options: [
+          { text: 'A loan worth $75 million with a third-party guarantor', correct: false },
+          { text: "The guarantor company's ownership structure is overly complex", correct: true },
+          { text: 'The prospect wishes to have a corporate structure with a holding company in an EU country', correct: false },
+          { text: 'The ultimate beneficial owner is a young woman who has gained her wealth through a small business', correct: true },
+        ],
+        explanation: "A stated source of wealth (a single fitness studio) that couldn't plausibly generate the funds behind a $75 million secured loan is a glaring mismatch, and stacking a Caribbean trust behind a secrecy-haven holding company deliberately obscures who is really guaranteeing the deal. A loan with a guarantor and an EU holding company are unremarkable on their own.",
+      },
+      {
+        id: 28, title: 'Precious Metals Risk', selectCount: 2,
+        question: "Which two aspects of precious metals pose the highest risk of money laundering?",
+        options: [
+          { text: 'Some precious metals can be formed into other objects, making them easier to transport', correct: true },
+          { text: 'Precious metals have high intrinsic value in a relatively compact form and are easy to convert into currency', correct: true },
+          { text: 'The value of precious metals can be inflated easily, making it easy to increase the amount of money laundered', correct: false },
+          { text: 'Precious metals can be readily used in many high-tech commercial applications, making them all the more valuable', correct: false },
+        ],
+        explanation: "The two features that matter for laundering are portability and liquidity: metal melted or reshaped into everyday objects moves across borders without drawing attention, and its high value-to-weight ratio means it converts back to cash quickly almost anywhere in the world. Industrial demand and price inflation don't make an asset easier to launder — they're separate market dynamics.",
+      },
+      {
+        id: 29, title: 'Trade-Based ML — Transshipment', selectCount: 2,
+        question: "A periodic review of a small household goods business reveals multiple shipments of goods to a country classified by the bank as high risk. The goods were transshipped through another country before reaching their final destination, and recent shipment volumes are far larger than in the business's 10-year history. The unit price of the goods is now three times higher than before, though the buyer and payment originator are unchanged. Which two red flags indicate potential trade-based money laundering?",
+        options: [
+          { text: 'The shipments of the same goods are now going to a different location', correct: false },
+          { text: 'The goods are transshipped through one or more jurisdictions for no apparent economic reason', correct: true },
+          { text: "The size of the shipments appears inconsistent with the exporter's previous business activities", correct: true },
+          { text: 'The goods are shipped to a jurisdiction that the bank classifies as high risk for money laundering activities', correct: false },
+        ],
+        explanation: "Routing goods through an extra country adds cost and time with no commercial upside — a classic sign the shipment is being used to layer value rather than move product efficiently. A sudden jump to volumes and unit prices far outside a decade of established trading history is the other clear anomaly. The destination being high-risk and buyer/originator staying the same are context, not red flags on their own.",
+      },
+      {
+        id: 30, title: 'Art Auction Red Flags', selectCount: 2,
+        question: "An auction house dealing in fine art and antiques sells a well-known painting for $12 million to an agent bidding on behalf of a group of investors. The same painting sold at auction ten years earlier for $5 million. Payment is received via wire transfer from an offshore account held by the investor group, with no beneficial ownership information available for the account. What are two money laundering red flags?",
+        options: [
+          { text: 'The payment is received via wire transfer', correct: false },
+          { text: 'An agent bids on the painting for a group of investors', correct: false },
+          { text: 'The painting has more than doubled its value in ten years', correct: false },
+          { text: 'Payment is received from an account in an offshore jurisdiction with no available beneficial ownership details', correct: true },
+        ],
+        explanation: "An offshore account paying for a $12 million painting with no way to identify who actually owns it is the core problem — it strips the auction house of any ability to know who its real counterparty is. Wire transfers and agent bidding are routine in the art trade, and price appreciation over a decade is unremarkable for a well-known work.",
+      },
+      {
+        id: 31, title: 'Real Estate — Anonymous Buyers', selectCount: 2,
+        question: "A UK real estate agent has three foreign clients interested in purchasing an apartment building valued at £30 million as an investment property. The clients are not willing to have their names provided to the bank, and want the purchase made in the names of three private companies for privacy reasons, with funds wired into an account held by another private company. Which red flag should stop the agent from taking this further?",
+        options: [
+          { text: 'The clients are foreign', correct: false },
+          { text: 'The clients have the funds necessary to fund a £30 million purchase', correct: false },
+          { text: 'The clients are not willing to have their names provided to the bank', correct: true },
+          { text: 'The clients want the purchase made in the names of the private companies', correct: false },
+        ],
+        explanation: "Buying through corporate structures for legitimate privacy or tax reasons happens all the time — that alone isn't disqualifying. Refusing outright to let the bank know who the real buyers are removes the ability to ever establish beneficial ownership, which is the one requirement no legitimate transaction should need to avoid.",
+      },
+      {
+        id: 32, title: 'Casino Risk — The Customer', selectCount: 2,
+        question: "When implementing a risk-based approach related to casinos, which two risks are related to the customer as an individual?",
+        options: [
+          { text: 'Transfers between customers', correct: false },
+          { text: 'Casual (walk-in) customers', correct: true },
+          { text: 'Improper use of third parties as customers', correct: true },
+          { text: 'Customer from a high-risk country', correct: false },
+          { text: 'Use of casino deposit accounts by the customer', correct: false },
+        ],
+        explanation: "The individual-customer-level risks are about who is actually gambling: a casual, unidentified walk-in gives you no relationship history to assess, and a third party gambling on someone else's behalf hides the true beneficiary. Transfers between customers and deposit account use are transactional/product risks, and country risk is a geographic factor.",
+      },
+      {
+        id: 33, title: 'Front Companies', selectCount: 2,
+        question: "Why do organized crime groups often use front companies?",
+        options: [
+          { text: 'Because front companies generally charge higher prices than legitimate companies, so profit margins are higher', correct: false },
+          { text: 'Because they can use the company\'s bank accounts to commingle deposits with those of legal businesses', correct: true },
+          { text: 'Because using multiple front companies can make it easier to control an entire sector of the economy', correct: true },
+          { text: 'Because front companies are generally subject to lighter due diligence requirements by banks and other financial services providers', correct: false },
+        ],
+        explanation: "A front company's value to organized crime is that its legitimate-looking revenue lets criminal cash blend in unnoticed inside a normal-looking business bank account, and owning several of them across a sector gives the group real economic leverage and cover. Front companies don't get lighter due diligence just for existing, and undercutting on price would actually draw attention rather than avoid it.",
+      },
+      {
+        id: 34, title: 'Online Gambling Red Flags', selectCount: 2,
+        question: "Which two are red-flag indicators of possible money laundering through online gambling?",
+        options: [
+          { text: 'The player is identified as a politically exposed person (PEP)', correct: true },
+          { text: 'The player opens several accounts under the same name using different IP addresses', correct: false },
+          { text: 'The customer uses their credit card to fund an online gambling account', correct: false },
+          { text: 'The player deposits small amounts of funds into their online gambling account', correct: false },
+          { text: 'The customer logs on to the account from multiple countries', correct: true },
+        ],
+        explanation: "A PEP brings elevated corruption/bribery risk regardless of channel, and logging in from multiple countries in short succession is inconsistent with normal personal use and can indicate account sharing or layering across jurisdictions. Small deposits and ordinary card funding are unremarkable, low-risk behaviour on their own.",
+      },
+      {
+        id: 35, title: 'Insurance Company Laundering Methods', selectCount: 2,
+        question: "Which two methods are typically used to launder money using insurance companies?",
+        options: [
+          { text: 'The policy holder overpays the policy and moves the funds out despite paying early withdrawal penalties', correct: true },
+          { text: 'The policy holder enters a sibling as a beneficiary of the insurance policy rather than themselves', correct: false },
+          { text: 'The policy holder purchases a bond and redeems it at a discount prior to its full term', correct: false },
+          { text: 'The policy holder uses an offshore company to pay the insurance installments', correct: true },
+        ],
+        explanation: "Willingly eating an early-withdrawal penalty only makes sense if the goal isn't investment return but simply getting funds back out with a legitimate-looking insurance transaction attached to them — and routing premium payments through an offshore company adds a layer of distance between the true payer and the policy. Naming a family member as beneficiary is completely normal, as is discount bond redemption.",
+      },
+      {
+        id: 36, title: 'Accountant — New Client Red Flags', selectCount: 2,
+        question: "A prospective client walks into an accounting firm wanting to incorporate a company. The accountant feels uncomfortable after the meeting. Which two observations warrant escalation to the compliance officer?",
+        options: [
+          { text: 'The prospective client presents confusing details about the proposed business and has very little knowledge about the proposed business activity', correct: true },
+          { text: 'The prospective client is able to provide source of funds and source of wealth documents', correct: false },
+          { text: 'The prospective client exhibits confidence when speaking to the accountant when providing personal details', correct: false },
+          { text: 'The principal activities of the proposed company are importing and exporting new furniture', correct: false },
+          { text: 'The prospective client is unable to provide information about the beneficial owners', correct: true },
+        ],
+        explanation: "Someone forming a company they can't coherently describe, and who can't or won't identify who actually owns it, are the two signs that the real purpose of the structure is being concealed. Providing source-of-funds documentation, presenting confidently, and running an unremarkable trading business are all what you'd expect from a genuine client.",
+      },
+      {
+        id: 37, title: 'Unusual Customer Identification', selectCount: 2,
+        question: "A training department is preparing awareness training for unusual customer identification scenarios. Which two indicators should be included?",
+        options: [
+          { text: "The customer's name and home address cannot be verified", correct: true },
+          { text: 'The customer opens the account in the name of a family member who begins making large deposits', correct: false },
+          { text: 'The customer requests payment of proceeds to an unrelated third party', correct: false },
+          { text: 'The customer frequently exchanges small bills for large bills', correct: false },
+          { text: "The customer's internet protocol (IP) address does not match the identifying information provided during online registration", correct: true },
+        ],
+        explanation: "Both indicators go directly to whether the person opening the account is who they claim to be: an unverifiable name and address is a basic identification failure, and an IP address inconsistent with the stated location during online registration suggests the applicant isn't where — or who — they say they are. The other options are transaction-pattern red flags, not identification red flags.",
+      },
+      {
+        id: 38, title: 'Securities Industry Risk Factors', selectCount: 2,
+        question: "Which two factors specific to the securities industry increase its exposure to money laundering risk?",
+        options: [
+          { text: 'The practice of brokerage firms maintaining securities as nominees', correct: true },
+          { text: 'The complexity of the securities business', correct: false },
+          { text: 'The speed of the transactions', correct: true },
+          { text: 'The link to sanctioned countries', correct: false },
+          { text: 'The increase of sector-specific guidance', correct: false },
+        ],
+        explanation: "Holding securities in nominee name obscures the real beneficial owner from view, and the speed at which trades execute and settle gives compliance staff very little time to intervene before value has already moved. General business complexity and any link to sanctioned countries are risk considerations in principle, but they aren't the specific structural features that make securities uniquely exploitable.",
+      },
+      {
+        id: 39, title: 'Human Trafficking — New Business Account', selectCount: 2,
+        question: "A new business opened an account at a bank. After a month of activity, the account is referred to AML Investigations for potential human trafficking activity. Which two red flags most likely triggered the referral?",
+        options: [
+          { text: 'Trade in large volumes conducted with countries that are part of the diamond pipeline', correct: false },
+          { text: 'Multiple purchases of virtual currency at or just below the reporting threshold', correct: false },
+          { text: 'Conducting the business\'s transactions online without visiting a branch', correct: false },
+          { text: 'Several lodging and food payments made on the same day at unusual hours for a business', correct: true },
+          { text: "Several cash deposits along the country's border that are quickly withdrawn by third parties", correct: true },
+        ],
+        explanation: "Payments for lodging and food at odd hours, on a business account, point to housing and feeding people rather than running a normal business — a recognised human trafficking indicator. Cash deposited near a border and immediately withdrawn by third parties suggests funds are moving between people, not through a legitimate commercial supply chain. Diamond trade, virtual currency, and online-only banking aren't specific to trafficking.",
+      },
+      {
+        id: 40, title: 'Luxury Real Estate Red Flags', selectCount: 2,
+        question: "Red flags for potential money laundering in real estate include completing luxury real estate purchases:",
+        options: [
+          { text: 'using the proceeds from selling a prior property or liquidating investments to make an all-cash purchase', correct: false },
+          { text: 'using loans backed by cash or certificates of deposit', correct: false },
+          { text: 'in the names of unrelated third parties', correct: true },
+          { text: 'using shell companies or trusts for privacy, tax planning, or asset protection', correct: true },
+        ],
+        explanation: "Titling a luxury property to someone with no real connection to the actual buyer, or hiding ownership behind a shell company or trust, are what break the link between the money and its true owner — the essence of laundering through real estate. Selling a prior property to fund a new one and loans secured against cash deposits both have obvious, traceable legitimate explanations.",
+      },
     ],
   },
   {
@@ -1669,6 +1896,256 @@ const CAMS_MODULES = [
           { text: 'When the requesting country has a larger GDP — smaller countries can refuse larger ones on proportionality grounds', correct: false, feedback: 'GDP differential is not an MLA refusal ground. MLA obligations are reciprocal and bilateral — not based on economic size.' },
           { text: 'When the SAR underlying the request was filed more than six months before the MLA request', correct: false, feedback: 'There is no time limitation on MLA requests based on SAR filing dates. MLA timelines are governed by statutes of limitations for the underlying offences — not SAR filing dates.' },
         ],
+      },
+      {
+        id: 21, title: 'OFAC Blocking Requirements', selectCount: 3,
+        question: "One key aspect of OFAC's extraterritorial reach includes the blocking of certain non-US-initiated transactions for or through the US for the benefit of a restricted person or entity. Under which three circumstances are US banks required to block transactions?",
+        options: [
+          { text: 'The transactions are to, or go through, a blocked entity', correct: true },
+          { text: 'Those that are by, or on behalf of, a blocked individual or entity', correct: true },
+          { text: 'Those that are by or on behalf of a blocked individual and a licensed entity', correct: false },
+          { text: 'Those that are in connection with a transaction in which a blocked individual or entity has an interest', correct: true },
+          { text: 'Those that are in connection with a transaction in which a blocked individual or entity has no interest', correct: false },
+        ],
+        explanation: "The blocking obligation is triggered by any nexus to a blocked party — as sender, recipient, or anyone with an interest in the funds — regardless of how indirect that nexus is. A licensed entity being involved doesn't create an exception, and if a blocked party genuinely has no interest at all, there's nothing to block.",
+      },
+      {
+        id: 22, title: 'Who OFAC Regulations Apply To', selectCount: 2,
+        question: "OFAC-issued regulations apply to which entities?",
+        options: [
+          { text: 'Intermediaries transacting with US banks', correct: false },
+          { text: 'Foreign banks with US customers', correct: false },
+          { text: 'Foreign subsidiaries of US banks', correct: true },
+          { text: 'US branches of a foreign bank', correct: true },
+        ],
+        explanation: "OFAC jurisdiction follows US ownership and US territory: a foreign subsidiary is still part of a US bank's corporate structure, and any branch physically operating in the US is subject to US law regardless of its foreign parent. Simply transacting with a US bank, or a foreign bank merely having US customers, doesn't by itself pull the whole institution under OFAC.",
+      },
+      {
+        id: 23, title: 'USA PATRIOT Act Extraterritorial Reach', selectCount: 3,
+        question: "Which statements regarding the USA PATRIOT Act best describe key aspects that have extraterritorial reach?",
+        options: [
+          { text: 'It allows the US Attorney General to subpoena records from a foreign bank with US correspondent accounts, including those located outside the US', correct: true },
+          { text: 'It allows foreign banks to voluntarily designate a registered agent in the US to accept service of subpoenas', correct: false },
+          { text: 'It allows the Secretary of the Treasury to order a US financial institution to close a correspondent account when a subpoena has not been responded to by a foreign bank in a timely manner', correct: true },
+          { text: 'It obliges the government to trace the origin of the funds when a seizure of assets occurs in a correspondent account opened and maintained for a foreign bank in the US', correct: false },
+          { text: 'It allows federal banking supervisors to require records of the identity of the owners of a foreign bank from a financial institution operating in the US', correct: true },
+        ],
+        explanation: "The extraterritorial teeth of the Act are the subpoena power reaching records held entirely outside the US, the ability to force closure of a US correspondent account as leverage when a foreign bank stonewalls a subpoena, and the requirement that US institutions can be made to produce ownership records for a foreign correspondent. Foreign banks don't get to opt into a voluntary registered-agent arrangement, and seizure doesn't require the government to trace fund origin first — that's a different (forfeiture) process.",
+      },
+      {
+        id: 24, title: 'Types of Economic Sanctions', selectCount: 3,
+        question: "Which are common types of economic sanctions?",
+        options: [
+          { text: 'Targeted sanctions', correct: true },
+          { text: 'Technological sanctions', correct: false },
+          { text: 'SWIFT network sanctions', correct: false },
+          { text: 'Sectoral sanctions', correct: true },
+          { text: 'Comprehensive sanctions', correct: true },
+        ],
+        explanation: "Sanctions regimes are generally built around three standard designs: targeted (specific individuals/entities), sectoral (specific industries), and comprehensive (an entire country or regime). 'Technological' and 'SWIFT network' sanctions aren't recognised categories on their own — removal from SWIFT is a specific enforcement measure, not a sanctions type.",
+      },
+      {
+        id: 25, title: '5th EU AML Directive', selectCount: 2,
+        question: "Which are requirements of the Fifth AML Directive of the European Union (EU)?",
+        options: [
+          { text: 'Promoting the record-keeping obligations of banks to the maximum amount of data necessary for AML/CFT investigation purposes', correct: false },
+          { text: 'Extending AML/CFT rules to entities that provide virtual currency services', correct: true },
+          { text: 'Broadening the criteria for assessing high-risk third countries', correct: true },
+          { text: 'Developing a variant approach in the strategy for the treatment of organised crime and terrorism threats', correct: false },
+          { text: 'Providing information access to Financial Intelligence Units according to the differences in the nature of their functions, competences, and powers', correct: false },
+        ],
+        explanation: "5AMLD's two headline changes were bringing virtual asset service providers into the regulated AML perimeter for the first time, and widening how a country gets assessed as high-risk beyond the narrower criteria in earlier directives. Record-keeping and FIU information access were addressed by other directives/instruments, not the specific 5AMLD headline requirements.",
+      },
+      {
+        id: 26, title: 'OFAC Rules for US-Related Persons', selectCount: 2,
+        question: "What are the rules imposed by the Office of Foreign Assets Control (OFAC) for legal entities and persons related to the US?",
+        options: [
+          { text: 'Any foreign corporation is also penalized if it conducts transactions with sanctioned countries under OFAC rules', correct: false },
+          { text: 'A subsidiary of a US legal entity, formally registered in a foreign country, is exempt from OFAC rules', correct: false },
+          { text: 'A foreign individual visiting the US for a short vacation is obligated to follow OFAC rules', correct: true },
+          { text: "The head office of a foreign legal entity with a branch in the US does not need to comply with OFAC rules", correct: false },
+          { text: 'Nationals of the US must comply with OFAC rules, regardless of where they are located in the world', correct: true },
+        ],
+        explanation: "OFAC jurisdiction is anchored two ways: by nationality (US persons must comply anywhere in the world) and by physical presence (anyone physically in the US, even a short-term visitor, is subject to US law while there). A US-owned foreign subsidiary is not automatically exempt, and a US branch's foreign head office doesn't escape scrutiny just because it sits offshore.",
+      },
+      {
+        id: 27, title: 'FATF and FSRB Roles', selectCount: 2,
+        question: "Which statements relate to the mandate, roles, and responsibilities of the Financial Action Task Force (FATF) and the FATF-Style Regional Bodies (FSRBs)?",
+        options: [
+          { text: 'FATF member countries cannot be members of an FSRB at the same time', correct: false },
+          { text: 'FSRBs have the right to develop standards with which their member countries are bound to comply', correct: false },
+          { text: 'FSRBs play an essential role in identifying and addressing AML technical assistance needs for their individual member countries', correct: true },
+          { text: 'In the process of setting standards, FATF will only consider inputs from its member countries as part of the consultation process', correct: false },
+          { text: 'FATF and FSRBs are free-standing organisations that share the common goals of combating money laundering and the financing of terrorism and proliferation', correct: true },
+        ],
+        explanation: "FSRBs and FATF are separate, independently governed bodies working toward the same goal — FSRBs support their region by identifying where members need technical assistance, but they don't set binding standards of their own (that remains FATF's role) or restrict FATF's consultation to member countries only. Dual FATF/FSRB membership is also common, not prohibited.",
+      },
+      {
+        id: 28, title: 'Egmont Group Cooperation Principles', selectCount: 2,
+        question: "Which principles of the Egmont Group of Financial Intelligence Units (FIUs) are aimed at maximizing cooperation between FIUs to more effectively combat money laundering?",
+        options: [
+          { text: 'Information exchange should take place informally, without too many formal prerequisites', correct: true },
+          { text: 'FIU cooperation should always be channelled through designated intermediaries', correct: false },
+          { text: 'Formal Egmont Group membership requirements ensure a high commitment of the eligible FIUs', correct: false },
+          { text: "It is within an FIU's authority to sign Memoranda of Understanding independently", correct: true },
+        ],
+        explanation: "Egmont's whole model is built on speed and directness: FIUs exchange information informally rather than through bureaucratic layers, and each FIU has the standing authority to enter MOUs with counterparts on its own — no need to route everything through intermediaries. Membership requirements are a gatekeeping mechanism, not a cooperation-maximizing principle in themselves.",
+      },
+      {
+        id: 29, title: 'Purposes of FSRBs', selectCount: 2,
+        question: "What are the primary purposes of Financial Action Task Force (FATF)-Style Regional Bodies?",
+        options: [
+          { text: 'Imposing special measures for non-cooperative jurisdictions', correct: false },
+          { text: 'Providing expertise and input in FATF policy-making', correct: true },
+          { text: 'Providing due diligence for foreign correspondent banks', correct: false },
+          { text: 'Promoting effective implementation of FATF Recommendations', correct: true },
+          { text: 'Acting as a prudential regulatory body for financial institutions', correct: false },
+        ],
+        explanation: "FSRBs exist to bridge FATF's global standards into their region — feeding regional expertise back into FATF's policy process, and driving practical implementation of the Recommendations among their members. They don't perform due diligence for banks, act as a prudential regulator, or impose sanctions-style special measures themselves.",
+      },
+      {
+        id: 30, title: 'EU AMLD and Local Regulations', selectCount: 2,
+        question: "What is the relationship between the EU Anti-Money Laundering Directives (AMLD) and local AML regulations in EU member states?",
+        options: [
+          { text: 'Local AML laws and regulations override the requirements of the EU AMLD', correct: false },
+          { text: 'Local AML regulations may impose additional or more stringent requirements than the EU AMLD', correct: true },
+          { text: 'The EU AMLD provide a framework that member countries must implement through local AML regulations', correct: true },
+          { text: 'The EU AMLD and local AML regulations are separate and unrelated legal frameworks', correct: false },
+          { text: 'The EU AMLD and local AML regulations must have identical requirements', correct: false },
+        ],
+        explanation: "EU directives (unlike regulations) don't apply directly — each member state must transpose them into its own national law, and is free to go further than the directive's floor if it chooses. That's why AML rules can differ in strictness across EU countries even though they all trace back to the same directive.",
+      },
+      {
+        id: 31, title: "FATF's 11 Immediate Outcomes", selectCount: 3,
+        question: "Which of the following are included in the 11 Immediate Outcomes outlined in the FATF methodology for assessing the effectiveness of AML/CFT/CPF systems during mutual evaluations?",
+        options: [
+          { text: 'International cooperation provides actionable information to use against criminals', correct: true },
+          { text: 'Supervisors regulate financial institutions and non-bank financial institutions and their risk-based AML/CFT programs', correct: true },
+          { text: 'Financial intelligence information is collected by authorities and shared with FATF for further investigation', correct: false },
+          { text: 'Those convicted of money laundering offenses are denied access to basic banking services', correct: false },
+          { text: 'Money laundering offenses are investigated and criminally prosecuted', correct: true },
+        ],
+        explanation: "The 11 Immediate Outcomes test real-world effectiveness, not paper compliance — whether international cooperation actually produces usable intelligence, whether supervisors genuinely regulate on a risk basis, and whether ML is actually investigated and prosecuted. Financial intelligence is shared with domestic authorities and other FIUs, not routed to FATF itself, and there's no outcome about permanently debanking convicted launderers.",
+      },
+      {
+        id: 32, title: 'Persons Bound by OFAC', selectCount: 3,
+        question: "Which persons must always comply with all Office of Foreign Assets Control (OFAC) regulations?",
+        options: [
+          { text: 'US citizens regardless of location', correct: true },
+          { text: 'Non-US financial institutions that offer accounts in USD regardless of location', correct: false },
+          { text: 'Merchants that offer US-origin goods for sale regardless of location', correct: false },
+          { text: 'US incorporated entities and their foreign branches', correct: true },
+          { text: 'Permanent US resident aliens regardless of location', correct: true },
+        ],
+        explanation: "OFAC's core jurisdictional anchors are nationality and residency status (US citizens and permanent resident aliens, wherever they are) and US corporate incorporation (including foreign branches of US entities). Merely offering USD-denominated accounts or selling US-origin goods doesn't by itself bring a foreign business under OFAC's direct jurisdiction — though it can still expose them to secondary sanctions risk.",
+      },
+      {
+        id: 33, title: 'Role of FSRBs', selectCount: 3,
+        question: "The role of FATF-style regional bodies (FSRBs) is to:",
+        options: [
+          { text: 'coordinate technical assistance for members in their FSRB jurisdiction', correct: true },
+          { text: 'identify and address any gaps in the AML/CFT policies for members outside of their FSRB jurisdiction', correct: false },
+          { text: 'identify and address current financial crime trends through the issuance of typologies originating in members outside of their FSRB jurisdiction', correct: false },
+          { text: 'set and amend the FATF 40 Recommendations for members in their FSRB jurisdiction', correct: false },
+          { text: 'offer mutual evaluation and follow-up processes for members in their FSRB jurisdiction', correct: true },
+          { text: 'provide AML/CFT technical assistance needed by members in their FSRB jurisdiction', correct: true },
+        ],
+        explanation: "Every genuine FSRB function is scoped to its own region: coordinating and providing technical assistance to its own members, and running mutual evaluations and follow-up for those same members. FSRBs don't set or amend the FATF 40 Recommendations themselves — that authority stays with FATF — and their typology/gap work is about their own membership, not members of other regions.",
+      },
+      {
+        id: 34, title: 'Wolfsberg — Correspondent Banking Training', selectCount: 2,
+        question: "A financial institution's compliance officer is developing targeted role-specific training for staff managing correspondent banking relationships, aligned with the Wolfsberg Group's Principles. Which key messages are important to include?",
+        options: [
+          { text: 'Funds used in the financing of terrorism and associated activities do not necessarily always come from criminal activity', correct: true },
+          { text: 'The respondent has sole responsibility for reporting suspicious activities regardless of the jurisdictions involved', correct: false },
+          { text: 'The correspondent and the respondent pose the same risk to each other, so the level of due diligence would be the same', correct: false },
+          { text: 'Tier 1 banks can be subject to simplified due diligence provided enhanced due diligence is undertaken on the Directors', correct: false },
+          { text: "Through the sharing of information, financial institutions can help combat and fight against terrorism", correct: true },
+        ],
+        explanation: "Two Wolfsberg messages matter most for correspondent banking staff: terrorist financing doesn't require criminal proceeds — legitimately sourced funds can still be diverted to terrorism, so 'clean money' isn't automatically low-risk. And information sharing between institutions is a genuine tool against terrorist financing, not just a compliance formality. Suspicious activity reporting is never the respondent's responsibility alone, and correspondent/respondent risk is never assumed to be symmetric.",
+      },
+      {
+        id: 35, title: 'Sanctions Awareness Without a Regime', selectCount: 2,
+        question: "How can awareness be raised within countries that do not have sanctions regulatory regimes?",
+        options: [
+          { text: 'Restrict trade between countries that have robust AFC and sanctions regulatory regimes and those that do not', correct: false },
+          { text: 'AFC and sanctions-related seminars, webinars, and trainings within these countries', correct: true },
+          { text: 'Enforcement and pecuniary fines against these countries', correct: false },
+          { text: 'Bilateral conversations and cooperation between governments', correct: true },
+        ],
+        explanation: "Building capability in a country with no sanctions regime is a cooperative, capacity-building exercise — direct training and government-to-government dialogue — not a punitive one. Fining a country that has no regime to begin with, or restricting trade with it, doesn't build the regulatory capacity that's actually missing.",
+      },
+      {
+        id: 36, title: "FATF's Mandate and Objectives", selectCount: 2,
+        question: "Which of the following are part of the Financial Action Task Force's (FATF's) mandate and objectives?",
+        options: [
+          { text: 'Coordinating international cooperation among FATF members to effectively combat human trafficking', correct: false },
+          { text: 'Setting standards for combating money laundering and the financing of terrorism and proliferation among FATF members', correct: true },
+          { text: "Describing national-level money laundering and financing of terrorism and proliferation vulnerabilities to share among FATF members", correct: false },
+          { text: 'Enforcing money laundering and financing of terrorism and proliferation controls in cooperation with local financial regulators', correct: false },
+          { text: 'Promoting effective implementation of legal, regulatory, and operational measures for combating money laundering and the financing of terrorism and proliferation', correct: true },
+        ],
+        explanation: "FATF's core mandate is standard-setting and promoting implementation of those standards — it is a policy body, not an enforcement one. It doesn't coordinate operational anti-trafficking work, enforce controls directly with local regulators, or catalogue individual country vulnerabilities as a stated objective (that's closer to what a national risk assessment does).",
+      },
+      {
+        id: 37, title: 'FATF Rec. 22 — Obliged Entities', selectCount: 4,
+        question: "Per FATF Recommendation 22, which obliged entities or gatekeepers may be required to perform customer due diligence (CDD)?",
+        options: [
+          { text: 'Notaries involved in real estate transactions', correct: true },
+          { text: 'Casino security guards', correct: false },
+          { text: 'Accountants and auditors', correct: true },
+          { text: 'Real estate agents', correct: true },
+          { text: 'City court judges', correct: false },
+          { text: 'Dealers in precious metals and stones', correct: true },
+        ],
+        explanation: "Recommendation 22 extends CDD obligations to designated non-financial businesses and professions (DNFBPs) — notaries, accountants/auditors, real estate agents, and precious metals/stones dealers all fall within this list because their services can be exploited to move or hide value. Casino security and court judges perform operational/judicial roles, not customer-facing gatekeeper functions, so they aren't captured.",
+      },
+      {
+        id: 38, title: 'USA PATRIOT Act — Correspondent Onboarding', selectCount: 2,
+        question: "The USA PATRIOT Act on correspondent banking requires US financial institutions that onboard new non-US financial institutions to address which of the following?",
+        options: [
+          { text: 'Determine under a risk-based approach if correspondent accounts require enhanced due diligence (EDD) measures', correct: true },
+          { text: 'Close correspondent accounts that the foreign banks allow other financial institutions to use', correct: false },
+          { text: "Ascertain the identity of the owners of the accounts that reside in the US", correct: false },
+          { text: "Perform scrutiny for possible money laundering by obtaining information of the foreign bank's AML program", correct: true },
+          { text: 'Implement monitoring activities in a reasonable manner only for inbound transactions', correct: false },
+        ],
+        explanation: "Onboarding a foreign correspondent means risk-rating the relationship to decide whether EDD is warranted, and specifically scrutinizing the foreign bank's own AML program before relying on it. 'Nested' correspondent use by other institutions isn't automatically disqualifying, and monitoring obligations cover both inbound and outbound activity — not inbound only.",
+      },
+      {
+        id: 39, title: "OFAC's Extraterritorial Reach", selectCount: 3,
+        question: "Identify three key aspects of OFAC sanctions that have extraterritorial reach.",
+        options: [
+          { text: 'Restricting travel by US citizens to certain countries', correct: false },
+          { text: 'Economic and trade sanctions based on US foreign policy', correct: true },
+          { text: 'Freezing foreign assets under US jurisdiction', correct: true },
+          { text: 'Blocking people on the Specially Designated Nationals and Blocked Persons List', correct: true },
+        ],
+        explanation: "OFAC's extraterritorial reach operates through its foreign-policy sanctions programs, its ability to freeze assets anywhere they touch US jurisdiction, and the SDN List, which blocks designated persons wherever they're found. Travel restrictions for US citizens are a State Department / immigration matter, not an OFAC sanctions tool.",
+      },
+      {
+        id: 40, title: 'Fourth EU Money Laundering Directive', selectCount: 3,
+        question: "Which three statements are true about the Fourth EU Directive on Money Laundering?",
+        options: [
+          { text: 'It updates European Community legislation to be further in line with the Financial Action Task Force (FATF) 40 Recommendations', correct: true },
+          { text: 'It repeats the definition of a politically exposed person from previous directives', correct: false },
+          { text: 'It repeats the customer due diligence requirements of the previous directives but adds more detail — for example, a specific requirement to identify the beneficial owner, plus ongoing monitoring requirements', correct: true },
+          { text: 'It includes new definitions for correspondent relationships and senior management', correct: true },
+        ],
+        explanation: "4AMLD's contribution was tightening and modernizing what came before it: aligning more closely with the (then-updated) FATF standards, adding explicit beneficial-ownership identification and ongoing monitoring to CDD, and defining terms like correspondent relationships and senior management for the first time. It didn't simply repeat the earlier PEP definition — it broadened PEP coverage as part of the same update.",
+      },
+      {
+        id: 41, title: 'EU AMLD Framework — Local Implementation', selectCount: 2,
+        question: "What is the relationship between the EU Anti-money Laundering Directives (AMLD) and local anti-money laundering (AML) regulations in EU member states, in terms of their relevance for, applicability to, and impact on EU banks?",
+        options: [
+          { text: 'The EU AMLD and local AML regulations are separate and unrelated legal frameworks', correct: false },
+          { text: 'The EU AMLD and local AML regulations must have identical requirements', correct: false },
+          { text: 'The EU AMLD take precedence over local AML regulations', correct: false },
+          { text: 'Local AML laws and regulations override the requirements of the EU AMLD', correct: false },
+          { text: 'Local AML regulations may impose additional or more stringent requirements than the EU AMLD', correct: true },
+          { text: 'The EU AMLD provide a framework that member countries must implement through local AML regulations', correct: true },
+        ],
+        explanation: "As directives (not directly-applicable regulations), the EU AMLDs set a minimum framework that each member state transposes into its own domestic law — and a member state remains free to legislate more strictly than that floor, which is exactly why AML requirements aren't perfectly uniform across the EU despite a shared directive.",
       },
     ],
   },
@@ -1879,6 +2356,245 @@ const CAMS_MODULES = [
           { text: 'Third-party reliance is only permitted for low-risk customers — EDD must always be conducted directly', correct: false, feedback: 'While EDD situations warrant greater scrutiny of third-party reliance, FATF R.17 does not categorically prohibit reliance for EDD. The key requirement is that the third party meets the R.17 conditions — not that reliance is excluded for higher-risk situations.' },
         ],
       },
+      {
+        id: 21, title: 'Correspondent Client Due Diligence Scope', selectCount: 2,
+        question: "Which entities require due diligence when the correspondent banking client is not controlled by its parent?",
+        options: [
+          { text: 'The parent of the correspondent banking client', correct: true },
+          { text: 'The clients of the correspondent banking client', correct: false },
+          { text: 'The entities exhibiting higher-risk characteristics', correct: false },
+          { text: 'The third parties providing services to the correspondent bank', correct: false },
+          { text: 'The correspondent banking client itself', correct: true },
+        ],
+        explanation: "Due diligence always covers the client itself — that's the baseline. When the client isn't actually controlled by its stated parent, you can no longer rely on the parent's due diligence to cover the relationship, so the parent needs to be independently assessed too. The client's own downstream customers and unrelated service providers aren't automatically pulled into correspondent-level due diligence.",
+      },
+      {
+        id: 22, title: 'Identifying Trust Parties (Basel)', selectCount: 3,
+        question: "Which trust parties should be identified to determine the true nature of the trust relationship, according to Basel guidelines?",
+        options: [
+          { text: 'Respondents', correct: false },
+          { text: 'Payees', correct: false },
+          { text: 'Trust administrators', correct: false },
+          { text: 'Trustees', correct: true },
+          { text: 'Beneficiaries', correct: true },
+          { text: 'Settlors/grantors', correct: true },
+        ],
+        explanation: "A trust's true nature is defined by who controls it, who receives its benefit, and who created it — the trustee, the beneficiaries, and the settlor/grantor. Understanding those three roles is what tells you who's really behind the structure. 'Respondents' and 'payees' aren't trust-specific roles, and administrators are typically service providers rather than parties whose identity defines the trust relationship.",
+      },
+      {
+        id: 23, title: 'Risk Assessment Factors', selectCount: 2,
+        question: "When performing a risk assessment, which factors should be considered when identifying and measuring risk?",
+        options: [
+          { text: 'Customer composition', correct: true },
+          { text: 'Financial performance', correct: false },
+          { text: 'Product offerings', correct: true },
+          { text: 'Regulatory environment', correct: false },
+          { text: 'Company culture', correct: false },
+        ],
+        explanation: "A money laundering risk assessment is built around who you serve and what you sell them — customer composition and product/service offerings are the two core inputs that actually drive ML/TF exposure. Financial performance, regulatory environment, and culture are relevant to the business more broadly, but they aren't the specific risk-assessment inputs FATF and Basel guidance point to.",
+      },
+      {
+        id: 24, title: 'Correspondent Client Ownership Risk', selectCount: 2,
+        question: "Which risks are involved in a correspondent banking client's ownership and management structure?",
+        options: [
+          { text: 'Regularity of board meetings', correct: false },
+          { text: 'Size of the management structure', correct: false },
+          { text: 'Status as a state-, publicly-, or privately-held entity', correct: true },
+          { text: 'Transparency of the ownership structure', correct: true },
+          { text: 'Length of time since the last Wolfsberg Group review', correct: false },
+        ],
+        explanation: "The two things that actually matter for correspondent risk are how transparent the ownership is — can you actually see who controls the bank — and what kind of entity it is, since state-owned banks carry different (often PEP-related) risk than privately held ones. Board meeting cadence and time since a Wolfsberg review are governance housekeeping, not ownership-structure risk factors.",
+      },
+      {
+        id: 25, title: 'Who May Perform the AML Audit', selectCount: 2,
+        question: "Who meets the standard to perform the AML audit?",
+        options: [
+          { text: 'Qualified bank staff, if not involved in the AML function being tested', correct: true },
+          { text: 'An internal auditor with the requisite knowledge and expertise of AML', correct: true },
+          { text: 'An internal auditor with a family member employed in the AML department', correct: false },
+          { text: 'A consultant with limited knowledge and experience in AML but many years of internal audit experience', correct: false },
+          { text: 'A consultant previously employed in the AML department within the past two years', correct: false },
+        ],
+        explanation: "Independence and competence are both non-negotiable: the auditor must actually understand AML, and must have no involvement in — or close personal/employment ties to — the function being reviewed. A family member in the AML department, or having worked in that department within the last two years, compromises independence even if the auditor is otherwise qualified.",
+      },
+      {
+        id: 26, title: "Basel's Essential KYC Elements", selectCount: 2,
+        question: "Which are essential elements of a KYC program identified by the Basel Committee on Banking Supervision?",
+        options: [
+          { text: 'Risk appetite', correct: false },
+          { text: 'Code of conduct', correct: false },
+          { text: 'Risk management', correct: true },
+          { text: 'Internal control', correct: false },
+          { text: 'Customer acceptance policy', correct: true },
+        ],
+        explanation: "Basel's KYC framework centres on deciding who you'll accept as a customer (customer acceptance policy) and how you manage the risk of the customers you do accept (risk management) — the two elements that shape the entire customer lifecycle. Risk appetite, code of conduct, and internal control are broader governance concepts that sit around a KYC program rather than defining its essential elements.",
+      },
+      {
+        id: 27, title: 'Third-Party Relationship Red Flags', selectCount: 2,
+        question: "Which red flags should be considered prior to establishing a relationship with a third party?",
+        options: [
+          { text: 'The third party has sufficient capability to provide the services or goods for which it is being engaged', correct: false },
+          { text: 'The third party has a declaration of non-family or business ties with government officials', correct: false },
+          { text: 'The third party has requested unusual payment or billing procedures', correct: true },
+          { text: 'The third party has a lack of anti-corruption compliance clauses in agreements', correct: true },
+          { text: "The third party's amount to be paid for goods and services appears to be reasonable", correct: false },
+        ],
+        explanation: "Unusual payment/billing requests and the absence of anti-corruption clauses are the two things that should stop a third-party onboarding in its tracks — both point toward funds being routed in ways designed to avoid scrutiny. Genuine capability to deliver the service, a clean government-ties declaration, and reasonable pricing are all what you'd expect from a legitimate vendor.",
+      },
+      {
+        id: 28, title: 'TCSP Trust Risk Assessment Data', selectCount: 2,
+        question: "According to the Financial Action Task Force, as part of their risk assessment, which are important data and information that a Trust and Company Service Provider (TCSP) must understand when establishing and administering a trust?",
+        options: [
+          { text: 'The source of funds in the structure', correct: true },
+          { text: 'The general purpose behind the structure', correct: true },
+          { text: 'The responsibility and authority in the structure', correct: false },
+          { text: 'The management structure of the trust', correct: false },
+          { text: 'The general nature of business of the trust', correct: false },
+        ],
+        explanation: "A TCSP's core job is understanding why the trust exists and where its money comes from — the source of funds and the stated purpose behind the structure. Those two answer the fundamental risk question: is this a legitimate arrangement, and does the money entering it make sense. Authority, management structure, and general business nature are operational details that support, but don't replace, that core understanding.",
+      },
+      {
+        id: 29, title: 'Triggers for Program Reassessment', selectCount: 2,
+        question: "Which factors should lead to a reassessment of the current AML program?",
+        options: [
+          { text: 'Appointment of a new Chief Financial Officer', correct: false },
+          { text: 'Change of company name', correct: false },
+          { text: 'Change of internal audit team members', correct: false },
+          { text: 'New product offering', correct: true },
+          { text: 'Expansion of business to new territories', correct: true },
+        ],
+        explanation: "A reassessment is warranted when the actual risk exposure of the business changes — a new product or expanding into new territory both introduce genuinely new ML/TF risk that the existing program wasn't built to cover. A rebrand, a new CFO, or a staffing change on the audit team don't change the underlying risk profile of what the institution does.",
+      },
+      {
+        id: 30, title: 'Customer Risk Rating Factors', selectCount: 3,
+        question: "Which risk factors are considered when assessing the risk rating of customers?",
+        options: [
+          { text: 'Employment risk', correct: false },
+          { text: 'Geographic risk', correct: true },
+          { text: 'Customer risk', correct: true },
+          { text: 'Credit risk', correct: false },
+          { text: 'Fraud risk', correct: false },
+          { text: 'Product risk', correct: true },
+        ],
+        explanation: "Customer risk rating is typically built on three standard dimensions: who the customer is (customer risk), where they operate (geographic risk), and what they're using (product risk). Credit and fraud risk are managed by other functions within a bank, and employment status alone isn't a standard risk-rating dimension.",
+      },
+      {
+        id: 31, title: 'Basel — Identifying and Accepting Customers', selectCount: 2,
+        question: 'The Basel Committee on Banking Supervision published guidelines on the "Sound management of risks related to money laundering and financing of terrorism." With regard to identifying and accepting customers, it recommends that banks:',
+        options: [
+          { text: 'establish policies and procedures for customer due diligence that vary based on risk', correct: true },
+          { text: 'are prohibited from offering numbered accounts to customers, even if procedures are established to gather and maintain due diligence information', correct: false },
+          { text: 'establish policies and procedures to identify and verify customers, beneficial owners, and any individuals that can transact on behalf of their customers', correct: true },
+          { text: 'establish policies and procedures to ensure due diligence activities are identical for all customers', correct: false },
+          { text: 'establish policies and procedures that encourage processing transactions while due diligence information is being established and verified', correct: false },
+        ],
+        explanation: "Basel's guidance is squarely risk-based: due diligence intensity should scale with risk, and it must cover not just the named customer but beneficial owners and anyone authorized to transact. Numbered accounts aren't outright banned as long as the bank still gathers full due diligence internally, and 'identical for everyone' is the opposite of a risk-based approach.",
+      },
+      {
+        id: 32, title: 'Strengthening the Customer ID Program', selectCount: 2,
+        question: "According to the Basel Committee principles, which actions would make a customer identification program at a bank more robust?",
+        options: [
+          { text: 'Limiting the online activities of a new customer during the first two months', correct: false },
+          { text: 'Understanding the nature and purpose behind a new business opening an account at the bank', correct: true },
+          { text: 'Verifying the identity of a customer with reputable online source documentation', correct: true },
+          { text: 'Understanding why a customer has selected a particular financial institution for banking', correct: false },
+        ],
+        explanation: "A stronger identification program is about better verification and better context — confirming identity against credible independent sources, and genuinely understanding why a business wants the account (its nature and purpose). Restricting new-customer activity for an arbitrary period, or probing why they chose this particular bank, don't add to identification robustness.",
+      },
+      {
+        id: 33, title: 'EU Data Privacy Restrictions on FIs', selectCount: 2,
+        question: "Privacy and data protection restrictions placed upon financial institutions (FIs) in the EU require that FIs must:",
+        options: [
+          { text: 'engage third parties to supplement any missing customer identification information', correct: false },
+          { text: 'apply data minimization to avoid overreach in data collection', correct: true },
+          { text: 'inform a customer of any information the FI has obtained as a result of an investigation into unusual activity', correct: false },
+          { text: 'follow strict guidelines when using machine learning and artificial intelligence', correct: true },
+        ],
+        explanation: "EU data protection principles require collecting only what's genuinely needed (data minimization) and applying real guardrails when automated tools like ML/AI process personal data. Telling a customer what an investigation uncovered would defeat the purpose of the investigation (and risks tipping-off), and outsourcing identity gaps to third parties doesn't satisfy the FI's own data-handling obligations.",
+      },
+      {
+        id: 34, title: 'New Corporate Customer Risk Factors', selectCount: 3,
+        question: "Which risk factors should a financial institution (FI) examine for a new corporate customer intending to open a new bank account?",
+        options: [
+          { text: 'The type of business the corporate customer is engaged in', correct: true },
+          { text: 'The employment profiles and information of all employees of the new customer', correct: false },
+          { text: 'All the financial institutions where the new customer currently banks or banked previously', correct: false },
+          { text: 'The identity of senior managing officials and all individuals authorized to operate the account', correct: true },
+          { text: 'The country or location where the customer is from or conducts business', correct: true },
+        ],
+        explanation: "The three things that actually shape a corporate customer's risk profile are what business they're in, where they operate, and who controls the account — the nature of the business, geography, and the identity of the people with real authority over it. A full employee roster and a complete banking history at other institutions aren't standard onboarding requirements.",
+      },
+      {
+        id: 35, title: 'Corporate Banking Role-Specific Training', selectCount: 2,
+        question: "A relationship manager in the corporate banking department at a bank is required to take specialized AML training tailored to the risks the department is most likely to encounter. Which types of content are most appropriate for this training?",
+        options: [
+          { text: 'Money laundering typologies applicable to monetary instrument reporting', correct: false },
+          { text: 'Applicable AML laws and regulations', correct: true },
+          { text: 'Money laundering typologies applicable to corporate loans', correct: true },
+          { text: 'Regulatory exam best practices', correct: false },
+        ],
+        explanation: "Role-specific training should map directly to the job: a corporate banking RM needs to know the laws that govern their work and the ML typologies specific to corporate lending — the products they actually handle. Monetary instrument reporting typologies belong to a retail/teller role, and regulatory exam best practices are a compliance-department concern, not a frontline training topic.",
+      },
+      {
+        id: 36, title: 'Purpose of a Risk Appetite Statement', selectCount: 2,
+        question: "What is the purpose of a risk appetite statement (RAS) and its linkages while implementing corresponding organizational controls?",
+        options: [
+          { text: "An RAS formalizes a risk appetite statement from management and informs the board of directors on the risk assessment performed", correct: false },
+          { text: 'An RAS establishes a desired level of risk exposure in qualitative terms and covering all areas of compliance', correct: false },
+          { text: 'An RAS sets limits for risk-taking by means of quantitative and qualitative metrics so that the business does not take up risk in excess of the organization\'s risk tolerance', correct: true },
+          { text: "An RAS establishes a management-approved policy that identifies the organization's risk tolerances aligned with strategic objectives, risk profile, and risk management capabilities", correct: true },
+          { text: 'An RAS sets limits in terms of residual risk and is thus strongly intertwined with the efficacy of the system of internal controls', correct: false },
+        ],
+        explanation: "An RAS does two things at once: it sets concrete, measurable boundaries on risk-taking, and it's a management-approved policy that ties those boundaries back to the organization's actual strategy and risk capacity. It's not simply a report to the board on a risk assessment already performed, and it isn't defined purely in terms of residual risk or internal-control efficacy.",
+      },
+      {
+        id: 37, title: 'Scenarios Warranting EDD', selectCount: 3,
+        question: "Which of the following scenarios warrants enhanced due diligence (EDD)?",
+        options: [
+          { text: 'The former personal secretary to the minister of transport in a low-risk country 25 years ago opening a bank account at a bank in a neighboring low-risk country', correct: false },
+          { text: 'An existing local league footballer trying to open a bank account with a bank in their local jurisdiction', correct: false },
+          { text: 'A bank located in a higher-risk country trying to establish a correspondent-respondent banking relationship with a bank in a lower-risk country', correct: true },
+          { text: 'An individual with a current bank account who resides in one country becoming the ambassador of another country', correct: true },
+          { text: 'The current prime minister of a country trying to open a bank account in another country', correct: true },
+        ],
+        explanation: "EDD is triggered by present, active risk: a correspondent relationship originating from a higher-risk jurisdiction, and two current PEPs (a sitting ambassador and a sitting prime minister) opening accounts. A former, decades-ago junior government role in a low-risk country and an ordinary local footballer don't carry the same live risk profile.",
+      },
+      {
+        id: 38, title: 'Designing a Risk-Based Approach', selectCount: 2,
+        question: "What should an organization consider when designing a risk-based approach (RBA) to mitigating financial crime risks?",
+        options: [
+          { text: "The size and complexity of the organization's operations", correct: true },
+          { text: 'The number of personnel or resources on staff', correct: false },
+          { text: 'Eliminating opportunities to implement simplified measures', correct: false },
+          { text: 'The nature and extent of money laundering and terrorist financing exposure', correct: true },
+          { text: 'Increasingly outsourcing accountability to third parties and vendors', correct: false },
+        ],
+        explanation: "An RBA has to be built around the organization it actually governs: how big and complex the business is, and what ML/TF exposure it genuinely faces. Staff headcount is a resourcing question, not a design input, and a properly risk-based approach should preserve — not eliminate — the option to apply simplified measures where risk is genuinely low.",
+      },
+      {
+        id: 39, title: 'Background Screening for New Hires', selectCount: 3,
+        question: "A recruitment manager in the human resources department of a bank has shortlisted a candidate for the position of relationship manager in its private banking division. Which resources would be most useful for identifying any potential negative information regarding the shortlisted candidate?",
+        options: [
+          { text: 'Past employment records', correct: true },
+          { text: 'Personal references from close associates', correct: false },
+          { text: 'Personal resume', correct: false },
+          { text: 'Internet and public media searches', correct: true },
+          { text: 'Criminal history searches', correct: true },
+        ],
+        explanation: "Genuinely independent, verifiable sources are what a know-your-employee screen needs: past employer records, public media, and a criminal history check. A resume and personal references are both supplied or chosen by the candidate themselves, so they're the least reliable sources for surfacing information the candidate would rather not disclose.",
+      },
+      {
+        id: 40, title: 'Triggers for Enterprise-Wide Reassessment', selectCount: 3,
+        question: "Which changes at a financial institution (FI) should trigger an enterprise-wide reassessment of its inherent AML risk exposure?",
+        options: [
+          { text: 'Introduction of new products or services', correct: true },
+          { text: "Restructuring of the FI's risk and compliance functions", correct: false },
+          { text: "Changes in the individuals overseeing the FI's product lines and sales strategies", correct: false },
+          { text: 'Use of new technologies for delivering existing products', correct: true },
+          { text: 'Mergers or acquisitions', correct: true },
+        ],
+        explanation: "The events that warrant a full enterprise-wide reassessment are the ones that actually change what risk the institution is exposed to: new products, new delivery technology for existing products, and mergers/acquisitions all bring genuinely new customers, channels, or jurisdictions into scope. Reorganizing the compliance department or changing which manager oversees a product line doesn't change the underlying risk itself.",
+      },
     ],
   },
   {
@@ -2088,6 +2804,243 @@ const CAMS_MODULES = [
           { text: 'Request a formal regulatory waiver before filing any retrospective SARs to avoid self-incrimination', correct: false, feedback: 'No formal waiver is required before filing retrospective SARs. The institution\'s SAR-filing obligation extends to historical transactions meeting the suspicion threshold. The institution should file and simultaneously engage with the regulator on the overall control deficiency.' },
         ],
       },
+      {
+        id: 21, title: 'Investigating Mule Accounts', selectCount: 3,
+        question: "When investigating an AML event, which techniques would be used to investigate suspected mule accounts?",
+        options: [
+          { text: 'Reconcile the stated purpose of the account with actual transaction history and compare with peer groups', correct: true },
+          { text: 'Determine if the suspected accounts are being accessed by a common person, telephone number, or device', correct: true },
+          { text: 'Contact the appropriate law enforcement agency and report the account activity', correct: false },
+          { text: 'Review the account history and determine if there are previous payments to charity accounts', correct: false },
+          { text: 'Establish the frequency with which funds are moved in and out of the accounts', correct: true },
+        ],
+        explanation: "Mule account analysis is internal investigative work before any escalation: checking whether the account's actual activity matches its stated purpose, spotting shared access points (same device/phone/person) across seemingly unrelated accounts, and looking at how quickly funds pass through. Contacting law enforcement is a later escalation step, not an investigative technique, and charity payment history isn't a recognised mule indicator.",
+      },
+      {
+        id: 22, title: 'Law Enforcement Request to Keep Account Open', selectCount: 3,
+        question: "Which steps should a financial institution (FI) take after receiving a request from law enforcement to keep an account open due to a criminal investigation?",
+        options: [
+          { text: 'Inform the customer that the account is under investigation by law enforcement', correct: false },
+          { text: 'Ask for written documentation of the request', correct: true },
+          { text: 'Freeze the account to prevent the customer from transferring the funds out', correct: false },
+          { text: 'Maintain documentation of such requests for at least five years after the request has expired', correct: true },
+          { text: 'Ensure that the request indicates the duration for the request', correct: true },
+        ],
+        explanation: "The institution's obligations here are procedural and record-keeping ones: get the request in writing, make sure it specifies how long it applies for, and retain that documentation well after it expires. Telling the customer would be tipping off, and freezing the account defeats the entire purpose of the request — law enforcement specifically wants activity to continue so they can keep watching it.",
+      },
+      {
+        id: 23, title: 'Cooperating With a Law Enforcement Investigation', selectCount: 2,
+        question: "A financial institution (FI) is being investigated for possible money laundering. When cooperating with law enforcement agencies, which additional steps should the FI ensure are taken?",
+        options: [
+          { text: 'Centralized control is maintained over all requests and responses to ensure completeness and timely responses', correct: true },
+          { text: 'Make employees, including corporate officers, unavailable for interviews and refuse documents upon receipt of a subpoena', correct: false },
+          { text: 'Subpoenas and other information requests should be reviewed by senior management and an investigations group or counsel', correct: true },
+          { text: 'Address the document destruction policy to ensure the relevant documents are destroyed', correct: false },
+          { text: 'Inquiries from the media are not answered directly, but rather are addressed by replying, "No comment."', correct: false },
+        ],
+        explanation: "Good cooperation is organized cooperation: routing everything through one central point so responses stay complete and consistent, and having senior management/counsel review requests before they're actioned. Making staff unavailable or refusing a valid subpoena is obstruction, and destroying documents once an investigation is known is a serious offence in its own right, regardless of any general retention policy.",
+      },
+      {
+        id: 24, title: 'How Law Enforcement Obtains Documentation', selectCount: 2,
+        question: "How should law enforcement obtain documentation from an institution when suspicious activity was identified?",
+        options: [
+          { text: 'Request copies of the relevant documents from the accountable institution', correct: true },
+          { text: 'Pay an employee of the accountable institution to make copies of the documents', correct: false },
+          { text: 'Request a Financial Intelligence Unit (FIU) share copies of suspicious transaction reports', correct: false },
+          { text: 'Request the documents from the FIU', correct: false },
+          { text: 'Acquire a search warrant to obtain the documents', correct: true },
+        ],
+        explanation: "The two legitimate routes are a direct, lawful request to the institution itself, or a search warrant when compulsory production is needed. FIUs hold analytical intelligence, not the institution's underlying records, so they aren't the source for the documents themselves — and paying an employee to hand over records outside proper channels is a serious integrity breach, not a legitimate investigative method.",
+      },
+      {
+        id: 25, title: 'Responding to a Search Warrant', selectCount: 2,
+        question: "An AML specialist at a financial institution (FI) is presented with a search warrant. Which actions should be taken to comply with the search?",
+        options: [
+          { text: 'Remember what items the agents have seized and taken from the premises', correct: false },
+          { text: 'Leave the premises to allow the agents to conduct the search', correct: false },
+          { text: 'Obtain a copy of the warrant or photocopy the original warrant', correct: true },
+          { text: 'Record the names and affiliations of the agents who conduct the search', correct: true },
+          { text: 'Proactively ask the agents as many questions as time allows', correct: false },
+
+        ],
+        explanation: "Compliance with a search warrant means creating a clear contemporaneous record of what authority was exercised and by whom — getting a copy of the warrant itself and logging the identities of the agents present. Staff shouldn't leave (someone from the institution should observe the search) or try to interrogate the agents about the investigation's substance — that's a matter for counsel, not the AML specialist on the floor.",
+      },
+      {
+        id: 26, title: 'Events That Trigger an AML Investigation', selectCount: 3,
+        question: "Typical events to identify and investigate potential AML activities include:",
+        options: [
+          { text: 'blocked transactions involving individuals included in the OFAC SDN list', correct: false },
+          { text: 'subpoenas requesting information for civil cases', correct: false },
+          { text: 'internal tips from employees of the bank about potential suspicious activity', correct: true },
+          { text: 'requests from law enforcement agencies', correct: true },
+          { text: 'alerts triggered by the automated AML monitoring system', correct: true },
+          { text: 'accounts going to dormant status', correct: false },
+        ],
+        explanation: "The three real triggers for opening an AML investigation are the ones that actually surface suspicion: an internal tip from staff, an external law enforcement request, or a system-generated monitoring alert. A blocked OFAC transaction is a sanctions compliance action rather than an ML investigation trigger, a civil-case subpoena is unrelated to AML suspicion, and an account simply going dormant is not by itself a red flag.",
+      },
+      {
+        id: 27, title: 'Notified of a FIU Investigation', selectCount: 2,
+        question: "The AML compliance officer of a financial institution (FI) has been advised that the institution is being investigated by the country's financial intelligence unit (FIU). What should the AML compliance officer do?",
+        options: [
+          { text: 'Monitor the progress of the investigation by keeping clear records', correct: true },
+          { text: 'Share investigation results with other financial institutions to help them prepare', correct: false },
+          { text: 'Send an informative communication to all employees about the investigation', correct: false },
+          { text: 'Provide all information to the FIU as soon as possible to avoid delays', correct: false },
+          { text: 'Inform senior leadership and the board of the investigation', correct: true },
+        ],
+        explanation: "When the institution itself is under investigation, the response is internal governance, not outreach: keep clear records of what's happening, and make sure senior leadership and the board are informed given the potential business impact. Broadcasting the investigation to all staff or to other institutions breaches confidentiality, and 'as soon as possible' isn't the standard — information should still go through proper legal review before release.",
+      },
+      {
+        id: 28, title: 'Investigating a Large Deposit Alert', selectCount: 3,
+        question: "A bank's transaction surveillance system triggers an alert for a deposit of $250,000 into a client's account. According to the bank's KYC information, the client works for a financial advisory firm and earns approximately $100,000 per year. Which actions should be taken?",
+        options: [
+          { text: 'File the suspicious transaction immediately to the financial intelligence unit', correct: false },
+          { text: "Review the transaction background in the bank's transaction platform", correct: true },
+          { text: 'Review the alert if the deposit is made in cash', correct: false },
+          { text: 'Discard the alert as a false positive hit', correct: false },
+          { text: 'Contact the client advisor to learn if he has any insight on the transaction background', correct: true },
+          { text: 'Request information and documentation from the client on the background of the transaction', correct: true },
+        ],
+        explanation: "A deposit well above the customer's known income needs investigation, not an immediate filing or an automatic dismissal: pull the transaction's context internally, ask the relationship manager what they know, and go to the client directly for an explanation and supporting documentation. Only after that fact-finding is complete would there be enough basis to either close the alert or escalate to an SAR/STR.",
+      },
+      {
+        id: 29, title: 'Foreign Law Enforcement — Wanted Client', selectCount: 2,
+        question: "The law enforcement agency (LEA) of a foreign jurisdiction contacts a financial institution (FI) regarding one of the FI's clients. The LEA advises that the client is currently wanted for prosecution as a result of a series of human trafficking charges. What should the FI do?",
+        options: [
+          { text: 'Comply immediately with the foreign jurisdiction and turn over all client information', correct: false },
+          { text: 'Inform the local LEA and regulator of the request, for awareness', correct: true },
+          { text: 'Review the client\'s activity, determine if suspicious activity exists, and report accordingly', correct: true },
+          { text: 'Advise the LEA that the government needs to be contacted for extradition', correct: false },
+          { text: "Close the client's accounts immediately to avoid any undue risk", correct: false },
+        ],
+        explanation: "A direct request from a foreign LEA doesn't bypass the FI's own domestic process — it should be routed through the proper local channels (informing local authorities/the regulator) and it should trigger the FI's own review of the client's activity to determine whether a domestic SAR/STR is now warranted. Handing over information directly to a foreign agency, or closing accounts unilaterally, skips the legal process that's supposed to govern cross-border requests.",
+      },
+      {
+        id: 30, title: 'Regulatory Actions for AML Program Failure', selectCount: 2,
+        question: "The regulators of a US financial institution find that the institution has failed to establish and maintain a reasonably designed AML program. Which regulatory actions should be taken?",
+        options: [
+          { text: 'Cease and desist order', correct: true },
+          { text: 'Obtain additional license', correct: false },
+          { text: 'Matter Requiring Attention (MRA)', correct: true },
+          { text: 'Criminal penalties', correct: false },
+        ],
+        explanation: "For a program deficiency (as opposed to proven willful misconduct), a regulator's toolkit typically starts with supervisory and enforcement actions — a formal Matter Requiring Attention demanding remediation, escalating to a cease-and-desist order if it isn't fixed. Criminal penalties require proof of willful violations, a much higher bar than a program design deficiency, and 'obtaining an additional license' isn't a regulatory sanction at all.",
+      },
+      {
+        id: 31, title: 'Roles of a Government FIU', selectCount: 3,
+        question: "What are the roles of a government Financial Intelligence Unit (FIU)?",
+        options: [
+          { text: 'Investigate and, where appropriate, prosecute all suspicious transaction and suspicious activity reports received from reporting institutions', correct: false },
+          { text: 'Analyze all suspicious transaction and suspicious activity reports received from reporting institutions or obliged institutions', correct: true },
+          { text: "Disseminate analysis of suspicious transaction and suspicious activity reports to foreign judicial systems to enhance their AML/CFT investigations and prosecutions", correct: false },
+          { text: 'Disseminate the analysis of suspicious transaction and suspicious activity reports to local law enforcement agencies and foreign FIUs to combat money laundering', correct: true },
+          { text: 'Receive reports of suspicious transactions and suspicious activities from reporting institutions or obliged institutions', correct: true },
+        ],
+        explanation: "An FIU's core function is receive → analyze → disseminate: taking in SARs/STRs, analyzing them for value, and passing actionable intelligence on to domestic law enforcement or partner FIUs. It does not prosecute — that stays with law enforcement/judicial authorities — and it disseminates to other FIUs and domestic agencies, not directly to a foreign judicial system.",
+      },
+      {
+        id: 32, title: 'Investigating Unusual Transactions', selectCount: 3,
+        question: "Which practices should be considered when investigating unusual transactions and activities?",
+        options: [
+          { text: 'Focusing primarily on quantitative metrics, such as transaction amounts', correct: false },
+          { text: 'Evaluating the transactions by cross-referencing with known external factors, such as market trends or recent news events', correct: true },
+          { text: "Discussing with the responsible relationship manager, who may have insights into the customer's behavior or the nature of the transactions", correct: true },
+          { text: 'Utilizing a risk-based approach to determine the level of scrutiny required for different types of transactions', correct: true },
+          { text: 'Prioritizing automated alerts over manual reviews to streamline the investigation process', correct: false },
+        ],
+        explanation: "A sound investigation looks beyond the raw numbers: checking transactions against real-world context (news, market events), talking to the people who actually know the customer, and applying a risk-based level of scrutiny rather than a one-size-fits-all check. Fixating purely on transaction size, or letting automation replace manual judgment entirely, both miss context a human investigator would catch.",
+      },
+      {
+        id: 33, title: 'Investigating a Cross-Border Correspondent Payment', selectCount: 3,
+        question: "An international bank is investigating a payment requested by one of its correspondent relationships that generated an alert in the automated transaction monitoring system. The payment originated from a corporation located in Hong Kong, and the final beneficiary is an individual located in New York. Which steps should the bank take first to address the alert?",
+        options: [
+          { text: 'Call the receiving individual to review identity verification documents', correct: false },
+          { text: 'Confirm that neither the beneficiary nor the originator are sanctioned parties', correct: true },
+          { text: 'Request supporting documents, including invoices and contracts, to confirm the purpose of the payment', correct: true },
+          { text: 'Check for negative news in public sources on the sender and receiver', correct: true },
+          { text: 'Send a 314(b) request to the corporation\'s bank in Hong Kong', correct: false },
+        ],
+        explanation: "The first-line checks are all things the investigating bank can do itself: confirm neither party is sanctioned, gather documentation supporting the stated business purpose, and screen both parties against adverse media. Contacting the ultimate beneficiary directly, or reaching out to a foreign correspondent's bank via 314(b), are appropriate later steps once the internal review has established there's a genuine reason to escalate.",
+      },
+      {
+        id: 34, title: 'Investigating Patterns Across Multiple Businesses', selectCount: 2,
+        question: "Which techniques would be most efficient for a complex investigation of unusual patterns of activity involving multiple businesses, triggered by an automated monitoring system alert?",
+        options: [
+          { text: 'Perform a control and ownership assessment of the businesses involved, using the information available in the client files', correct: true },
+          { text: 'Contact local law enforcement and request that they assist in the analysis and investigation', correct: false },
+          { text: 'Contact the account manager and ask for the reasons behind the patterns of activity highlighted in the AML alerts', correct: true },
+          { text: 'Review the information presented in the automated monitoring system\'s alert description and decline any future transactions', correct: false },
+          { text: 'Use social media platforms to connect with the businesses and request details about the account activity', correct: false },
+        ],
+        explanation: "The efficient first moves are entirely internal: check whether the businesses share common control or ownership using what's already on file, and get the account manager's read on the pattern. Looping in law enforcement before the internal review is complete is premature, and reaching out via social media, or simply blocking future transactions without investigating, are neither appropriate nor effective.",
+      },
+      {
+        id: 35, title: 'Employee Red Flags Before a Resignation', selectCount: 2,
+        question: "An employee in a corporation's finance department hears news of an internal investigation into potential fraud within the company, quits her job, and disappears. If they had been observed before her resignation, which characteristics of the employee would have been considered red flags?",
+        options: [
+          { text: 'The employee was constantly evasive about the reasons for leaving her previous corporate finance job', correct: true },
+          { text: 'The employee was originally from a high-risk jurisdiction', correct: false },
+          { text: 'The employee had friends in high-risk industries', correct: false },
+          { text: 'The employee had a lavish lifestyle for her income', correct: true },
+
+        ],
+        explanation: "Both real red flags are behavioural and financial: being evasive about her own employment history (a vetting red flag), and living beyond what her salary could support (a classic insider-risk indicator). Where someone is originally from, or who their friends are, aren't legitimate red flags — using them would amount to profiling rather than genuine risk assessment.",
+      },
+      {
+        id: 36, title: 'SAR Supporting Documentation', selectCount: 2,
+        question: "According to FinCEN, when a financial institution (FI) identifies a suspicious activity that necessitates suspicious activity report (SAR) filing, the SAR supporting documentation should:",
+        options: [
+          { text: 'have written policies and procedures to maintain supporting documentation', correct: true },
+          { text: 'always be limited to account name, account details, and transaction records', correct: false },
+          { text: 'be saved in a single separate file with hard copies stored in a fireproof cabinet', correct: false },
+          { text: 'include all documents or records that assisted the FI in making the determination that the activity required a filing', correct: true },
+        ],
+        explanation: "The two real requirements are having documented policies governing how supporting documentation is kept, and retaining everything that actually informed the SAR decision — not just a fixed, narrow set of account records. There's no FinCEN requirement dictating a specific physical storage method like a single fireproof cabinet.",
+      },
+      {
+        id: 37, title: 'Developments That Trigger an Internal Investigation', selectCount: 3,
+        question: "What are three developments that should cause a financial institution to conduct an internal investigation?",
+        options: [
+          { text: 'When the institution receives a grand jury subpoena with regard to transactions that have occurred within several accounts at the institution', correct: true },
+          { text: 'When several employees of the institution alert senior management or the compliance officer that there are some suspicious transactions within an account', correct: true },
+          { text: "When the institution's auditor identifies an omission in the AML policy", correct: false },
+          { text: 'When a small local business starts engaging in overseas activity involving numerous, unexplained wire transfers', correct: true },
+        ],
+        explanation: "A grand jury subpoena, multiple internal staff flagging the same account, and a small local business suddenly generating unexplained international wire activity are all live signals that something specific needs investigating. An audit finding a gap in the written AML policy is a program design issue to be remediated — it doesn't point to any particular suspicious activity requiring a case-level investigation.",
+      },
+      {
+        id: 38, title: 'Responding to Law Enforcement Inquiries', selectCount: 3,
+        question: "What are three of the recommended ways to respond to a law enforcement inquiry?",
+        options: [
+          { text: 'Cooperate with the law enforcement inquiry as much as possible', correct: true },
+          { text: 'Respond to all formal requests for information as promptly and thoroughly as possible, unless there is a valid objection that can and should be made', correct: true },
+          { text: 'Ensure that all communication, written and oral, is funneled through a centralized place', correct: true },
+          { text: 'Guard against unwarranted publicity by resisting all inquiries and requests whenever possible', correct: false },
+        ],
+        explanation: "The recommended posture is genuine, organized cooperation: respond promptly and fully unless there's a legitimate legal basis not to, and route everything through one centralized point of contact. Reflexively resisting inquiries to avoid publicity is the opposite of good practice and can itself create legal and reputational exposure.",
+      },
+      {
+        id: 39, title: 'Sources for Deciding Whether to Report', selectCount: 2,
+        question: "A compliance officer receives a report from the institution's monitoring system. One account was identified in multiple alerts for the amount of cash deposited and international wires sent. Which two sources of information held within the institution will enable the compliance officer to determine whether the activity should be reported?",
+        options: [
+          { text: 'The signature card for the account', correct: false },
+          { text: 'The customer due diligence information on file', correct: true },
+          { text: 'The monitoring system parameters for identifying unusual activity', correct: false },
+          { text: 'Transaction records for the period during which the unusual activity occurred', correct: true },
+        ],
+        explanation: "Deciding whether an alert is genuinely suspicious means comparing what the customer is actually doing against what you already know about them: their CDD profile (expected activity) against their actual transaction records for the alerted period. The signature card just shows who can operate the account, and the monitoring system's own parameters explain why it alerted — neither tells you whether the activity itself is suspicious.",
+      },
+      {
+        id: 40, title: 'Governing Transaction Monitoring Effectiveness', selectCount: 2,
+        question: "In a large US bank, an individual leads a team in charge of overseeing the governance and effectiveness of the bank's transaction monitoring approach. Which strategies should the team implement?",
+        options: [
+          { text: 'Periodic review of suspicious activity reports (SARs) filed with FinCEN to determine whether any should be withdrawn', correct: false },
+          { text: 'Periodic and ad hoc cooperation with the legal team to appropriately investigate and monitor the transactions of subjects of subpoenas or government inquiries', correct: false },
+          { text: "Periodic review of client profiles to ensure that the most up-to-date information is on file for high-risk clients in line with the bank's internal policies and procedures", correct: true },
+          { text: "Periodic review of the transaction monitoring scenarios and their productivity to ensure that appropriate AML typologies are reflected", correct: true },
+        ],
+        explanation: "Governing a monitoring program means keeping its two core inputs current: the client risk data the system relies on, and the detection scenarios themselves, tuned so they still reflect real-world typologies. Reviewing already-filed SARs for possible withdrawal isn't a recognised monitoring-governance practice, and coordinating with legal on subpoenas is a case-response function, not a program-governance one.",
+      },
     ],
   },
 ]
@@ -2102,7 +3055,7 @@ const TAG_STYLE = {
   'Free Preview': 'bg-violet-100 text-violet-600 border border-violet-200',
 }
 
-const CAMS_FREE_QUESTIONS = 6
+const CAMS_FREE_QUESTIONS = 20
 
 export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onUpgrade }) {
   const isPremium = user?.premium || false
@@ -2126,7 +3079,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
   const [activeStep, setActiveStep] = useState(0)
-  const [selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState([])
   const [showFeedback, setShowFeedback] = useState(false)
 
   useEffect(() => {
@@ -2144,7 +3097,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
     const step = fromStep != null ? fromStep : (progress[c.id]?.step || 0)
     setActiveCase(c)
     setActiveStep(step)
-    setSelected(null)
+    setSelected([])
     setShowFeedback(false)
   }
 
@@ -2154,11 +3107,22 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
     startCase(c, 0)
   }
 
-  const handleAnswer = (i) => {
+  const toggleOption = (i) => {
     if (showFeedback) return
-    setSelected(i)
-    setShowFeedback(true)
+    const step = activeCase.steps[activeStep]
+    if (!step.selectCount) {
+      setSelected([i])
+      setShowFeedback(true)
+      return
+    }
+    setSelected((prev) => {
+      if (prev.includes(i)) return prev.filter((x) => x !== i)
+      if (prev.length >= step.selectCount) return prev
+      return [...prev, i]
+    })
   }
+
+  const submitMultiAnswer = () => setShowFeedback(true)
 
   const stepLimit = (c) => (c.sector === 'CAMS' && !isPremium) ? Math.min(CAMS_FREE_QUESTIONS, c.steps.length) : c.steps.length
 
@@ -2170,7 +3134,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
     } else {
       save({ ...progress, [activeCase.id]: { step: next, completed: false } })
       setActiveStep(next)
-      setSelected(null)
+      setSelected([])
       setShowFeedback(false)
     }
   }
@@ -2183,7 +3147,10 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   /* ── Case simulation view ── */
   if (activeCase) {
     const step = activeCase.steps[activeStep]
-    const chosen = selected != null ? step.options[selected] : null
+    const isMulti = !!step.selectCount
+    const chosen = !isMulti && selected.length ? step.options[selected[0]] : null
+    const correctIndices = step.options.map((o, i) => (o.correct ? i : null)).filter((x) => x !== null)
+    const multiCorrect = isMulti && selected.length === correctIndices.length && correctIndices.every((i) => selected.includes(i))
     const total = stepLimit(activeCase)
     const isCamsFree = activeCase.sector === 'CAMS' && !isPremium
     const isLastFreeStep = isCamsFree && activeStep === total - 1
@@ -2226,34 +3193,64 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">{activeCase.isExam ? `Question ${activeStep + 1} of ${total}` : `Step ${activeStep + 1} of ${total}`} — {step.title}</p>
               <p className="text-slate-900 dark:text-white font-semibold text-base leading-snug mb-5">{step.question}</p>
 
+              {isMulti && !showFeedback && (
+                <p className="text-xs text-slate-400 dark:text-slate-500 mb-3">Select {step.selectCount} answers — {selected.length}/{step.selectCount} selected</p>
+              )}
+
               <div className="space-y-2">
                 {step.options.map((opt, i) => {
+                  const isSelected = selected.includes(i)
                   let cls = 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer'
                   if (showFeedback) {
-                    if (i === selected) cls = opt.correct ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 dark:border-emerald-600 text-emerald-900 dark:text-emerald-300' : 'bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-600 text-red-900 dark:text-red-300'
+                    if (isSelected) cls = opt.correct ? 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 dark:border-emerald-600 text-emerald-900 dark:text-emerald-300' : 'bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-600 text-red-900 dark:text-red-300'
                     else if (opt.correct) cls = 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-400'
                     else cls = 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-400 dark:text-slate-500 cursor-default'
+                  } else if (isMulti && isSelected) {
+                    cls = 'bg-blue-50 dark:bg-blue-900/30 border-blue-400 dark:border-blue-500 text-blue-900 dark:text-blue-200 cursor-pointer'
                   }
                   return (
                     <button
                       key={i}
-                      onClick={() => handleAnswer(i)}
+                      onClick={() => toggleOption(i)}
                       disabled={showFeedback}
-                      className={`w-full text-left px-4 py-3 rounded-xl border text-sm leading-snug transition-all ${cls}`}
+                      className={`w-full text-left px-4 py-3 rounded-xl border text-sm leading-snug transition-all flex items-start gap-3 ${cls}`}
                     >
-                      {opt.text}
+                      {isMulti && (
+                        <span className={`shrink-0 mt-0.5 w-4 h-4 rounded border flex items-center justify-center ${isSelected ? 'bg-blue-600 border-blue-600' : 'border-slate-300 dark:border-slate-500'}`}>
+                          {isSelected && (
+                            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                          )}
+                        </span>
+                      )}
+                      <span>{opt.text}</span>
                     </button>
                   )
                 })}
               </div>
 
-              {showFeedback && chosen && (
+              {showFeedback && !isMulti && chosen && (
                 <div className={`mt-4 p-4 rounded-xl border text-sm leading-relaxed ${chosen.correct ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'}`}>
                   <p className="font-semibold mb-1">{chosen.correct ? '✓ Correct' : '✗ Incorrect'}</p>
                   {chosen.feedback}
                 </div>
               )}
+
+              {showFeedback && isMulti && (
+                <div className={`mt-4 p-4 rounded-xl border text-sm leading-relaxed ${multiCorrect ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300' : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300'}`}>
+                  <p className="font-semibold mb-1">{multiCorrect ? '✓ Correct' : '✗ Incorrect'}</p>
+                  {step.explanation}
+                </div>
+              )}
             </div>
+
+            {isMulti && !showFeedback && selected.length === step.selectCount && (
+              <button
+                onClick={submitMultiAnswer}
+                className="w-full py-3 bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-xl font-semibold text-sm transition-colors"
+              >
+                Check answer
+              </button>
+            )}
 
             {showFeedback && isLastFreeStep ? (
               <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-5 text-center">
@@ -2317,7 +3314,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               {activeRole === 'mlro'
                 ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
                 : activeRole === 'cams'
-                ? `Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Free plan: ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks all 20.`
+                ? `Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Free plan: the first ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks every remaining question in every chapter.`
                 : activeRole === 'simulations'
                 ? 'Gamified mini-games to sharpen specific AML skills.'
                 : 'Investigative training for AML case analysis and decision-making.'}
@@ -2560,7 +3557,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
           <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
             <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: {CAMS_FREE_QUESTIONS} questions per chapter</p>
             <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
-              Each chapter's free preview covers the first {CAMS_FREE_QUESTIONS} questions. Upgrade to <strong>Premium</strong> to unlock all 20 exam-style questions in every chapter.
+              Each chapter's free preview covers the first {CAMS_FREE_QUESTIONS} questions. Upgrade to <strong>Premium</strong> to unlock every remaining exam-style question in every chapter.
             </p>
             <div className="flex items-center gap-4 flex-wrap">
               <button onClick={onUpgrade} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors">
