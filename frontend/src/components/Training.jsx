@@ -4048,6 +4048,26 @@ const TAG_STYLE = {
 
 const CAMS_FREE_QUESTIONS = 6
 
+// Deterministic per-question shuffle so the same question always renders in the
+// same scrambled order (stable across re-renders/revisits) without needing to
+// hand-reorder every option in the source data.
+function seededShuffle(arr, seed) {
+  let h = 0
+  for (let i = 0; i < seed.length; i++) h = (Math.imul(h, 31) + seed.charCodeAt(i)) >>> 0
+  const next = () => {
+    h ^= h << 13; h >>>= 0
+    h ^= h >>> 17
+    h ^= h << 5; h >>>= 0
+    return h / 4294967296
+  }
+  const out = arr.slice()
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(next() * (i + 1))
+    ;[out[i], out[j]] = [out[j], out[i]]
+  }
+  return out
+}
+
 export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
@@ -4138,9 +4158,10 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   /* ── Case simulation view ── */
   if (activeCase) {
     const step = activeCase.steps[activeStep]
+    const options = seededShuffle(step.options, `${activeCase.id}::${step.id ?? activeStep}`)
     const isMulti = !!step.selectCount
-    const chosen = !isMulti && selected.length ? step.options[selected[0]] : null
-    const correctIndices = step.options.map((o, i) => (o.correct ? i : null)).filter((x) => x !== null)
+    const chosen = !isMulti && selected.length ? options[selected[0]] : null
+    const correctIndices = options.map((o, i) => (o.correct ? i : null)).filter((x) => x !== null)
     const multiCorrect = isMulti && selected.length === correctIndices.length && correctIndices.every((i) => selected.includes(i))
     const total = stepLimit(activeCase)
     const isCamsFree = activeCase.sector === 'CAMS' && !isPremium
@@ -4189,7 +4210,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               )}
 
               <div className="space-y-2">
-                {step.options.map((opt, i) => {
+                {options.map((opt, i) => {
                   const isSelected = selected.includes(i)
                   let cls = 'bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-blue-300 dark:hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/30 cursor-pointer'
                   if (showFeedback) {
