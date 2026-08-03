@@ -1688,6 +1688,258 @@ const CAMS_MODULES = [
         ],
         explanation: "Titling a luxury property to someone with no real connection to the actual buyer, or hiding ownership behind a shell company or trust, are what break the link between the money and its true owner — the essence of laundering through real estate. Selling a prior property to fund a new one and loans secured against cash deposits both have obvious, traceable legitimate explanations.",
       },
+      {
+        id: 41, title: 'Real Estate Business — Enhanced Due Diligence',
+        question: "A bank account is established for a new business customer. The business was established five years ago with an address in another state. The business website contains few details other than stating it is a real estate business. One principal has an international telephone number and appears to be living in another country. The other principal works out of a recreational vehicle. What warrants enhanced due diligence in this scenario?",
+        options: [
+          { text: 'Shell company', correct: true, feedback: "Correct. A business with almost no operational footprint — a bare-bones website, a principal reachable only by international number, another operating out of a vehicle rather than any fixed premises — is the profile of a shell entity used to hold and move funds rather than run a real business." },
+          { text: 'Human trafficker', correct: false, feedback: "There's no indicator here connecting to human trafficking specifically — no mention of housing, transport, or payment patterns tied to controlling other people's movement." },
+          { text: 'Politically exposed person', correct: false, feedback: "Nothing in the scenario indicates either principal holds a prominent public function — the concern here is the business's lack of substance, not political exposure." },
+          { text: 'Money laundering through real estate', correct: false, feedback: "The business is described as being in real estate, but there's no actual property transaction described — the red flag is the shell-like nature of the business itself, not a specific real estate deal." },
+        ],
+      },
+      {
+        id: 42, title: 'STR Focus — Multi-Jurisdiction Transfer',
+        question: "A branch manager for a small community bank has a new customer who deposits four EUR 50,000 checks into one account. Shortly thereafter, the customer goes to another branch and asks to transfer all but EUR 1,500 to three accounts in different foreign jurisdictions. Which suspicious activity should be the focus of the suspicious transaction report?",
+        options: [
+          { text: 'The customer opened the account with four large checks', correct: false, feedback: 'Large opening deposits by check are unusual but not the central concern here — checks are traceable instruments in their own right.' },
+          { text: 'The customer goes to a different branch to make this transaction', correct: false, feedback: 'Using a different branch is a minor behavioural detail, not the substance of the suspicious pattern.' },
+          { text: 'The customer transfers almost all of the funds out of the account', correct: false, feedback: "Depleting an account is consistent with the broader pattern but doesn't capture what makes the destination of the funds suspicious." },
+          { text: 'The customer asks to transfer funds to accounts in three different foreign jurisdictions', correct: true, feedback: "Correct. Splitting large funds across three separate foreign jurisdictions immediately after a large deposit is a classic layering pattern — it's the destination and fragmentation of the funds, not simply that the account is being emptied, that should anchor the STR." },
+        ],
+      },
+      {
+        id: 43, title: 'Black Market Peso Exchange',
+        question: "Which method to launder money through deposit-taking institutions is closely associated with international trade?",
+        options: [
+          { text: 'Forming a shell company', correct: false, feedback: 'Shell companies support many laundering methods but are not specifically tied to the trade-goods exchange mechanism this question is pointing at.' },
+          { text: 'Using Black Market Peso Exchange', correct: true, feedback: "Correct. The Black Market Peso Exchange launders drug proceeds by using them to buy US goods for export to Latin America, which are then sold locally for pesos — directly exploiting the international trade system to move value without ever formally transferring the original dollars." },
+          { text: 'Structuring cash deposits/withdrawals', correct: false, feedback: 'Structuring is a domestic reporting-threshold evasion technique, not one specifically built around international trade.' },
+          { text: 'Investing in legitimate businesses with illicit funds', correct: false, feedback: 'This describes integration in general terms — it is not the trade-specific mechanism the question is asking about.' },
+        ],
+      },
+      {
+        id: 44, title: 'Crowdfunding Red Flags',
+        question: "The compliance officer at a crowdfunding website is in charge of monitoring new crowdfunding projects. Recently, the number of crowdfunding projects has significantly increased. Which red flag indicates the highest anti-money laundering risk?",
+        options: [
+          { text: 'Those with the largest number of donors', correct: false, feedback: 'A large number of individual small donors is actually a normal sign of a genuinely popular, organic campaign.' },
+          { text: 'Projects that get funding within days of their start', correct: false, feedback: 'Fast funding alone is common for well-promoted or high-profile legitimate campaigns.' },
+          { text: 'Projects with the highest monetary success threshold', correct: false, feedback: 'An ambitious funding goal is not inherently suspicious — plenty of legitimate projects set high targets.' },
+          { text: 'Projects that start and close and are fully funded within a very short period', correct: true, feedback: "Correct. A campaign that opens, hits its full funding target, and closes almost immediately doesn't follow the normal, gradual pattern of organic donor interest — it looks far more like pre-arranged funds being pushed through the platform in bulk." },
+        ],
+      },
+      {
+        id: 45, title: 'Charity Cash Withdrawals — Terrorist Financing',
+        question: "A bank has maintained an account for a European charity for several years. The charity provides clothing to persons in need in various countries with active terrorists' cells. Which action by the charity indicates possible terrorist financing?",
+        options: [
+          { text: 'The charity frequently withdraws cash from the bank', correct: true, feedback: "Correct. Frequent cash withdrawals break the paper trail right at the point where funds leave the regulated system — for a charity operating in areas with active terrorist activity, that's exactly the pattern that would let donated funds be diverted without a way to verify how they were ultimately used." },
+          { text: 'The charity has branch locations located in various countries', correct: false, feedback: 'Having branches in multiple countries is normal for an international charity and is not, by itself, suspicious.' },
+          { text: 'The charity receives cash donations primarily from European countries', correct: false, feedback: 'Receiving donations from the charity\'s home region is unremarkable and expected for a European-based charity.' },
+          { text: 'The charity maintains a bank account for non-business-related expenses', correct: false, feedback: 'A charity having a separate account for administrative or overhead expenses is standard organisational practice.' },
+        ],
+      },
+      {
+        id: 46, title: 'Restaurant — Privately-Owned ATM',
+        question: "A popular restaurant in town has begun depositing less cash than it has in prior years. In a review of the customer's accounts, you notice that credit card receipts have increased with no explanation. The account officer discovers that the restaurant has installed a privately-owned automated teller machine (ATM) onsite and has begun construction of a patio dining area. Which red flag should trigger additional investigation?",
+        options: [
+          { text: 'Privately-owned ATM', correct: true, feedback: "Correct. A privately-owned ATM lets cash be introduced into the financial system disguised as ATM withdrawal fees and reimbursements — it's a well-documented placement technique, and it directly explains why the restaurant's own cash deposits have dropped while credit card receipts rose with no clear business reason." },
+          { text: 'Lower cash deposits', correct: false, feedback: 'Lower cash deposits are the symptom, not the underlying red flag — the privately-owned ATM is what explains the shift.' },
+          { text: 'Increased credit card receipts', correct: false, feedback: "An increase in card receipts on its own could have several innocent explanations — it's only suspicious in combination with the ATM installation." },
+          { text: 'Construction of the new patio dining area', correct: false, feedback: 'Restaurant renovations are a routine business investment and not a money laundering indicator in themselves.' },
+        ],
+      },
+      {
+        id: 47, title: 'Insurance Premium Paid With Money Orders',
+        question: "A compliance officer at an insurance company has been reviewing the transaction activity of several clients. Which transaction is considered a red flag for potential money laundering?",
+        options: [
+          { text: 'A client paid the quarterly life insurance premium using money orders from two different banks', correct: true, feedback: "Correct. Paying an ordinary recurring premium with money orders sourced from two separate banks is an unusual and roundabout way to pay a routine bill — it suggests an effort to break up and obscure the source of the payment rather than simply writing a check or using a direct debit." },
+          { text: 'A client from a high-risk jurisdiction recently purchased property insurance for a real-estate development', correct: false, feedback: 'Purchasing property insurance for a real development is a normal, expected transaction for that type of asset, regardless of the client\'s jurisdiction.' },
+          { text: 'A corporation owns several affiliates and recently opened separate group life insurance policies for each of the affiliates', correct: false, feedback: 'Separate group policies per affiliate is standard corporate insurance structuring, not a laundering indicator.' },
+          { text: 'A client established a $100,000 charitable annuity with a non-profit organization that provides health and safety assistance internationally', correct: false, feedback: 'A charitable annuity of this kind is a legitimate, well-documented philanthropic and estate-planning product.' },
+        ],
+      },
+      {
+        id: 48, title: 'Human Trafficking — Same-Day Withdrawals',
+        question: "A bank compliance officer has implemented enhanced monitoring rules that have identified some unusual activity that may be indicative of human trafficking. Which red flag should prompt additional transactional review?",
+        options: [
+          { text: 'Wire transfer activity from countries with significant migrant populations', correct: false, feedback: 'Wire activity from countries with large migrant populations reflects normal remittance patterns for many legitimate customers.' },
+          { text: 'Cash deposits that occur in cities where the customer resides and conducts business', correct: false, feedback: "Cash deposits in a customer's own home city and business area are exactly what you'd expect from ordinary local commerce." },
+          { text: 'Cash deposits that occur in cities where the customer does not reside or conduct business', correct: false, feedback: "Deposits in an unfamiliar city are worth noting, but on their own they don't complete the trafficking pattern — what happens to the funds next is what matters." },
+          { text: 'Cash deposits that occur in cities where the customer does not reside or conduct business followed by same-day withdrawals', correct: true, feedback: "Correct. Deposits made far from the customer's home base, immediately withdrawn the same day, matches the pattern of collecting proceeds from victims across multiple locations and rapidly moving the cash out before it can be traced — a recognised human trafficking financial indicator." },
+        ],
+      },
+      {
+        id: 49, title: 'Annuities and Money Laundering',
+        question: "Which insurance product is particularly vulnerable to money laundering?",
+        options: [
+          { text: 'Annuity', correct: true, feedback: "Correct. Annuities accept large lump-sum premiums and can later be surrendered or structured to pay out to a different party — that combination of large up-front cash-like investment and flexible payout terms is exactly what makes them attractive for legitimising large sums quickly." },
+          { text: 'Casualty', correct: false, feedback: 'Casualty insurance indemnifies against loss or damage — it does not involve large investment-style premiums that could be exploited the same way.' },
+          { text: 'Collateral', correct: false, feedback: '"Collateral" is not itself an insurance product category — this option does not describe a real insurance line.' },
+          { text: 'Regulated pension', correct: false, feedback: 'Regulated pensions are typically subject to strict withdrawal and access rules precisely because they are designed for long-term retirement savings, not liquidity.' },
+        ],
+      },
+      {
+        id: 50, title: 'Cash Couriers',
+        question: "Which method do terrorist financiers use to move funds without leaving an audit trail?",
+        options: [
+          { text: 'Extortion', correct: false, feedback: 'Extortion is a method of raising funds in the first place — it does not describe how funds are subsequently moved.' },
+          { text: 'Cash couriers', correct: true, feedback: "Correct. Physically carrying cash across borders leaves no electronic or paper record at all — FATF identifies cash couriers as one of the most persistent methods terrorist financiers use precisely because it sidesteps the financial system's monitoring entirely." },
+          { text: 'Casa de cambio', correct: false, feedback: 'A casa de cambio is a currency exchange business — using one still generates a transaction record, unlike physically moving cash.' },
+          { text: 'Virtual currency', correct: false, feedback: 'Virtual currency transactions are typically recorded on a public blockchain, which is traceable — it is not a genuinely audit-trail-free method.' },
+        ],
+      },
+      {
+        id: 51, title: 'Undisclosed LLC Ownership',
+        question: "A bank located in Arizona is considering a loan application for a new client. The collateral for the loan is a property in Florida. The loan will be in the name of a limited liability company (LLC) whose ownership is not disclosed to the bank. The LLC was established by a New York-based attorney. The loan will be repaid by the LLC in monthly wire transfers of $9,000, which is more than the required monthly payment. Which aspect indicates the potential for money laundering?",
+        options: [
+          { text: "The LLC's ownership is not disclosed to the bank", correct: true, feedback: "Correct. Not knowing who actually owns and controls the borrowing entity is the fundamental problem — everything else about the loan (out-of-state collateral, an out-of-area attorney, slightly overpaid installments) is secondary to the fact that the bank has no way to identify who it's really lending to or who benefits from the arrangement." },
+          { text: 'The collateral, a property in Florida, is not located in Arizona', correct: false, feedback: 'Out-of-state collateral is common in commercial lending and is not unusual on its own.' },
+          { text: 'The repayment in the amount of $9,000 indicates potential structuring', correct: false, feedback: 'Structuring specifically involves staying under a reporting threshold — an amount above the required payment does not itself indicate structuring.' },
+          { text: "The attorney associated with the account is outside the bank's lending area", correct: false, feedback: 'Using an attorney from another state to set up an entity is common and not inherently suspicious.' },
+        ],
+      },
+      {
+        id: 52, title: 'Front Companies — Economic Consequence',
+        question: "What is a major economic consequence of money laundering through the use of front companies?",
+        options: [
+          { text: 'Placing more emphasis on manufacturing', correct: false, feedback: 'Laundering through front companies has no particular tendency to boost genuine manufacturing activity.' },
+          { text: 'Weakening of the legitimate private sector', correct: true, feedback: "Correct. Front companies can afford to undercut real businesses because their goal isn't profit — they're happy to operate at a loss to launder funds, which distorts competition and drives genuinely productive, tax-paying businesses out of the market over time." },
+          { text: 'Creating a more competitive pricing environment', correct: false, feedback: "Any pricing effect from front companies is distortive rather than genuinely competitive — it undermines fair competition rather than improving it." },
+          { text: 'Aligning management principles between criminal enterprises and legitimate businesses', correct: false, feedback: 'This is not a recognised or meaningful economic consequence of front-company laundering.' },
+        ],
+      },
+      {
+        id: 53, title: 'Bakery — Multiple Accounts',
+        question: "A bank maintains a relationship with a customer who owns a small bakery business. Which customer action indicates potential money laundering?",
+        options: [
+          { text: 'The customer continually makes regular cash deposits', correct: false, feedback: 'Regular cash deposits are entirely expected for a cash-based retail business like a bakery.' },
+          { text: 'The customer has multiple bank accounts at several locations', correct: true, feedback: "Correct. A single small bakery has no obvious operational need for multiple accounts spread across different locations — that pattern is more consistent with structuring transactions across accounts or obscuring the true flow of funds than with running one storefront business." },
+          { text: 'The customer purchased property insurance that is twice the value of the business', correct: false, feedback: 'Over-insuring an asset is a business or valuation decision — it does not, by itself, indicate laundering.' },
+          { text: 'The customer recently wired a large amount to a foreign jurisdiction where family is located', correct: false, feedback: 'Sending funds to family abroad is a common and explainable personal transaction.' },
+        ],
+      },
+      {
+        id: 54, title: 'Casino Chip Redemption Method',
+        question: "Which method is used to launder money in casinos?",
+        options: [
+          { text: 'Purchase chips with cash and play at a table', correct: false, feedback: 'Actually gambling with the chips exposes the funds to real loss risk — it is not the laundering method itself.' },
+          { text: 'Purchase chips with cash and redeem for cash', correct: false, feedback: "Redeeming for cash simply returns the funds in the same form — it doesn't change or legitimise their appearance in any useful way." },
+          { text: 'Purchase chips with cash and redeem for a check', correct: true, feedback: "Correct. Converting cash into chips and redeeming them for a casino cheque gives the funds the appearance of legitimate gambling winnings, complete with an official-looking payment instrument from a regulated business — a well-known integration technique." },
+          { text: 'Purchase chips with cash and sell to another person for cash', correct: false, feedback: 'Selling chips peer-to-peer for cash just moves cash between two people — it does not achieve the same legitimising effect as a casino-issued cheque.' },
+        ],
+      },
+      {
+        id: 55, title: 'Real Estate — Nominee Purchaser',
+        question: "Which red flag indicates high potential for money laundering in a real estate purchase?",
+        options: [
+          { text: 'The purchaser is a nominee', correct: true, feedback: "Correct. A nominee purchaser is, by definition, someone standing in for the real buyer — that arrangement exists specifically to hide who actually controls and benefits from the property, which is the single clearest indicator of a laundering attempt through real estate." },
+          { text: 'The purchaser had a previous bankruptcy', correct: false, feedback: 'A past bankruptcy is a credit history fact and is not inherently connected to money laundering.' },
+          { text: 'The purchaser owns a cash intensive business', correct: false, feedback: 'Owning a cash-intensive business is a risk factor worth noting for enhanced due diligence, but it is not as direct an indicator as a nominee arrangement.' },
+          { text: 'The purchaser is not a resident where the property is located', correct: false, feedback: "Out-of-area buyers are extremely common in real estate investment and are not, by themselves, a strong red flag." },
+        ],
+      },
+      {
+        id: 56, title: 'New Restaurant — Uniform Cash Deposits', selectCount: 2,
+        question: "A bank employee recently opened an account for a new restaurant. Daily cash deposits over a three-month period are close to $9,500. What are two red flags that indicate possible money laundering or terrorist financing?",
+        options: [
+          { text: 'The restaurant is located in a different city', correct: false },
+          { text: 'The daily cash deposits are so close in amount', correct: true },
+          { text: 'It is a new account that has daily cash deposits', correct: true },
+          { text: 'The new account demonstrates a steady flow of income', correct: false },
+        ],
+        explanation: "Deposits that consistently land just under a common reporting threshold ($10,000) is a hallmark of deliberate structuring, and seeing that pattern immediately from a brand-new account — with no track record to judge it against — compounds the concern. A new restaurant simply making daily cash deposits, or being in a different city, isn't unusual on its own for a genuine cash-intensive business.",
+      },
+      {
+        id: 57, title: 'Terrorist Groups — Revenue Diversification', selectCount: 2,
+        question: "Which two methods have terrorist groups used to diversify their revenue stream and to fund their operations?",
+        options: [
+          { text: 'Human trafficking', correct: true },
+          { text: 'Engaging in civil conflict', correct: false },
+          { text: 'Smuggling cultural artifacts', correct: true },
+          { text: 'Engaging in wire transfer activity', correct: false },
+        ],
+        explanation: "Human trafficking and looted-antiquities smuggling are both documented, standalone revenue streams that terrorist organisations have exploited to fund operations independent of donations. Civil conflict is a condition terrorist groups operate within, not itself a funding method, and wire transfers are simply a payment channel, not a source of revenue.",
+      },
+      {
+        id: 58, title: 'MSB Wire Remittance Laundering',
+        question: "Which method is used to launder money via wire remittances sent through a bureau de change or money services business?",
+        options: [
+          { text: 'A customer in country A makes a weekly small wire transfer to the bank account of an individual in country B', correct: false, feedback: 'A small, consistent, ongoing personal remittance is a normal pattern for supporting family abroad.' },
+          { text: 'A customer in country A makes frequent wire transfers to a single customer in country B that are slightly under the legal reporting threshold', correct: true, feedback: "Correct. Repeatedly sending transfers to the same recipient, each one kept just under the reporting threshold, is textbook structuring applied to the remittance channel — the consistency of the amount relative to the threshold is what gives it away." },
+          { text: 'A large number of wire transfers are sent from a large number of senders in country A to a large number of recipients in country B during a two-week period', correct: false, feedback: 'Many senders paying many unrelated recipients over a normal window is consistent with an MSB simply doing high volumes of ordinary remittance business.' },
+          { text: 'A customer in country A receives four small wire transfers from four different individuals located in country B on the same day, with the aggregate falling below the legal reporting threshold', correct: false, feedback: "Multiple unrelated small senders paying one recipient is a less classic pattern than the same sender/recipient pair repeatedly transacting just under the threshold." },
+        ],
+      },
+      {
+        id: 59, title: 'Even-Dollar Wire Transfers',
+        question: "A client is a wholesale auto business that operates as a used car lot and regularly ships vehicles internationally. In a four-month period, the client received wires totaling $1,250,000 from a dealer in Benin in West Africa, all in increments of $50,000. Dock shipping receipts identify the vehicles but cannot easily be tied to the wires received. What is the suspicious behavior?",
+        options: [
+          { text: 'The dock shipping receipts match the vehicles', correct: false, feedback: 'The receipts matching the vehicles they describe is expected — the concern is that they can\'t be tied to the wires, not that they\'re internally inconsistent.' },
+          { text: 'Vehicles are regularly shipped internationally', correct: false, feedback: 'International vehicle export is the normal business of a wholesale used car exporter.' },
+          { text: 'Wires received are in large, even dollar amounts', correct: true, feedback: "Correct. Genuine commercial trade payments almost always reflect a specific invoice total, down to the cent — a series of perfectly round $50,000 wires suggests the payments are unrelated to any actual priced transaction and are instead being used simply to move a target amount of money." },
+          { text: 'Account debits are payable to transport companies', correct: false, feedback: "Paying transport companies is entirely consistent with actually running a vehicle export business." },
+        ],
+      },
+      {
+        id: 60, title: 'Precious Metals Dealer — No Background',
+        question: "A high-volume dealer of precious metals and stones in a high-risk jurisdiction is approached by a new customer interested in selling gold worth $200,000. The customer was referred by a longtime family friend of the dealer and provides no indication of background or business purpose for the sale. The dealer agrees to make the purchase based solely on the reference. What is the money laundering red flag?",
+        options: [
+          { text: 'The customer was referred by a longtime friend of the dealer', correct: false, feedback: 'A personal referral might explain how the relationship started, but it says nothing about the legitimacy of the funds behind a $200,000 sale.' },
+          { text: 'The precious metals dealer is operating in a high-risk jurisdiction', correct: false, feedback: 'Jurisdictional risk is background context that should raise the general level of caution, but it is not the specific red flag in this transaction.' },
+          { text: 'A new customer is selling gold worth $200,000 to a high-volume dealer', correct: false, feedback: 'A large gold sale to a high-volume dealer is, by itself, a plausible ordinary transaction for that kind of business.' },
+          { text: 'The customer provides no background information or business purpose for the transaction', correct: true, feedback: "Correct. Accepting a $200,000 transaction on the strength of a personal introduction alone, with zero explanation of where the gold came from or why it's being sold, means the dealer has done no meaningful due diligence at all — that absence of any explanation is the actual red flag, not the referral itself." },
+        ],
+      },
+      {
+        id: 61, title: 'Prepaid Card Loading',
+        question: "A bank sells reloadable open-loop prepaid cards to both customers and non-customers. What is a red flag associated with these cards that may indicate money laundering?",
+        options: [
+          { text: 'A bank customer historically purchases several prepaid cards near year-end', correct: false, feedback: 'A recurring seasonal pattern (e.g. holiday gift cards) from an established customer has an obvious, benign explanation.' },
+          { text: 'A non-bank customer regularly loads large amounts of cash onto several prepaid cards', correct: true, feedback: "Correct. A non-customer — someone the bank has no ongoing relationship with or visibility into — repeatedly loading large cash sums onto multiple cards is a way to convert bulk cash into a portable, spendable, and easily transportable instrument with minimal identification requirements." },
+          { text: 'A non-bank customer consistently uses the bank to obtain cash advances using a prepaid card', correct: false, feedback: 'Taking cash advances against a card is ordinary card usage and not inherently suspicious.' },
+          { text: 'A bank customer routinely purchases five prepaid cards in small even-dollar amounts on a monthly basis', correct: false, feedback: "Small, modest recurring purchases by a known customer don't carry the same weight as large, anonymous cash loading." },
+        ],
+      },
+      {
+        id: 62, title: 'Highest-Risk Product',
+        question: "Which product is considered to be of highest money laundering risk?",
+        options: [
+          { text: 'Credit cards', correct: false, feedback: 'Credit card spending is closely tracked and tied to specific merchants, giving it a strong transaction trail.' },
+          { text: 'Savings accounts', correct: false, feedback: 'Ordinary savings accounts are low-velocity, well-documented, and don\'t offer the cross-border speed that makes laundering easy.' },
+          { text: 'Time deposit accounts', correct: false, feedback: 'Time deposits are locked in for a fixed term, which limits their usefulness for quickly moving or layering funds.' },
+          { text: 'International wire transfers', correct: true, feedback: "Correct. International wires move large sums quickly across jurisdictions and correspondent banking chains, often with limited visibility into the ultimate originator or beneficiary — that combination of speed, cross-border reach, and reduced transparency is why wires are consistently rated the highest-risk product." },
+        ],
+      },
+      {
+        id: 63, title: 'Steel Exporter — Understated Value',
+        question: "A bank provides trade financing for a company whose primary export is steel. Which action by the company indicates possible money laundering?",
+        options: [
+          { text: 'The company often deals with foreign currency exchanges', correct: false, feedback: 'Dealing in foreign currency is a routine part of running an international export business.' },
+          { text: 'The company regularly understates the value of goods exported', correct: true, feedback: "Correct. Deliberately understating the export value on trade documents is a classic trade-based money laundering technique — it lets the difference between the real and declared value be settled separately outside the formal trade payment, moving value across borders without it showing up in the trade financing itself." },
+          { text: "The company frequently sells above or below its competitors' price", correct: false, feedback: 'Pricing that varies from competitors could simply reflect normal market positioning or negotiating leverage.' },
+          { text: 'The company frequently transfers funds to other bank accounts located in other jurisdictions', correct: false, feedback: 'Moving funds between accounts in different jurisdictions is common for a business with genuinely international operations.' },
+        ],
+      },
+      {
+        id: 64, title: 'Tutoring Account — Same-Day Transfer',
+        question: "A new accounts representative recently opened an account for an individual whose stated employment is tutoring students. Which customer action indicates possible money laundering?",
+        options: [
+          { text: 'Continually making weekly small cash deposits', correct: false, feedback: 'Small, steady cash deposits are plausible for someone paid in cash for tutoring sessions.' },
+          { text: 'Periodically initiating wire transfers to another account owned by a relative', correct: false, feedback: 'Occasional transfers to a family member\'s account is an ordinary personal financial pattern.' },
+          { text: 'Transferring all funds to another bank on the same day of large cash deposits', correct: true, feedback: "Correct. A large cash deposit that is immediately transferred out in full, the same day, is completely inconsistent with a tutor's modest expected income — the rapid pass-through pattern (deposit then instant transfer-out) is a classic sign the account is just being used as a conduit." },
+          { text: 'Opening a savings account and making frequent transfers from the checking account', correct: false, feedback: 'Moving money between one\'s own checking and savings accounts is routine personal money management.' },
+        ],
+      },
+      {
+        id: 65, title: "Attorney's Trust Account — Cash Withdrawals",
+        question: "A bank has opened a new account for a well-known attorney to manage client funds. During the first six months, bank staff observe the account receives multiple deposits via wire transfer. They also observe that the attorney withdraws cash, makes payments to various people, and transfers funds to the law firm's account online. What is considered a red flag for potential money laundering in this situation?",
+        options: [
+          { text: 'Withdrawing cash', correct: true, feedback: "Correct. A client trust account is meant to hold funds on behalf of clients for specific legal purposes — cash withdrawals from that account break the traceable link between the money coming in and what it's actually being used for, which is exactly the kind of activity a trust account shouldn't normally show." },
+          { text: 'Making payment to various people', correct: false, feedback: 'Paying out to various parties can be entirely legitimate — settlements, disbursements, and third-party payments are routine trust account activity.' },
+          { text: 'Receiving multiple deposits via wire transfer', correct: false, feedback: 'Wire transfers into a trust account are a normal, traceable way for clients to fund matters the attorney is handling.' },
+          { text: "Transferring funds to his law firm's account online", correct: false, feedback: "Moving earned fees from a trust account to the firm's own operating account is standard, well-documented legal practice." },
+        ],
+      },
     ],
   },
   {
