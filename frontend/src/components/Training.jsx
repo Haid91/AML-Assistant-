@@ -4046,7 +4046,7 @@ const TAG_STYLE = {
   'Free Preview': 'bg-violet-100 text-violet-600 border border-violet-200',
 }
 
-const CAMS_FREE_QUESTIONS = 20
+const CAMS_FREE_QUESTIONS = 6
 
 export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onUpgrade }) {
   const isPremium = user?.premium || false

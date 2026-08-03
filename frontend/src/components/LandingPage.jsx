@@ -202,7 +202,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
           {camsOpen && (
             <div className="pb-4 pt-1 grid sm:grid-cols-2 gap-x-12 gap-y-1.5">
               {[
-                '258 exam-style MCQs across 4 ACAMS chapters — first 20 free per chapter, rest with Premium',
+                '258 exam-style MCQs across 4 ACAMS chapters — first 6 free per chapter, rest with Premium',
                 'Chapter 1 — Risks & Methods of ML and Terrorist Financing',
                 'Chapter 2 — International AML/CFT Standards (FATF, Palermo, Vienna)',
                 'Chapter 3 — AML/CFT Compliance Programmes (CDD, EDD, PEPs, EWRA)',
