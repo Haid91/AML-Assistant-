@@ -359,12 +359,9 @@ function App() {
   if (view === 'training') {
     return (
       <Training
+        {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
-        onBack={() => setView('landing')}
-        onSignOut={handleSignOut}
-        onOpenChat={() => setView('chat')}
         onUpgrade={handleUpgrade}
-        onOpenSettings={openSettings}
       />
     )
   }
@@ -372,12 +369,9 @@ function App() {
   if (view === 'chat') {
     return (
       <AMLAssistant
+        {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
-        onBack={() => setView('landing')}
-        onSignOut={handleSignOut}
-        onOpenTraining={() => enterTraining(user)}
         onUpgrade={handleUpgrade}
-        onOpenSettings={openSettings}
       />
     )
   }

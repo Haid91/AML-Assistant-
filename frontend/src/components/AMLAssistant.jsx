@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import ThemeToggle from './ThemeToggle'
-import ProfileMenu from './ProfileMenu'
+import Navbar from './Navbar'
 import { API_URL } from '../config'
 
 const SUGGESTIONS = [
@@ -75,7 +74,7 @@ function groupSessions(sessions) {
   return { today, yesterday, older }
 }
 
-export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, onUpgrade, onOpenSettings }) {
+export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onUpgrade }) {
   const storageKey = `aml_chats_${user?.id || 'guest'}`
 
   const [sessions, setSessions] = useState(() => {
@@ -104,7 +103,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
   }, [sessions])
 
   if (!user?.premium) {
-    return <PremiumGate onBack={onBack} onSignOut={onSignOut} onUpgrade={onUpgrade} />
+    return <PremiumGate onBack={onGoHome} onSignOut={onSignOut} onUpgrade={onUpgrade} />
   }
 
   const updateSession = (id, msgs) => {
@@ -180,16 +179,37 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
   const { today, yesterday, older } = groupSessions(sessions)
 
   return (
-    <div className="flex h-screen bg-[#f0f0f0] dark:bg-slate-950 font-sans overflow-hidden transition-colors">
+    <div className="flex flex-col h-screen bg-[#f0f0f0] dark:bg-slate-950 font-sans overflow-hidden transition-colors">
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenAustracEnrolment={onOpenAustracEnrolment}
+        onOpenSmrGuide={onOpenSmrGuide}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
+      />
+
+      <div className="flex flex-1 min-h-0">
 
       {/* ── Sidebar ── */}
       {sidebarOpen && (
         <aside className="w-64 shrink-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col">
           <div className="px-4 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <button onClick={onBack} className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">AML</div>
-              <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">Intel</span>
-            </button>
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">Chats</p>
             <button onClick={() => setSidebarOpen(false)} className="w-6 h-6 flex items-center justify-center rounded text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             </button>
@@ -251,31 +271,11 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
               </button>
             )}
-            {onBack && (
-              <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                Home
-              </button>
-            )}
-            {onOpenTraining && (
-              <button onClick={onOpenTraining} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition-colors px-2 py-1 rounded-lg hover:bg-white dark:hover:bg-slate-800">
-                Training
-              </button>
-            )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-700 dark:text-slate-300 font-medium border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 rounded-full">
-              {roleLabel}
-            </span>
-            <ThemeToggle />
-            <ProfileMenu
-              user={user}
-              onGoToTraining={onOpenTraining}
-              onOpenSettings={() => onOpenSettings?.('profile')}
-              onSignOut={onSignOut}
-            />
-          </div>
+          <span className="text-sm text-slate-700 dark:text-slate-300 font-medium border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 rounded-full">
+            {roleLabel}
+          </span>
         </header>
 
         <div className="flex-1 overflow-y-auto">
@@ -373,6 +373,7 @@ export default function AMLAssistant({ onBack, onSignOut, user, onOpenTraining, 
             </div>
           </form>
         </div>
+      </div>
       </div>
     </div>
   )

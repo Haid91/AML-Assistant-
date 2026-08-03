@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import OwnershipSimulation from './OwnershipSimulation'
-import ProfileMenu from './ProfileMenu'
-import Logo from './Logo'
+import Navbar from './Navbar'
 
 const ANALYST_CASES = [
   {
@@ -2105,7 +2104,7 @@ const TAG_STYLE = {
 
 const CAMS_FREE_QUESTIONS = 6
 
-export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrade, onOpenSettings }) {
+export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
   const [activeIndustry, setActiveIndustry] = useState(user?.industry || 'banking')
@@ -2283,36 +2282,28 @@ export default function Training({ user, onBack, onSignOut, onOpenChat, onUpgrad
   /* ── Dashboard view ── */
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 font-sans">
-      <header className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          {onBack && (
-            <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              Home
-            </button>
-          )}
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-600" />
-          <button onClick={onBack} className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-xs font-bold text-white">AML</div>
-            <span className="text-sm font-semibold text-slate-800 dark:text-white">Intel</span>
-          </button>
-        </div>
-        <div className="flex items-center gap-3">
-          {onOpenChat && (
-            <button onClick={onOpenChat} title="Open AI Assistant" className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity">
-              <Logo size={32} />
-            </button>
-          )}
-          <ThemeToggle />
-          <ProfileMenu
-            user={user}
-            onOpenSettings={() => onOpenSettings?.('profile')}
-            onSignOut={onSignOut}
-          />
-        </div>
-      </header>
+      <Navbar
+        user={user}
+        onGoHome={onGoHome}
+        onNavigateSection={onNavigateSection}
+        onStart={onStart}
+        onSignIn={onSignIn}
+        onSignUp={onSignUp}
+        onOpenChat={onOpenChat}
+        onOpenTraining={onOpenTraining}
+        onSignOut={onSignOut}
+        onOpenSettings={onOpenSettings}
+        onOpenAbout={onOpenAbout}
+        onOpenContact={onOpenContact}
+        onOpenCost={onOpenCost}
+        onOpenSetupGuide={onOpenSetupGuide}
+        onOpenEligibility={onOpenEligibility}
+        onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenAustracEnrolment={onOpenAustracEnrolment}
+        onOpenSmrGuide={onOpenSmrGuide}
+        onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenRiskAssessment={onOpenRiskAssessment}
+      />
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         <div className="mb-6 flex items-start justify-between gap-4 flex-wrap">
