@@ -4305,7 +4305,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               {activeRole === 'mlro'
                 ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
                 : activeRole === 'cams'
-                ? `Exam-style MCQ questions based on the ACAMS CAMS Sixth Edition Study Guide. Free plan: the first ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks every remaining question in every chapter.`
+                ? `Genuine, exam-style questions sourced from real CAMS exam question banks and reviewed by a CAMS-certified AML professional. Free plan: the first ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks every remaining question in every chapter.`
                 : activeRole === 'simulations'
                 ? 'Gamified mini-games to sharpen specific AML skills.'
                 : 'Investigative training for AML case analysis and decision-making.'}
@@ -4548,7 +4548,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
           <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-700 rounded-2xl p-6">
             <p className="font-bold text-slate-900 dark:text-white mb-1">Free plan: {CAMS_FREE_QUESTIONS} questions per chapter</p>
             <p className="text-slate-600 dark:text-slate-300 text-sm mb-5">
-              Each chapter's free preview covers the first {CAMS_FREE_QUESTIONS} questions. Upgrade to <strong>Premium</strong> to unlock every remaining exam-style question in every chapter.
+              Each chapter's free preview covers the first {CAMS_FREE_QUESTIONS} questions, sourced from real CAMS exam question banks and reviewed by a CAMS-certified AML professional. Upgrade to <strong>Premium</strong> to unlock every remaining exam-style question in every chapter.
             </p>
             <div className="flex items-center gap-4 flex-wrap">
               <button onClick={onUpgrade} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors">
