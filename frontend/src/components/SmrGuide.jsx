@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { CheckCircle2, Circle, ExternalLink, ClipboardList, AlertTriangle } from 'lucide-react'
+import { CheckCircle2, Circle, ExternalLink, ClipboardList, AlertTriangle, XCircle, HelpCircle, BookOpen } from 'lucide-react'
 import Navbar from './Navbar'
 
 const STORAGE_KEY = 'aml_smr_progress'
@@ -11,6 +11,17 @@ const ESSENTIAL_ELEMENTS = [
   'When — dates and times of the relevant activity',
   "Why — the specific facts, behaviours, or circumstances that triggered your suspicion, described factually, not speculatively",
   'How — how the activity was carried out',
+]
+
+const FORM_PARTS = [
+  {
+    part: 'Part C — the suspicious person',
+    detail: "Full name, address, date of birth, country of citizenship, occupation, and whatever ID documents you used to verify them. Can't identify them? A physical description and anything else you have still goes here.",
+  },
+  {
+    part: 'Part D — other parties',
+    detail: "Anyone else connected to the matter — joint or authorised signatories, or a customer who's actually the victim (identity fraud, for example) rather than the suspect. Victims belong in Part D, not Part C.",
+  },
 ]
 
 const STEPS = [
@@ -48,6 +59,59 @@ const STEPS = [
     title: 'Keep your records',
     what: 'Retain your SMR and the records that supported it for 7 years.',
     tip: null,
+  },
+]
+
+const COMMON_MISTAKES = [
+  {
+    title: 'Being too vague',
+    detail: '"Client seemed suspicious" won\'t cut it. Name the specific behaviour — an unusual transaction size, documents that don\'t line up, evasiveness when asked routine questions.',
+  },
+  {
+    title: 'Missing the deadline',
+    detail: "The 24-hour and 3-business-day clocks start the moment you form the suspicion, not once you've finished investigating. Give whoever files your SMRs a way to hear about suspicions immediately.",
+  },
+  {
+    title: 'Mixing up victim and suspect',
+    detail: "A customer who's been defrauded isn't the suspicious person — their details go in Part D. The person actually behind the activity goes in Part C.",
+  },
+  {
+    title: 'Burying details in free text',
+    detail: "If you've got a description but no verified ID for the suspicious person, that still belongs in Part C — not tucked into a free-text field where it's easy to miss.",
+  },
+  {
+    title: 'Waiting for certainty before filing',
+    detail: 'You only need reasonable grounds to suspect, not proof. Reporting in good faith is legally protected, so when in doubt, file.',
+  },
+]
+
+const CASE_STUDIES = [
+  {
+    title: 'Drug syndicate dismantled',
+    detail: 'An SMR helped investigators identify individuals and financial transactions connected to a drug syndicate, and establish the links between its members. Two people were convicted.',
+  },
+  {
+    title: 'Wanted fugitive identified',
+    detail: 'SMRs flagged an offender running multiple bank accounts under a false name and moving large, unexplained sums domestically and overseas. He turned out to be wanted internationally for cybercrime and fraud, and was later convicted.',
+  },
+  {
+    title: 'Identity-fraud syndicate uncovered',
+    detail: 'A criminal syndicate used fraudulently obtained identities to open more than 60 bank accounts across Australian institutions and laundered an estimated $2.5 million offshore. Suspicious reporting was part of what unravelled it.',
+  },
+]
+
+const FAQ = [
+  {
+    q: 'What if I file and it turns out to be nothing?',
+    a: "You're protected. AUSTRAC doesn't penalise entities for reporting in good faith, even if the matter turns out to be unrelated to crime. It's far safer to report and be wrong than to stay silent on a genuine suspicion.",
+  },
+  {
+    q: 'Can I hold off filing until I have more information?',
+    a: 'No — the clock starts when you form the suspicion, not when your investigation is complete. File with what you know now, then submit an update if something material comes to light afterward.',
+  },
+  {
+    q: 'Do I have to end the client relationship after filing?',
+    a: "Not automatically. Filing an SMR doesn't require you to offboard the customer. Consider whether the ongoing risk calls for enhanced due diligence, and talk to your compliance officer or a legal adviser if you're unsure.",
   },
 ]
 
@@ -142,6 +206,18 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
           </ul>
         </div>
 
+        <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 mb-8">
+          <p className="font-semibold text-sm mb-4">Where suspicious-person details actually go on the form</p>
+          <div className="space-y-4">
+            {FORM_PARTS.map((item) => (
+              <div key={item.part}>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">{item.part}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <a
           href="https://www.austrac.gov.au/industry-and-business/obligations-and-guidance/your-amlctf-program/reporting-us/suspicious-matter-reports"
           target="_blank"
@@ -194,6 +270,115 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
               </button>
             </div>
           ))}
+        </div>
+
+        <div className="mb-10">
+          <h2 className="text-lg font-bold mb-4">Common mistakes to avoid</h2>
+          <ul className="space-y-3">
+            {COMMON_MISTAKES.map((item) => (
+              <li key={item.title} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-2 shrink-0" />
+                <span><span className="font-semibold text-slate-800 dark:text-slate-100">{item.title}:</span> {item.detail}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mb-10">
+          <h2 className="text-lg font-bold mb-4">What you can and can't say once you're filing</h2>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-5">
+              <p className="font-semibold text-sm text-red-700 dark:text-red-300 mb-3">You must not</p>
+              <ul className="space-y-2">
+                {[
+                  'Tell the customer you have filed an SMR about them',
+                  'Tell the customer you are thinking about filing one',
+                  'Warn the customer that their behaviour raised suspicion',
+                  "Discuss it with anyone who doesn't need to know for compliance purposes",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400 leading-relaxed">
+                    <XCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-2xl p-5">
+              <p className="font-semibold text-sm text-emerald-700 dark:text-emerald-300 mb-3">You can</p>
+              <ul className="space-y-2">
+                {[
+                  'Discuss it with your AML/CTF compliance officer',
+                  'Discuss it with colleagues who genuinely need to know',
+                  'Discuss it with your legal adviser, in confidence',
+                  'Discuss it with AUSTRAC itself',
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mt-4">
+            These rules exist because tipping off a suspect gives them the chance to destroy evidence, move funds, or disappear before an investigation can act. Treat it as seriously as the filing deadline itself.
+          </p>
+        </div>
+
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <BookOpen className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            <h2 className="text-lg font-bold">Real cases SMRs have helped crack</h2>
+          </div>
+          <div className="space-y-3">
+            {CASE_STUDIES.map((item) => (
+              <div key={item.title} className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+                <p className="font-semibold text-sm mb-1.5">{item.title}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.detail}</p>
+              </div>
+            ))}
+          </div>
+          <a
+            href="https://www.austrac.gov.au/business/core-guidance/reporting/suspicious-matter-reports-smrs/smr-case-study-examples"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 mt-3 transition-colors"
+          >
+            Published case studies via AUSTRAC <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <HelpCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            <h2 className="text-lg font-bold">Frequently asked questions</h2>
+          </div>
+          <div className="space-y-5">
+            {FAQ.map((item) => (
+              <div key={item.q}>
+                <p className="font-semibold text-sm mb-1.5">{item.q}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mb-10">
+          <h2 className="text-lg font-bold mb-4">Related guidance</h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            <button onClick={onOpenComplianceOfficer} className="text-left text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 rounded-2xl px-5 py-4 transition-colors">
+              Appoint & notify your Compliance Officer →
+            </button>
+            <button onClick={onOpenAustracEnrolment} className="text-left text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 rounded-2xl px-5 py-4 transition-colors">
+              Not enrolled with AUSTRAC yet? →
+            </button>
+            <button onClick={onOpenRiskAssessment} className="text-left text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 rounded-2xl px-5 py-4 transition-colors">
+              Run a quick risk assessment →
+            </button>
+            <button onClick={onOpenSetupGuide} className="text-left text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 rounded-2xl px-5 py-4 transition-colors">
+              See the full Setup Guide →
+            </button>
+          </div>
         </div>
 
         <div className="bg-slate-900 dark:bg-slate-800 rounded-3xl p-8 text-center">
