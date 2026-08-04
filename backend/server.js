@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import express from 'express';
+import helmet from 'helmet';
 import cors from 'cors';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
@@ -13,6 +14,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
+// This is a pure JSON API (the frontend is served separately), so helmet's
+// default CSP — built for serving HTML — isn't relevant and is disabled;
+// the rest of its defaults (X-Content-Type-Options, HSTS, removing
+// X-Powered-By, etc.) apply as normal.
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 
 // ── Stripe webhook ────────────────────────────────────────────────────────────

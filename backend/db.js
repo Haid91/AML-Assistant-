@@ -69,12 +69,20 @@ export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, st
   )
 }
 
+const SESSION_TTL = '30 days'
+
 export async function createSession(token, email) {
+  // Opportunistic cleanup so the table doesn't grow unbounded — cheap enough
+  // to run on every login without a separate cron job.
+  await pool.query(`DELETE FROM sessions WHERE created_at <= now() - interval '${SESSION_TTL}'`)
   await pool.query('INSERT INTO sessions (token, email) VALUES ($1, $2)', [token, email])
 }
 
 export async function getSessionEmail(token) {
-  const { rows } = await pool.query('SELECT email FROM sessions WHERE token = $1', [token])
+  const { rows } = await pool.query(
+    `SELECT email FROM sessions WHERE token = $1 AND created_at > now() - interval '${SESSION_TTL}'`,
+    [token]
+  )
   return rows[0]?.email || null
 }
 
