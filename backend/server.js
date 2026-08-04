@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
@@ -131,25 +131,20 @@ const anthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY
 // short-lived, and losing one on restart just means requesting a new reset link.
 const resetTokens = new Map() // token → { email, expiresAt }
 
-// ── Email / SMTP ──────────────────────────────────────────────────────────────
-function createTransporter() {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS || process.env.SMTP_PASS === 'your_email_password_here') return null
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  })
-}
+// ── Email (Resend) ─────────────────────────────────────────────────────────────
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
+// Resend can only send from a domain you've verified in their dashboard. Until
+// you verify your own (Dashboard > Domains), their shared sandbox address works
+// with no setup — just less "branded." Override via RESEND_FROM once you have one.
+const RESEND_FROM = process.env.RESEND_FROM || 'AmlIntel <onboarding@resend.dev>'
 
 async function sendResetEmail(toEmail, name, resetUrl) {
-  const transporter = createTransporter()
-  if (!transporter) {
-    console.log(`\n📧 Password reset link (configure SMTP_PASS in .env to send real emails):\n   ${resetUrl}\n`)
+  if (!resend) {
+    console.log(`\n📧 Password reset link (configure RESEND_API_KEY in .env to send real emails):\n   ${resetUrl}\n`)
     return
   }
-  await transporter.sendMail({
-    from: `"AmlIntel" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
+  await resend.emails.send({
+    from: RESEND_FROM,
     to: toEmail,
     subject: 'Reset your AmlIntel password',
     html: `
@@ -169,14 +164,13 @@ async function sendResetEmail(toEmail, name, resetUrl) {
 }
 
 async function sendEstimateEmail(toEmail, { industryLabel, people, annualTotal, monthlyEquivalent }) {
-  const transporter = createTransporter()
   const summary = `${industryLabel} · ${people} ${people === 1 ? 'person' : 'people'} · $${annualTotal.toFixed(2)}/year ($${monthlyEquivalent.toFixed(2)}/month)`
-  if (!transporter) {
-    console.log(`\n📧 Cost estimate (configure SMTP_PASS in .env to send real emails):\n   To: ${toEmail}\n   ${summary}\n`)
+  if (!resend) {
+    console.log(`\n📧 Cost estimate (configure RESEND_API_KEY in .env to send real emails):\n   To: ${toEmail}\n   ${summary}\n`)
     return
   }
-  await transporter.sendMail({
-    from: `"AmlIntel" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
+  await resend.emails.send({
+    from: RESEND_FROM,
     to: toEmail,
     subject: 'Your AmlIntel cost estimate',
     html: `
@@ -204,14 +198,13 @@ function escapeHtml(str) {
 }
 
 async function sendContactEmail({ name, email, subject, message }) {
-  const transporter = createTransporter()
-  const inboxAddress = process.env.EMAIL_FROM || process.env.SMTP_USER
-  if (!transporter) {
-    console.log(`\n📧 Contact message (configure SMTP_PASS in .env to send real emails):\n   From: ${name} <${email}>\n   Subject: ${subject}\n   Message: ${message}\n`)
+  const inboxAddress = process.env.EMAIL_FROM
+  if (!resend || !inboxAddress) {
+    console.log(`\n📧 Contact message (configure RESEND_API_KEY and EMAIL_FROM in .env to send real emails):\n   From: ${name} <${email}>\n   Subject: ${subject}\n   Message: ${message}\n`)
     return
   }
-  await transporter.sendMail({
-    from: `"AmlIntel Contact Form" <${inboxAddress}>`,
+  await resend.emails.send({
+    from: RESEND_FROM,
     to: inboxAddress,
     replyTo: email,
     subject: `[Contact] ${subject}`,
