@@ -24,3 +24,7 @@ create table if not exists sessions (
   email text not null,
   created_at timestamptz not null default now()
 );
+
+-- Stripe billing — safe to re-run against an existing table.
+alter table users add column if not exists stripe_customer_id text;
+alter table users add column if not exists stripe_subscription_id text;

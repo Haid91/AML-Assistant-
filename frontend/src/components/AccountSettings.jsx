@@ -170,7 +170,7 @@ function PasswordTab() {
   )
 }
 
-function SubscriptionTab({ user, onUpgrade, onDowngrade }) {
+function SubscriptionTab({ user, onUpgrade, onManageBilling }) {
   return (
     <div className="max-w-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
       {user?.premium ? (
@@ -179,11 +179,14 @@ function SubscriptionTab({ user, onUpgrade, onDowngrade }) {
           <p className="text-xl font-bold text-slate-900 dark:text-white mb-1">AmlIntel Premium</p>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">$49.99/month · billed to {user?.email}</p>
           <button
-            onClick={onDowngrade}
+            onClick={onManageBilling}
             className="w-full py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl font-semibold text-sm text-slate-600 dark:text-slate-300 transition-colors"
           >
-            Cancel subscription
+            Manage billing
           </button>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-3 text-center">
+            Opens Stripe's secure billing portal — update your payment method, view invoices, or cancel.
+          </p>
         </>
       ) : (
         <>
@@ -202,7 +205,7 @@ function SubscriptionTab({ user, onUpgrade, onDowngrade }) {
   )
 }
 
-export default function AccountSettings({ user, initialTab = 'profile', onBack, onUpdateUser, onUpgrade, onDowngrade }) {
+export default function AccountSettings({ user, initialTab = 'profile', onBack, onUpdateUser, onUpgrade, onManageBilling }) {
   const [tab, setTab] = useState(initialTab)
 
   return (
@@ -240,7 +243,7 @@ export default function AccountSettings({ user, initialTab = 'profile', onBack, 
 
         {tab === 'profile' && <ProfileTab user={user} onUpdateUser={onUpdateUser} />}
         {tab === 'password' && <PasswordTab />}
-        {tab === 'subscription' && <SubscriptionTab user={user} onUpgrade={onUpgrade} onDowngrade={onDowngrade} />}
+        {tab === 'subscription' && <SubscriptionTab user={user} onUpgrade={onUpgrade} onManageBilling={onManageBilling} />}
       </div>
     </div>
   )

@@ -13,7 +13,7 @@ export const pool = new Pool({
 
 export async function getUserByEmail(email) {
   const { rows } = await pool.query(
-    'SELECT id, name, email, password_hash AS "passwordHash", premium FROM users WHERE email = $1',
+    'SELECT id, name, email, password_hash AS "passwordHash", premium, stripe_customer_id AS "stripeCustomerId", stripe_subscription_id AS "stripeSubscriptionId" FROM users WHERE email = $1',
     [email]
   )
   return rows[0] || null
@@ -52,6 +52,20 @@ export async function saveProgramDraft({ id, userId, businessName, intake, draft
        draft_text = EXCLUDED.draft_text,
        updated_at = now()`,
     [id, userId, businessName, intake, draftText]
+  )
+}
+
+export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
+  await pool.query(
+    'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',
+    [stripeCustomerId, stripeSubscriptionId ?? null, email]
+  )
+}
+
+export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, stripeSubscriptionId) {
+  await pool.query(
+    'UPDATE users SET premium = $1, stripe_subscription_id = $2 WHERE stripe_customer_id = $3',
+    [premium, stripeSubscriptionId ?? null, stripeCustomerId]
   )
 }
 

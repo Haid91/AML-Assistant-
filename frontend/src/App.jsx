@@ -52,7 +52,36 @@ function App() {
       setResetToken(params.get('token'))
       setView('resetpassword')
     }
+    // Detect return from Stripe Checkout: /?checkout=success or /?checkout=cancel
+    const checkout = params.get('checkout')
+    if (checkout === 'success' || checkout === 'cancel') {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+    if (checkout === 'success') {
+      refreshUserAfterCheckout()
+    }
   }, [])
+
+  // Stripe's webhook may land a moment after the redirect back, so retry a
+  // few times until premium actually shows true (or we give up and just
+  // reflect whatever the account currently has).
+  const refreshUserAfterCheckout = async (attempt = 0) => {
+    const token = localStorage.getItem('aml_token')
+    if (!token) return
+    try {
+      const res = await fetch(`${API_URL}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+      const data = await res.json()
+      if (res.ok && data.user) {
+        setUser(data.user)
+        localStorage.setItem('aml_user', JSON.stringify(data.user))
+        if (!data.user.premium && attempt < 4) {
+          setTimeout(() => refreshUserAfterCheckout(attempt + 1), 1500)
+          return
+        }
+      }
+    } catch { /* ignore */ }
+    setView('chat')
+  }
 
   const goHome = (u) => setView(isPremium(u) ? 'chat' : 'training')
 
@@ -96,17 +125,17 @@ function App() {
 
   const handleUpgrade = () => setView('checkout')
 
-  const handleCheckoutSuccess = () => {
-    const upgraded = { ...user, premium: true }
-    setUser(upgraded)
-    localStorage.setItem('aml_user', JSON.stringify(upgraded))
-    setView('chat')
-  }
-
-  const handleDowngrade = () => {
-    const downgraded = { ...user, premium: false }
-    setUser(downgraded)
-    localStorage.setItem('aml_user', JSON.stringify(downgraded))
+  const handleManageBilling = async () => {
+    const token = localStorage.getItem('aml_token')
+    if (!token) return
+    try {
+      const res = await fetch(`${API_URL}/billing/create-portal-session`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (res.ok && data.url) window.location.href = data.url
+    } catch { /* ignore */ }
   }
 
   const handleUpdateUser = (partialUser) => {
@@ -349,7 +378,6 @@ function App() {
       <Checkout
         user={user}
         onBack={() => setView(isPremium(user) ? 'chat' : 'training')}
-        onSuccess={handleCheckoutSuccess}
       />
     )
   }
@@ -362,7 +390,7 @@ function App() {
         onBack={() => setView(previousView)}
         onUpdateUser={handleUpdateUser}
         onUpgrade={handleUpgrade}
-        onDowngrade={handleDowngrade}
+        onManageBilling={handleManageBilling}
       />
     )
   }

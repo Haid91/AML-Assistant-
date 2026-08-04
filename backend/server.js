@@ -5,14 +5,54 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import Anthropic from '@anthropic-ai/sdk';
+import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, createSession, getSessionEmail, deleteSession } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
+
+// ── Stripe webhook ────────────────────────────────────────────────────────────
+// Must be registered with the raw body BEFORE express.json() below — Stripe's
+// signature verification needs the exact bytes it signed, not a parsed/re-serialized copy.
+const stripe = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_your_key_here'
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null
+
+app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) return res.status(503).json({ error: 'Billing is not configured' })
+  let event
+  try {
+    event = stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET)
+  } catch (err) {
+    console.error('Stripe webhook signature verification failed:', err.message)
+    return res.status(400).send(`Webhook Error: ${err.message}`)
+  }
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object
+        if (session.customer) await setPremiumByStripeCustomerId(session.customer, true, session.subscription)
+        break
+      }
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object
+        const active = ['active', 'trialing'].includes(sub.status)
+        await setPremiumByStripeCustomerId(sub.customer, active, sub.id)
+        break
+      }
+    }
+    res.json({ received: true })
+  } catch (err) {
+    console.error('Stripe webhook handler error:', err)
+    res.status(500).json({ error: 'Webhook handler failed' })
+  }
+})
+
 app.use(express.json());
 
 const authLimiter = rateLimit({
@@ -53,6 +93,14 @@ const contactLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many messages. Please try again later.' },
+})
+
+const billingLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 15,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again later.' },
 })
 
 function asyncRoute(handler) {
@@ -253,6 +301,50 @@ async function getUserFromAuth(req) {
   if (!email) return null
   return getUserByEmail(email)
 }
+
+app.get('/auth/me', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  res.json({ user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+}))
+
+// ── Billing (Stripe) ────────────────────────────────────────────────────────
+app.post('/billing/create-checkout-session', billingLimiter, asyncRoute(async (req, res) => {
+  if (!stripe || !process.env.STRIPE_PRICE_ID) return res.status(503).json({ error: 'Billing is not configured yet' })
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+
+  let customerId = user.stripeCustomerId
+  if (!customerId) {
+    const customer = await stripe.customers.create({ email: user.email, name: user.name, metadata: { userId: user.id } })
+    customerId = customer.id
+    await updateUserStripeInfo(user.email, { stripeCustomerId: customerId, stripeSubscriptionId: user.stripeSubscriptionId })
+  }
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    customer: customerId,
+    line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+    subscription_data: { trial_period_days: 7 },
+    allow_promotion_codes: true,
+    success_url: `${FRONTEND_URL}/?checkout=success`,
+    cancel_url: `${FRONTEND_URL}/?checkout=cancel`,
+  })
+  res.json({ url: session.url })
+}))
+
+app.post('/billing/create-portal-session', billingLimiter, asyncRoute(async (req, res) => {
+  if (!stripe) return res.status(503).json({ error: 'Billing is not configured yet' })
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!user.stripeCustomerId) return res.status(400).json({ error: 'No billing account found for this user yet' })
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: user.stripeCustomerId,
+    return_url: `${FRONTEND_URL}/`,
+  })
+  res.json({ url: session.url })
+}))
 
 app.post('/auth/update-profile', asyncRoute(async (req, res) => {
   const user = await getUserFromAuth(req)
