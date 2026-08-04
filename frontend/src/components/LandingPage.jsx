@@ -456,6 +456,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 {[
                   'AI compliance co-pilot trained on FATF, AUSTRAC & global regulations',
                   'Full SMR/SAR drafting assistance',
+                  'AI-drafted AML/CTF Program (Part A & B)',
                   'Full CAMS exam prep — 258 questions across all 4 chapters',
                   'Personalised FATF & AUSTRAC compliance mapping',
                   'Unlimited questions — no daily cap',
