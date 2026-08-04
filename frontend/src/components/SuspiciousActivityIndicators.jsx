@@ -2,6 +2,59 @@ import { Eye, AlertTriangle, ArrowRight } from 'lucide-react'
 import Navbar from './Navbar'
 import { SECTORS } from './SectorGuide'
 
+const WORKED_EXAMPLES = {
+  accountant: {
+    title: 'Structured trust account deposits',
+    concern: "Reasonable grounds to suspect structuring designed to avoid the AUD $10,000 Threshold Transaction Report obligation under Section 43 of the AML/CTF Act 2006.",
+    customerProfiling: 'Sole-trader landscaping client, engaged since 2023, with declared annual turnover of around $140,000. No prior reports on file.',
+    suspiciousActivity: 'Over an eight-week period the client made nine separate cash deposits into the firm\'s trust account, each between $8,200 and $9,700 and totalling $78,000 — well above anything seen in the two years prior. Asked about the source, the client described the funds only as "private jobs," could not produce invoices, and asked that the balance be moved to a newly incorporated entity with no trading history.',
+    indicatorRefs: [
+      "Instructions to move funds through the practice's trust account with no underlying commercial rationale",
+      "Client's declared income or business activity doesn't match the volume of funds passing through their accounts",
+    ],
+  },
+  lawyer: {
+    title: 'Cash-funded settlement with a silent third party',
+    concern: 'Reasonable grounds to suspect the source of settlement funds is being deliberately obscured, potentially engaging money laundering offences under Part 10.2 of the Criminal Code Act 1995 (Cth).',
+    customerProfiling: 'Client instructed the firm on a residential purchase; retainer commenced four weeks before scheduled settlement.',
+    suspiciousActivity: 'Days before settlement, the client asked for the deposit to be paid directly by a third party not named on the contract, described only as "a family friend helping out." The client could not explain the relationship further and grew reluctant to answer follow-up questions about where those funds actually came from.',
+    indicatorRefs: [
+      'Client is reluctant to explain the source of settlement funds or provides vague, unverifiable answers',
+      "Instructions come from a third party who isn't a party to the matter, with no clear authority",
+    ],
+  },
+  realestate: {
+    title: 'Rapid resale at an inflated price',
+    concern: 'Reasonable grounds to suspect the purchase and rapid on-sale of a property is being used to layer funds of uncertain origin.',
+    customerProfiling: 'Buyer is a company incorporated four weeks before the offer was made; sole director is an overseas national with no prior property dealings known to the agency.',
+    suspiciousActivity: "The buyer offered 28% above the agent's appraisal with no negotiation, settled in full via a single international wire transfer from an account not held in the buyer's name, and relisted the property for resale within three weeks of settlement at a price close to the original offer.",
+    indicatorRefs: [
+      'Rapid on-sale of a property shortly after purchase, at a price inconsistent with market movement',
+      'Settlement funds arrive from a third party or an entity unrelated to the named purchaser',
+    ],
+  },
+  tcsp: {
+    title: 'Nominee director request with no rationale',
+    concern: 'Reasonable grounds to suspect the requested structure is intended to obscure beneficial ownership.',
+    customerProfiling: 'New client requesting company formation services — first engagement with the firm.',
+    suspiciousActivity: 'The client asked the firm to appoint a nominee director and use the firm\'s own address as the registered office, declined to explain the commercial reason for the arrangement, and asked for the paperwork to be completed "quickly and quietly" with the actual controller\'s name kept off all public filings.',
+    indicatorRefs: [
+      'Client requests a nominee director or shareholder with no credible commercial reason',
+      'Client requests services be conducted with unusual secrecy or urgency',
+    ],
+  },
+  bullion: {
+    title: 'Structured bullion purchases',
+    concern: 'Reasonable grounds to suspect deliberate structuring of cash purchases to avoid the AUD $10,000 Threshold Transaction Report obligation.',
+    customerProfiling: 'Walk-in customer with no prior purchase history at the business; provided a driver\'s licence as identification.',
+    suspiciousActivity: 'The customer made four separate gold bullion purchases across five days, each paid in cash and each between $8,400 and $9,600 — $34,600 in total. Each time she said the purchase was "a gift," but bought identical items on every visit and gave an address that didn\'t match her identification.',
+    indicatorRefs: [
+      'Customer makes several purchases just under the reporting threshold in a short period (structuring)',
+      "Unusual requests for anonymity or reluctance to provide identification",
+    ],
+  },
+}
+
 const CROSS_INDUSTRY_FLAGS = [
   'Reluctance or evasiveness when asked routine, low-stakes questions about the source of funds',
   'Transactions structured to sit just under a reporting threshold, especially several in short succession',
@@ -72,8 +125,9 @@ export default function SuspiciousActivityIndicators({ user, onGoHome, onNavigat
         <div className="mb-12">
           <h2 className="text-lg font-bold mb-5">By industry</h2>
           <div className="space-y-5">
-            {Object.values(SECTORS).map((sector) => {
+            {Object.entries(SECTORS).map(([key, sector]) => {
               const Icon = sector.icon
+              const example = WORKED_EXAMPLES[key]
               return (
                 <div key={sector.label} className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
                   <div className="flex items-center gap-2.5 mb-3">
@@ -90,6 +144,29 @@ export default function SuspiciousActivityIndicators({ user, onGoHome, onNavigat
                       </li>
                     ))}
                   </ul>
+
+                  {example && (
+                    <div className="mt-4 border-l-4 border-orange-300 dark:border-orange-500/50 bg-orange-50/50 dark:bg-orange-500/5 rounded-r-xl pl-4 pr-4 py-3">
+                      <p className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide mb-2">Worked example — {example.title}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic mb-2">
+                        <span className="font-semibold not-italic text-slate-700 dark:text-slate-200">Concern: </span>{example.concern}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic mb-2">
+                        <span className="font-semibold not-italic text-slate-700 dark:text-slate-200">Customer profiling: </span>{example.customerProfiling}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed italic mb-3">
+                        <span className="font-semibold not-italic text-slate-700 dark:text-slate-200">Suspicious activity: </span>{example.suspiciousActivity}
+                      </p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">Indicators present:</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {example.indicatorRefs.map((ref) => (
+                          <span key={ref} className="text-xs text-orange-700 dark:text-orange-400 bg-white dark:bg-slate-800 border border-orange-200 dark:border-orange-500/30 rounded-full px-2.5 py-1">
+                            {ref.length > 60 ? ref.slice(0, 57) + '…' : ref}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )
             })}
