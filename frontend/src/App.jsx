@@ -96,6 +96,16 @@ function App() {
     goHome(u)
   }
 
+  // Entry point specifically for "open the AI assistant" (nav icon, homepage
+  // CTA) — unlike enterApp/goHome, a non-premium user here goes to checkout
+  // rather than being silently dropped into Training, since Training isn't
+  // what they asked for.
+  const enterChat = (u) => {
+    if (!u) { setView('signup'); return }
+    if (!u.role) { setView('industryselect'); return }
+    setView(isPremium(u) ? 'chat' : 'checkout')
+  }
+
   const enterTraining = (u) => {
     if (!u) { setView('signup'); return }
     if (!u.role) { setView('industryselect'); return }
@@ -178,7 +188,7 @@ function App() {
     onStartTrial: () => user ? handleUpgrade() : setView('signup'),
     onSignIn: () => setView('signin'),
     onSignUp: () => setView('signup'),
-    onOpenChat: () => enterApp(user),
+    onOpenChat: () => enterChat(user),
     onOpenTraining: () => enterTraining(user),
     onSignOut: handleSignOut,
     onOpenSettings: openSettings,

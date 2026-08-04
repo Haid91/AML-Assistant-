@@ -239,7 +239,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              onClick={onStart}
+              onClick={user ? onOpenChat : onStart}
               className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm"
             >
               {user ? 'Open Assistant →' : 'Get started free →'}
