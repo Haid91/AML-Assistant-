@@ -28,3 +28,12 @@ create table if not exists sessions (
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
+
+-- These tables are only ever accessed via the backend's direct Postgres
+-- connection (connects as the table-owning role, which bypasses RLS
+-- regardless of policies) — never via Supabase's PostgREST Data API. RLS is
+-- enabled with no policies specifically so that API is fully deny-by-default,
+-- closing off a public data-exposure path this app never intended to use.
+alter table users enable row level security;
+alter table program_drafts enable row level security;
+alter table sessions enable row level security;
