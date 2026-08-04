@@ -121,7 +121,7 @@ const FAQ = [
   },
 ]
 
-export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment }) {
+export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -163,6 +163,7 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         onOpenAustracEnrolment={onOpenAustracEnrolment}
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}
+        onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">
@@ -241,14 +242,14 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         </a>
 
         <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">
-          For industry-specific red flags, see our{' '}
+          For industry-specific indicators, see our{' '}
           <button
-            onClick={onOpenSetupGuide}
+            onClick={onOpenSuspiciousIndicators}
             className="text-orange-600 dark:text-orange-400 font-semibold underline decoration-orange-300 dark:decoration-orange-500/50 hover:text-orange-700 dark:hover:text-orange-300 transition-colors"
           >
-            Setup Guide
+            Suspicious Activity Indicators
           </button>{' '}
-          — it covers designated services, CDD guidance, and warning signs by sector.
+          page.
         </p>
 
         <div className="flex items-center justify-between mb-5">

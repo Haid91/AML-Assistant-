@@ -17,6 +17,7 @@ import AustracEnrolment from './components/AustracEnrolment'
 import SmrGuide from './components/SmrGuide'
 import ComplianceOfficerGuide from './components/ComplianceOfficerGuide'
 import RiskAssessmentTool from './components/RiskAssessmentTool'
+import SuspiciousActivityIndicators from './components/SuspiciousActivityIndicators'
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
@@ -157,6 +158,7 @@ function App() {
     onOpenSmrGuide: () => setView('smrGuide'),
     onOpenComplianceOfficer: () => setView('complianceOfficer'),
     onOpenRiskAssessment: () => setView('riskAssessment'),
+    onOpenSuspiciousIndicators: () => setView('suspiciousIndicators'),
     onOpenCost: () => setView('cost'),
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
@@ -241,6 +243,15 @@ function App() {
   if (view === 'riskAssessment') {
     return (
       <RiskAssessmentTool
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'suspiciousIndicators') {
+    return (
+      <SuspiciousActivityIndicators
         {...navProps}
         user={user}
       />

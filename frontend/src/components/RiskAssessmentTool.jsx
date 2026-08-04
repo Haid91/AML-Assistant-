@@ -58,7 +58,7 @@ function ratingStyles(rating) {
   return { text: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-200 dark:border-emerald-500/30' }
 }
 
-export default function RiskAssessmentTool({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer }) {
+export default function RiskAssessmentTool({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenSuspiciousIndicators }) {
   const [selected, setSelected] = useState({})
   const [copied, setCopied] = useState(false)
 
@@ -120,6 +120,7 @@ export default function RiskAssessmentTool({ user, onGoHome, onNavigateSection, 
         onOpenAustracEnrolment={onOpenAustracEnrolment}
         onOpenSmrGuide={onOpenSmrGuide}
         onOpenComplianceOfficer={onOpenComplianceOfficer}
+        onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
       />
 
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-20">
