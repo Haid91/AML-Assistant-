@@ -385,6 +385,16 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         </div>
 
         <div className="mb-10">
+          <h2 className="text-lg font-bold mb-4">Filing frequency</h2>
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            There's no cap on how many SMRs you can file, and no such thing as filing "too often." AUSTRAC would much rather receive a report that turns out to be unrelated to crime than have a genuine one go unreported.
+          </p>
+          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mt-3">
+            If the same customer triggers a fresh suspicion later on, file a new SMR for it — don't assume an earlier report already covers it. Each new grounds-to-suspect event needs its own report.
+          </p>
+        </div>
+
+        <div className="mb-10">
           <h2 className="text-lg font-bold mb-4">Related guidance</h2>
           <div className="grid sm:grid-cols-2 gap-3">
             <button onClick={onOpenComplianceOfficer} className="text-left text-sm font-medium bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-300 dark:hover:border-orange-500/50 rounded-2xl px-5 py-4 transition-colors">
@@ -404,8 +414,13 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
 
         <div className="bg-slate-900 dark:bg-slate-800 rounded-3xl p-8 text-center">
           <p className="text-lg font-bold text-white mb-2">What's next</p>
-          <p className="text-slate-400 text-sm mb-6">Review the rest of your ongoing obligations, or get your AML/CTF Program drafted if you haven't already.</p>
+          <p className="text-slate-400 text-sm mb-6">
+            Our AI Assistant can draft a first-pass SMR/SAR narrative in the Concern / Customer Profiling / Suspicious Activity format above — or review the rest of your ongoing obligations and get your AML/CTF Program drafted if you haven't already.
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
+            <button onClick={onOpenChat} className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors">
+              Draft an SMR with the AI Assistant →
+            </button>
             <button onClick={onOpenProgramBuilder} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft your AML/CTF Program →
             </button>
@@ -418,6 +433,14 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-8">
           Educational guidance only — not legal advice, and not a substitute for AUSTRAC's own instructions. Consult a qualified AML/CTF professional for advice specific to your firm.
         </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+          {['SMR', 'AUSTRAC', 'Reporting', 'Suspicious Matter', 'Compliance', 'Examples'].map((tag) => (
+            <span key={tag} className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1">
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )
