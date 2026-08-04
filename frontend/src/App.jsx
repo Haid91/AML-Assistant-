@@ -175,6 +175,7 @@ function App() {
     onGoHome: () => setView('landing'),
     onNavigateSection: navigateToSection,
     onStart: () => user ? enterApp(user) : setView('signup'),
+    onStartTrial: () => user ? handleUpgrade() : setView('signup'),
     onSignIn: () => setView('signin'),
     onSignUp: () => setView('signup'),
     onOpenChat: () => enterApp(user),
