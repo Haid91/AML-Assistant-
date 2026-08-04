@@ -421,7 +421,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 {[
                   'All Analyst & MLRO training modules, every industry',
                   'Ownership Structure Simulation',
-                  'CAMS exam prep — 6 of 20 questions per chapter',
+                  'CAMS exam prep — the first 6 questions free in every chapter',
                   'AUSTRAC e-learning overview',
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
@@ -456,7 +456,7 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                 {[
                   'AI compliance co-pilot trained on FATF, AUSTRAC & global regulations',
                   'Full SMR/SAR drafting assistance',
-                  'Full CAMS exam prep — all 20 questions per chapter',
+                  'Full CAMS exam prep — 258 questions across all 4 chapters',
                   'Personalised FATF & AUSTRAC compliance mapping',
                   'Unlimited questions — no daily cap',
                 ].map((f) => (
