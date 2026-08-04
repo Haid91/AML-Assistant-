@@ -4,13 +4,19 @@ import Navbar from './Navbar'
 
 const STORAGE_KEY = 'aml_smr_progress'
 
-const ESSENTIAL_ELEMENTS = [
-  'Who — full name, address, date of birth, country of citizenship, occupation, ABN if applicable, and the ID documents used to verify them',
-  'What — the transaction(s) or activity involved',
-  'Where — the location or channel the activity occurred through',
-  'When — dates and times of the relevant activity',
-  "Why — the specific facts, behaviours, or circumstances that triggered your suspicion, described factually, not speculatively",
-  'How — how the activity was carried out',
+const NARRATIVE_SECTIONS = [
+  {
+    title: 'Concern',
+    detail: 'A few sentences on the nature and basis of the suspicion — name the specific typology (structuring, layering, rapid fund movement, smurfing, etc.) and the legislation it falls under (Section 41 of the AML/CTF Act 2006 for Australia).',
+  },
+  {
+    title: 'Customer Profiling',
+    detail: "The customer's KYC and risk picture — full name, date of birth, address, occupation, declared income, account details, risk rating, PEP/sanctions status, and any prior SMR history or adverse media.",
+  },
+  {
+    title: 'Suspicious Activity',
+    detail: 'Every relevant credit and debit, listed individually with amount, counterparty, and date, followed by totals (credits, debits, net movement, closing balance) and the specific red flags observed.',
+  },
 ]
 
 const FORM_PARTS = [
@@ -46,8 +52,8 @@ const STEPS = [
     tip: null,
   },
   {
-    title: 'Complete the six essential elements',
-    what: 'Work through Who, What, Where, When, Why, and How — see the checklist above for exactly what each needs.',
+    title: 'Write your narrative in three sections',
+    what: 'Structure it as Concern, Customer Profiling, and Suspicious Activity — see above for exactly what each section needs.',
     tip: null,
   },
   {
@@ -194,16 +200,19 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <ClipboardList className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-            <p className="font-semibold text-sm">Before you start — the 6 essential elements</p>
+            <p className="font-semibold text-sm">Before you start — how to structure your narrative</p>
           </div>
-          <ul className="space-y-2">
-            {ESSENTIAL_ELEMENTS.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-2 shrink-0" />
-                {item}
-              </li>
+          <div className="space-y-4">
+            {NARRATIVE_SECTIONS.map((item, i) => (
+              <div key={item.title}>
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-1">{i + 1}. {item.title}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.detail}</p>
+              </div>
             ))}
-          </ul>
+          </div>
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-4">
+            This is the same three-part structure our AI Assistant uses whenever it drafts an SMR/SAR narrative for you.
+          </p>
         </div>
 
         <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 mb-8">
@@ -230,6 +239,17 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
           </div>
           <ExternalLink className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
         </a>
+
+        <p className="text-sm text-slate-600 dark:text-slate-300 mb-6">
+          For industry-specific red flags, see our{' '}
+          <button
+            onClick={onOpenSetupGuide}
+            className="text-orange-600 dark:text-orange-400 font-semibold underline decoration-orange-300 dark:decoration-orange-500/50 hover:text-orange-700 dark:hover:text-orange-300 transition-colors"
+          >
+            Setup Guide
+          </button>{' '}
+          — it covers designated services, CDD guidance, and warning signs by sector.
+        </p>
 
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold">The 7 steps</h2>
