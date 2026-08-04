@@ -410,12 +410,13 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
 
             {/* Free */}
             <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
-              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Free</p>
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Free</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Get started with training</p>
               <div className="mb-2 flex items-end gap-1">
                 <span className="text-4xl font-bold text-slate-900 dark:text-white">$0</span>
-                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/forever</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mb-7">All Analyst & MLRO training, no card required.</p>
+              <p className="text-slate-400 dark:text-slate-500 text-xs mb-7">No credit card required</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'All Analyst & MLRO training modules, every industry',
@@ -433,25 +434,24 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               </ul>
               <button
                 onClick={onSignIn}
-                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-xl text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
               >
-                Sign in to start
+                Try it free
               </button>
             </div>
 
             {/* Premium */}
-            <div className="relative bg-white dark:bg-slate-700 border-2 border-slate-900 dark:border-slate-400 rounded-2xl p-8 flex flex-col">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap">
-                <span className="bg-slate-900 dark:bg-slate-200 text-white dark:text-slate-900 text-xs font-bold px-5 py-1.5 rounded-full uppercase tracking-widest">
-                  Most Popular
-                </span>
-              </div>
-              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Premium</p>
+            <div className="relative bg-white dark:bg-slate-700 border-2 border-blue-600 rounded-2xl p-8 flex flex-col overflow-hidden">
+              <span className="absolute top-4 -right-9 rotate-45 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-10 py-1">
+                Most Popular
+              </span>
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Premium</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">For working compliance professionals</p>
               <div className="mb-1 flex items-end gap-1">
                 <span className="text-4xl font-bold text-slate-900 dark:text-white">$49.99</span>
                 <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
               </div>
-              <p className="text-orange-500 text-sm font-semibold mb-6">7-day free trial. Cancel anytime.</p>
+              <p className="text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">7-day free trial · cancel anytime</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'AI compliance co-pilot trained on FATF, AUSTRAC & global regulations',
@@ -470,19 +470,19 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
               </ul>
               <button
                 onClick={onStart}
-                className="w-full py-3.5 bg-slate-900 dark:bg-slate-200 text-white dark:text-slate-900 rounded-xl font-semibold text-sm hover:bg-slate-800 dark:hover:bg-white transition-colors"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors"
               >
-                Start 7-day free trial
+                Start free trial →
               </button>
               <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">Free for 7 days, then $49.99/month.</p>
             </div>
 
             {/* Team */}
             <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
-              <p className="font-bold text-slate-900 dark:text-white text-lg mb-3">Team</p>
-              <p className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Custom</p>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 flex-1">Customise a package for your financial crime compliance team.</p>
-              <ul className="space-y-3 mb-8">
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Team</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Multi-office / large teams</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white mb-7">Custom</p>
+              <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'Everything in Premium',
                   'Team admin dashboard',
@@ -498,7 +498,10 @@ export default function LandingPage({ user, onStart, onSignIn, onSignUp, onOpenC
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-xl text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors">
+              <button
+                onClick={onOpenContact}
+                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+              >
                 Contact sales
               </button>
             </div>
