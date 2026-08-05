@@ -1,6 +1,70 @@
 import { useState } from 'react'
 import Navbar from './Navbar'
 
+const DOC_ICONS = {
+  privacyPolicy: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+  ),
+  collectionNotice: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+  ),
+  dataBreachPlan: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+  ),
+  retentionSchedule: (
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+  ),
+}
+
+const FAQS = [
+  {
+    q: 'Does becoming an AML/CTF reporting entity remove my Privacy Act small business exemption?',
+    a: "Yes. Section 6E(1A) of the Privacy Act 1988, inserted by the AML/CTF Amendment Act 2024, binds any AML/CTF reporting entity to the Australian Privacy Principles for personal information it handles in connection with its AML/CTF obligations — regardless of annual turnover. The usual $3 million small-business exemption doesn't apply to that part of your business.",
+  },
+  {
+    q: 'When does this start for Tranche 2 businesses?',
+    a: "From 1 July 2026, for lawyers and conveyancers, accountants, real estate agents, trust and company service providers, and dealers in precious metals and stones who provide a designated service. Existing reporting entities (banks, remitters, and other Tranche 1 entities) were already captured earlier, from 31 March 2026.",
+  },
+  {
+    q: 'Does the Privacy Act now cover my whole business, or just the AML/CTF part?',
+    a: "Just the personal information you handle in connection with your AML/CTF obligations — customer identification, verification, and ongoing due diligence records. If your overall turnover is still under $3 million, the rest of your business can remain outside the Privacy Act, but your CDD data can't.",
+  },
+  {
+    q: 'What privacy documents does a Tranche 2 firm actually need?',
+    a: 'At minimum: a Privacy Policy (APP 1), a Collection Notice for client ID information (APP 5), a Data Breach Response Plan covering the Notifiable Data Breaches scheme, and a Retention & Destruction Schedule (APP 11) for when you have to keep records and when you must get rid of them.',
+  },
+  {
+    q: 'Do I have to keep copies of client ID documents for seven years?',
+    a: "You have to keep records demonstrating your customer due diligence for 7 years under the AML/CTF Act — but OAIC guidance confirms that from 31 March 2026, reporting entities aren't required to retain scanned copies or photocopies of the identity documents themselves, only the identity information extracted from them.",
+  },
+  {
+    q: 'Are the documents AmlIntel generates legal advice?',
+    a: "No. They're AI-generated first-pass drafts based on what you tell us about your business — a starting point, not a finished, compliant document. Have them reviewed and finalised by a qualified privacy or legal professional before you rely on or publish them.",
+  },
+]
+
+function FaqItem({ item, open, onToggle }) {
+  return (
+    <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+      >
+        <span className="font-semibold text-sm">{item.q}</span>
+        <svg
+          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+        <p className="px-5 pb-4 text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{item.a}</p>
+      )}
+    </div>
+  )
+}
+
 const INDUSTRIES = [
   { id: 'lawyer', label: 'Lawyer or Conveyancer' },
   { id: 'accountant', label: 'Accountant / Bookkeeper' },
@@ -43,6 +107,7 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
   const [reportingEntity, setReportingEntity] = useState(null)
   const [haveDocs, setHaveDocs] = useState({})
   const [result, setResult] = useState(null)
+  const [openFaq, setOpenFaq] = useState(null)
 
   const restart = () => {
     setStep(0); setIndustry(null); setReportingEntity(null); setHaveDocs({}); setResult(null)
@@ -87,7 +152,7 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
       />
 
-      <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">
+      <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">
         {!result && (
           <>
             <div className="text-center mb-10">
@@ -99,6 +164,39 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
                 From 1 July 2026, Tranche 2 reporting entities lose the small business exemption. Answer a few quick questions to see where you stand.
               </p>
             </div>
+
+            {step === 0 && (
+              <div className="mb-12">
+                <h2 className="text-xl font-bold mb-3">Why this applies to your Tranche 2 business</h2>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4 text-sm">
+                  The same AML/CTF Amendment Act 2024 that turned lawyers and conveyancers, accountants, real estate
+                  agents, trust and company service providers, and dealers in precious metals and stones into
+                  reporting entities also removed their Privacy Act small business exemption. Section 6E(1A) of the
+                  Privacy Act 1988 now binds any AML/CTF reporting entity to the Australian Privacy Principles for
+                  the personal information it handles in connection with its AML/CTF obligations — regardless of
+                  annual turnover. For Tranche 2 entities, that applies from 1 July 2026. The reforms are expected
+                  to grow Australia's reporting entity population from around 17,000 to around 90,000 businesses,
+                  most of them newly regulated for the first time.
+                </p>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6 text-sm">
+                  In practice, that means four documents most small firms have never needed before:
+                </p>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {DOCUMENTS.map((d) => (
+                    <div key={d.id} className="border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+                      <div className="w-10 h-10 rounded-xl bg-orange-50 dark:bg-orange-500/10 flex items-center justify-center mb-3">
+                        <svg className="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          {DOC_ICONS[d.id]}
+                        </svg>
+                      </div>
+                      <p className="text-xs font-bold text-orange-600 dark:text-orange-400 mb-1">{d.tag}</p>
+                      <p className="font-semibold text-sm mb-1.5">{d.title}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{d.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-2 mb-10">
               {[0, 1, 2].map((i) => (
@@ -262,11 +360,18 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
           </div>
         )}
 
-        {result && (
-          <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-8">
-            This is general information based on your answers, not legal advice. Confirm how the Australian Privacy Principles apply to your specific business with a qualified adviser.
-          </p>
-        )}
+        <div className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800">
+          <h2 className="text-xl font-bold mb-6">Privacy Act and Tranche 2: common questions</h2>
+          <div className="space-y-3">
+            {FAQS.map((item, i) => (
+              <FaqItem key={item.q} item={item} open={openFaq === i} onToggle={() => setOpenFaq(openFaq === i ? null : i)} />
+            ))}
+          </div>
+        </div>
+
+        <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-10">
+          This is general information based on your answers, not legal advice. Confirm how the Australian Privacy Principles apply to your specific business with a qualified adviser.
+        </p>
       </div>
     </div>
   )

@@ -32,7 +32,7 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onUpgrade, prefill }) {
+export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenPrivacyCheck, onUpgrade, prefill }) {
   const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility }
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
@@ -161,6 +161,13 @@ export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart
           <button onClick={onUpgrade} className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors mb-6">
             Upgrade to Premium — $49.99/mo
           </button>
+          <p className="text-xs text-slate-400 dark:text-slate-500 leading-relaxed mb-4">
+            Section 6E(1A) of the Privacy Act 1988 binds Tranche 2 reporting entities to the Australian Privacy
+            Principles for AML/CTF personal information, regardless of turnover, from 1 July 2026.
+          </p>
+          <button onClick={onOpenPrivacyCheck} className="text-sm text-orange-600 dark:text-orange-400 font-semibold hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+            ← Back to the free Privacy Act check
+          </button>
         </div>
       </div>
     )
@@ -229,10 +236,20 @@ export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
       <Nav {...navProps} />
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">Your Privacy Pack</h1>
           <p className="text-slate-500 dark:text-slate-400">Answer a couple of questions and get tailored first-pass Privacy Act documents</p>
         </div>
+
+        {step === 0 && (
+          <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 mb-8 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Since 1 July 2026, s6E(1A) of the Privacy Act 1988 binds Tranche 2 reporting entities to the Australian
+            Privacy Principles for AML/CTF personal information, regardless of turnover.{' '}
+            <button onClick={onOpenPrivacyCheck} className="text-orange-600 dark:text-orange-400 font-semibold underline hover:text-orange-700 dark:hover:text-orange-300 transition-colors">
+              See the full breakdown and FAQ →
+            </button>
+          </div>
+        )}
 
         <div className="flex items-center gap-2 mb-10">
           {Array.from({ length: STEP_COUNT }, (_, i) => (
