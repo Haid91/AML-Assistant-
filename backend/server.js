@@ -572,6 +572,19 @@ function buildBusinessProfileText(intake) {
 Draft a first-pass AML/CTF Program (Part A and Part B) for this business, following the mandatory structure and grounding every section in these specific details.`
 }
 
+function buildChatContextPreamble(intake) {
+  const { businessName, industry, services, staffSize, clientTypes, deliveryChannels } = intake || {}
+  const parts = []
+  if (businessName) parts.push(`business name: ${businessName}`)
+  if (industry) parts.push(`industry: ${industry}`)
+  if (Array.isArray(services) && services.length) parts.push(`designated services: ${services.join(', ')}`)
+  if (staffSize) parts.push(`staff size: ${staffSize}`)
+  if (Array.isArray(clientTypes) && clientTypes.length) parts.push(`client types: ${clientTypes.join(', ')}`)
+  if (Array.isArray(deliveryChannels) && deliveryChannels.length) parts.push(`delivery channels: ${deliveryChannels.join(', ')}`)
+  if (!parts.length) return null
+  return `The user has previously provided this business profile via AmlIntel's Program Builder — use it to make answers specific where relevant, but don't force it into every reply: ${parts.join('; ')}.`
+}
+
 const PRIVACY_PACK_SYSTEM_PROMPT = `You are a privacy compliance drafting assistant. Given a Business Profile for an Australian Tranche 2 AML/CTF reporting entity, draft the specific Privacy Act 1988 (Cth) documents requested, grounded in the following facts:
 
 - Under section 6E(1A) of the Privacy Act, a small business operator that becomes an AML/CTF reporting entity is bound by the Australian Privacy Principles (APPs) for the personal information it handles in connection with its AML/CTF obligations, regardless of annual turnover. This removes the usual small-business exemption. Tranche 2 entities are captured from the date they start providing a designated service (from 1 July 2026 for the Tranche 2 reforms).
@@ -706,7 +719,11 @@ function fallbackReply(message) {
 }
 
 // ── Chat endpoint ─────────────────────────────────────────────────────────────
-app.post('/chat', chatLimiter, async (req, res) => {
+app.post('/chat', chatLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
   const { message, history } = req.body
 
   if (!message || typeof message !== 'string' || message.trim().length === 0) {
@@ -732,10 +749,15 @@ app.post('/chat', chatLimiter, async (req, res) => {
     }
     messages.push({ role: 'user', content: message.trim() })
 
+    let systemPrompt = AML_SYSTEM_PROMPT
+    const draft = await getProgramDraft(user.id)
+    const preamble = draft?.intake && buildChatContextPreamble(draft.intake)
+    if (preamble) systemPrompt += `\n\n${preamble}`
+
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 4000,
-      system: AML_SYSTEM_PROMPT,
+      system: systemPrompt,
       messages,
     })
 
@@ -748,7 +770,7 @@ app.post('/chat', chatLimiter, async (req, res) => {
     }
     res.status(500).json({ reply: 'The AI service encountered an error. Please try again in a moment.' })
   }
-})
+}))
 
 // ── AML/CTF Program draft endpoints ───────────────────────────────────────────
 app.post('/program-draft', programDraftLimiter, asyncRoute(async (req, res) => {

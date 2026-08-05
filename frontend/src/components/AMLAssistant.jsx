@@ -115,13 +115,15 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
   const sendToAPI = async (text, msgs, sessionId) => {
     try {
       const history = msgs.map((m) => ({ role: m.role, text: m.text }))
+      const token = localStorage.getItem('aml_token')
       const res = await fetch(`${API_URL}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ message: text, history }),
       })
       const data = await res.json()
-      const reply = { id: Date.now() + 1, role: 'assistant', text: data.reply }
+      const replyText = res.ok ? data.reply : (data.error || 'Something went wrong. Please try again.')
+      const reply = { id: Date.now() + 1, role: 'assistant', text: replyText }
       const next = [...msgs, reply]
       updateSession(sessionId, next)
     } catch {
