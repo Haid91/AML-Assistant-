@@ -83,6 +83,58 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
         </section>
 
         <section>
+          <h2 className="text-xl font-bold mb-2">Built on the compliance desk</h2>
+          <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+            The guidance in this assistant isn't just from regulation documents — it's shaped by the real-time
+            judgement calls made by compliance professionals in the field.
+          </p>
+
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 md:p-10 mb-6">
+            <div className="text-6xl leading-none text-blue-600/25 font-serif mb-2 select-none">"</div>
+            <blockquote className="text-lg md:text-xl font-medium leading-relaxed text-slate-200 mb-8">
+              The questions analysts ask in the middle of a live investigation are never in the textbook. This tool
+              is shaped by years of real casework — the red flags that actually matter, the SMRs that hold up under
+              scrutiny, and the judgement calls that protect your organisation.
+            </blockquote>
+            <div className="flex items-center gap-4 border-t border-slate-800 pt-6">
+              <div className="w-11 h-11 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold shrink-0 tracking-tight text-white">
+                CO
+              </div>
+              <div>
+                <p className="font-semibold text-sm text-white">Senior Compliance Officer</p>
+                <p className="text-xs text-slate-400 mt-0.5">10+ years · AML/CTF · AUSTRAC regulated entities · Financial crime investigations · FATF typologies</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                stat: '10+',
+                label: 'Years in AML compliance',
+                desc: 'Front-line experience across banking, remittance, fintech, and digital asset sectors.',
+              },
+              {
+                stat: 'AUSTRAC',
+                label: 'Regulatory expertise',
+                desc: 'Hands-on knowledge of AUSTRAC reporting obligations, AML/CTF programs, and enforcement outcomes.',
+              },
+              {
+                stat: 'Live cases',
+                label: 'Investigation background',
+                desc: 'Guidance shaped by real SMR decisions, transaction monitoring reviews, and customer due diligence investigations.',
+              },
+            ].map((item) => (
+              <div key={item.label} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+                <p className="text-2xl font-bold text-blue-600 mb-1">{item.stat}</p>
+                <p className="font-semibold text-sm mb-2">{item.label}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
           <h2 className="text-xl font-bold mb-2">Setting up your AML/CTF program</h2>
           <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
             If your firm has been captured by the Tranche 2 reforms, AmlIntel has two things to help you get

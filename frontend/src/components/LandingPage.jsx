@@ -709,57 +709,42 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
         </div>
       </section>
 
-      {/* Compliance Officer Experience */}
-      <section id="experience" className="py-24 px-6">
+      {/* Privacy Act Check promo */}
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <p className="text-xs text-blue-600 uppercase tracking-widest font-medium mb-3">Real-world experience</p>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built on the compliance desk</h2>
+            <p className="text-xs text-orange-600 dark:text-orange-400 uppercase tracking-widest font-medium mb-3">Tranche 2 · Privacy Act</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Are you ready for the Privacy Act?</h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
-              The guidance in this assistant isn't just from regulation documents — it's shaped by the real-time judgement calls made by compliance professionals in the field.
+              From 1 July 2026, Tranche 2 reporting entities lose the Privacy Act's small business exemption — regardless of turnover. Most firms are missing at least one of four core documents.
             </p>
           </div>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 md:p-12 mb-6">
-            <div className="text-7xl leading-none text-blue-600/25 font-serif mb-2 select-none">"</div>
-            <blockquote className="text-xl md:text-2xl font-medium leading-relaxed text-slate-200 mb-10">
-              The questions analysts ask in the middle of a live investigation are never in the textbook. This tool is shaped by years of real casework — the red flags that actually matter, the SMRs that hold up under scrutiny, and the judgement calls that protect your organisation.
-            </blockquote>
-            <div className="flex items-center gap-4 border-t border-slate-800 pt-8">
-              <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center text-sm font-bold shrink-0 tracking-tight">
-                CO
-              </div>
-              <div>
-                <p className="font-semibold text-sm text-white">Senior Compliance Officer</p>
-                <p className="text-xs text-slate-400 mt-0.5">10+ years · AML/CTF · AUSTRAC regulated entities · Financial crime investigations · FATF typologies</p>
-              </div>
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 md:p-12">
+            <div className="grid sm:grid-cols-2 gap-4 mb-10">
+              {[
+                { title: 'Privacy Policy', tag: 'APP 1' },
+                { title: 'Collection Notice', tag: 'APP 5' },
+                { title: 'Data Breach Response Plan', tag: 'NDB Scheme' },
+                { title: 'Retention & Destruction Schedule', tag: 'APP 11' },
+              ].map((d) => (
+                <div key={d.title} className="flex items-center gap-3 bg-slate-800/60 border border-slate-700 rounded-xl px-4 py-3">
+                  <span className="text-[10px] font-bold text-orange-400 bg-orange-500/10 border border-orange-500/30 rounded-full px-2 py-0.5 shrink-0">{d.tag}</span>
+                  <span className="text-sm font-medium text-slate-200">{d.title}</span>
+                </div>
+              ))}
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              {
-                stat: '10+',
-                label: 'Years in AML compliance',
-                desc: 'Front-line experience across banking, remittance, fintech, and digital asset sectors.',
-              },
-              {
-                stat: 'AUSTRAC',
-                label: 'Regulatory expertise',
-                desc: 'Hands-on knowledge of AUSTRAC reporting obligations, AML/CTF programs, and enforcement outcomes.',
-              },
-              {
-                stat: 'Live cases',
-                label: 'Investigation background',
-                desc: 'Guidance shaped by real SMR decisions, transaction monitoring reviews, and customer due diligence investigations.',
-              },
-            ].map((item) => (
-              <div key={item.label} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
-                <p className="text-2xl font-bold text-blue-600 mb-1">{item.stat}</p>
-                <p className="font-semibold text-sm mb-2">{item.label}</p>
-                <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 border-t border-slate-800 pt-8">
+              <p className="text-sm text-slate-400 max-w-sm">
+                Answer a few quick questions to see which of these you already have — free, no signup required.
+              </p>
+              <button
+                onClick={onOpenPrivacyCheck}
+                className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+              >
+                Take the Privacy Act check →
+              </button>
+            </div>
           </div>
         </div>
       </section>
