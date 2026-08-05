@@ -28,6 +28,8 @@ import PrivacyPack from './components/PrivacyPack'
 import ComplianceCalendar from './components/ComplianceCalendar'
 import ClientRiskRegister from './components/ClientRiskRegister'
 import ComplianceDashboard from './components/ComplianceDashboard'
+import TermsOfService from './components/TermsOfService'
+import PrivacyPolicy from './components/PrivacyPolicy'
 import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
@@ -216,6 +218,8 @@ function App() {
     onOpenClientRiskRegister: () => setView('clientRiskRegister'),
     onOpenReportableTransactionCheck: () => setView('reportableTransactionCheck'),
     onOpenComplianceDashboard: () => setView('dashboard'),
+    onOpenTermsOfService: () => setView('termsOfService'),
+    onOpenPrivacyPolicy: () => setView('privacyPolicy'),
   }
 
   if (view === 'signin') {
@@ -251,6 +255,24 @@ function App() {
   if (view === 'about') {
     return (
       <About
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'termsOfService') {
+    return (
+      <TermsOfService
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'privacyPolicy') {
+    return (
+      <PrivacyPolicy
         {...navProps}
         user={user}
       />
@@ -424,6 +446,8 @@ function App() {
         onSignUp={handleSignIn}
         onGoSignIn={() => setView('signin')}
         onGoHome={() => setView('landing')}
+        onOpenTermsOfService={() => setView('termsOfService')}
+        onOpenPrivacyPolicy={() => setView('privacyPolicy')}
       />
     )
   }

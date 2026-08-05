@@ -199,7 +199,7 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
+export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenTermsOfService, onOpenPrivacyPolicy, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
   const [camsOpen, setCamsOpen] = useState(false)
 
   useEffect(() => {
@@ -884,12 +884,16 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
               <div className="w-6 h-6 rounded bg-blue-600 flex items-center justify-center text-white text-xs font-bold">A</div>
               <span>© 2026 AmlIntel</span>
             </div>
-            <div className="flex gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <span>For educational purposes only</span>
               <span>·</span>
               <span>Not legal advice</span>
               <span>·</span>
               <span>FATF-aligned · AUSTRAC guidance</span>
+              <span>·</span>
+              <button onClick={onOpenTermsOfService} className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms of Service</button>
+              <span>·</span>
+              <button onClick={onOpenPrivacyPolicy} className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</button>
             </div>
           </div>
         </div>

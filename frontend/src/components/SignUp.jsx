@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { API_URL } from '../config'
 
-export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
+export default function SignUp({ onSignUp, onGoSignIn, onGoHome, onOpenTermsOfService, onOpenPrivacyPolicy }) {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -139,6 +139,13 @@ export default function SignUp({ onSignUp, onGoSignIn, onGoHome }) {
             >
               {loading ? 'Creating account…' : 'Create account'}
             </button>
+
+            <p className="text-center text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+              By creating an account, you agree to our{' '}
+              <button type="button" onClick={onOpenTermsOfService} className="text-blue-500 dark:text-blue-400 hover:underline">Terms of Service</button>
+              {' '}and{' '}
+              <button type="button" onClick={onOpenPrivacyPolicy} className="text-blue-500 dark:text-blue-400 hover:underline">Privacy Policy</button>.
+            </p>
           </form>
 
           <p className="text-center text-sm text-slate-500 dark:text-slate-500 mt-6">
