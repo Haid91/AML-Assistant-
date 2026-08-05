@@ -599,6 +599,92 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
         </div>
       </section>
 
+      {/* Compliance Dashboard preview */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">Premium</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">One screen for your whole compliance status</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+              Your AML/CTF Program, Privacy Pack, Staff Induction, Client Risk Register, Compliance Calendar and CAMS prep — rolled up into a single Dashboard, so you always know what's done and what still needs attention.
+            </p>
+          </div>
+
+          {/* Browser-chrome frame around a static preview */}
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl overflow-hidden max-w-3xl mx-auto">
+            <div className="flex items-center gap-1.5 px-4 py-3 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+              <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+              <span className="ml-3 text-[11px] text-slate-400 dark:text-slate-500 font-mono">amlintel.com/dashboard</span>
+            </div>
+
+            <div className="p-5 sm:p-7 pointer-events-none select-none">
+              <div className="flex items-center justify-between mb-5">
+                <p className="text-base font-bold">Compliance Dashboard</p>
+                <span className="text-[10px] font-bold uppercase tracking-wide bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full px-2.5 py-1">Sample data</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl p-5 mb-5">
+                <div className="flex sm:flex-col items-center justify-center gap-2 sm:border-r sm:border-slate-200 sm:dark:border-slate-700 sm:pr-5">
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center relative shrink-0" style={{ background: 'conic-gradient(#2563eb 259deg, rgb(226 232 240) 259deg 360deg)' }}>
+                    <div className="absolute inset-2 rounded-full bg-slate-50 dark:bg-slate-900" />
+                    <span className="relative text-lg font-extrabold">72%</span>
+                  </div>
+                  <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 text-center">Overall readiness</span>
+                </div>
+                <div className="grid grid-cols-3 gap-4 content-center">
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wide font-bold text-slate-400 dark:text-slate-500 mb-1">Documents</dt>
+                    <dd className="text-sm font-bold">2 / 2</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wide font-bold text-slate-400 dark:text-slate-500 mb-1">Needs attention</dt>
+                    <dd className="text-sm font-bold text-red-600 dark:text-red-400">1 overdue</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wide font-bold text-slate-400 dark:text-slate-500 mb-1">CAMS readiness</dt>
+                    <dd className="text-sm font-bold">68%</dd>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+                {[
+                  { title: 'AML/CTF Program', pill: 'Draft ready', cls: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400' },
+                  { title: 'Client Risk Register', pill: '1 overdue', cls: 'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400' },
+                  { title: 'Staff Induction', pill: 'Not done', cls: 'bg-amber-100 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400' },
+                ].map((c) => (
+                  <div key={c.title} className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3.5">
+                    <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 ${c.cls}`}>{c.pill}</span>
+                    <p className="text-xs font-semibold">{c.title}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                {[
+                  { name: 'CDD review — Matter 2026-014', when: '10d overdue', cls: 'text-red-600 dark:text-red-400', dot: 'bg-red-500' },
+                  { name: 'Staff AML/CTF Training Refresher', when: 'Due in 31d', cls: 'text-amber-600 dark:text-amber-400', dot: 'bg-amber-500' },
+                ].map((d, i) => (
+                  <div key={d.name} className={`flex items-center gap-3 px-4 py-2.5 text-xs ${i > 0 ? 'border-t border-slate-100 dark:border-slate-700' : ''}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${d.dot}`} />
+                    <span className="font-semibold flex-1 truncate">{d.name}</span>
+                    <span className={`font-bold whitespace-nowrap ${d.cls}`}>{d.when}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <button onClick={onStartTrial} className="px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm">
+              Try Premium free →
+            </button>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-24 px-6 bg-slate-50 dark:bg-slate-800">
         <div className="max-w-5xl mx-auto">
