@@ -317,9 +317,15 @@ app.post('/auth/logout', asyncRoute(async (req, res) => {
   res.json({ success: true })
 }))
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 async function getUserFromAuth(req) {
   const token = req.headers.authorization?.replace('Bearer ', '')
-  if (!token) return null
+  // Session tokens are always UUIDs (crypto.randomUUID()) — a non-UUID value
+  // can never match a row, and querying the uuid-typed sessions.token column
+  // with one throws a Postgres type-cast error rather than just finding no
+  // rows. Treat it the same as "no session found" instead of a 500.
+  if (!token || !UUID_RE.test(token)) return null
   const email = await getSessionEmail(token)
   if (!email) return null
   return getUserByEmail(email)
