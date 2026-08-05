@@ -1,5 +1,65 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Navbar from './Navbar'
+
+// Mirrors the real 8-step order in SetupGuide.jsx — first 5 shown here as a
+// worked example (illustrative progress, not tied to a real account).
+const HERO_SETUP_STEPS = [
+  { label: 'Enrol with AUSTRAC', status: 'done' },
+  { label: 'Appoint an AML/CTF Compliance Officer', status: 'done' },
+  { label: 'Enterprise-wide risk assessment', status: 'done' },
+  { label: 'Draft your AML/CTF Program', status: 'active' },
+  { label: 'Implement CDD / EDD', status: 'todo' },
+]
+
+const HERO_INDUSTRIES = [
+  { label: 'Banking', soon: false },
+  { label: 'Law', soon: false },
+  { label: 'Crypto', soon: false },
+  { label: 'Fintech', soon: false },
+  { label: 'Accountant / TCSP', soon: false },
+  { label: 'Gambling', soon: true },
+]
+
+const HERO_CAMS_CHAPTERS = [
+  { title: 'Ch.1 — Risks & Methods of ML/TF', count: 65 },
+  { title: 'Ch.2 — International AML/CFT Standards', count: 61 },
+  { title: 'Ch.3 — Compliance Programs', count: 63 },
+  { title: 'Ch.4 — Investigations & Response', count: 69 },
+]
+
+function CountUp({ to, decimals = 0, prefix = '', suffix = '' }) {
+  const [value, setValue] = useState(0)
+  const ref = useRef(null)
+  const started = useRef(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduceMotion) { setValue(to); return }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true
+          const duration = 1100
+          const start = performance.now()
+          const tick = (now) => {
+            const p = Math.min((now - start) / duration, 1)
+            const eased = 1 - Math.pow(1 - p, 3)
+            setValue(to * eased)
+            if (p < 1) requestAnimationFrame(tick)
+          }
+          requestAnimationFrame(tick)
+          io.unobserve(el)
+        }
+      })
+    }, { threshold: 0.6 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [to])
+
+  return <span ref={ref}>{prefix}{value.toFixed(decimals)}{suffix}</span>
+}
 
 const FEATURES = [
   {
@@ -224,44 +284,181 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
       </div>
 
       {/* Hero */}
-      <section className="text-center pt-28 pb-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400 text-xs font-medium mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 inline-block"></span>
-            AUSTRAC guidance · FATF-aligned · BSA compliant · For compliance professionals
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight mb-6">
-            Risk-based AML<br />
-            <span className="text-blue-600">compliance assistant</span>
-          </h1>
-          <p className="text-lg md:text-xl text-slate-500 dark:text-slate-400 leading-relaxed mb-10 max-w-2xl mx-auto">
-            An intelligent knowledge base that puts you inside KYC, transaction monitoring, and sanctions investigations — with instant, regulation-backed answers.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={user ? onOpenChat : onStart}
-              className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm"
-            >
-              {user ? 'Open Assistant →' : 'Get started free →'}
-            </button>
-            {!user && (
+      <style>{`
+        @keyframes heroReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+        @keyframes heroPulse {
+          0% { box-shadow: 0 0 0 0 rgba(234,88,12,.45); }
+          70% { box-shadow: 0 0 0 7px rgba(234,88,12,0); }
+          100% { box-shadow: 0 0 0 0 rgba(234,88,12,0); }
+        }
+        .hero-reveal { opacity: 0; animation: heroReveal .6s cubic-bezier(.2,.8,.2,1) forwards; }
+        .hero-pulse-dot { animation: heroPulse 2.2s ease-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-reveal, .hero-pulse-dot { animation: none !important; opacity: 1 !important; transform: none !important; }
+        }
+      `}</style>
+
+      <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-50 dark:bg-orange-500/10 border-b border-orange-100 dark:border-orange-500/20 text-orange-700 dark:text-orange-400 text-xs sm:text-sm font-semibold text-center">
+        <span className="w-1.5 h-1.5 rounded-full bg-orange-600 dark:bg-orange-400 shrink-0 hero-pulse-dot"></span>
+        AML/CTF obligations for Tranche 2 entities are now in force — enrolment, program, and reporting duties apply from day one.
+      </div>
+
+      <section className="relative overflow-hidden pt-16 pb-20 px-6">
+        <div
+          className="absolute inset-0 -z-10 hidden dark:block"
+          style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px)', backgroundSize: '22px 22px', WebkitMaskImage: 'radial-gradient(ellipse 65% 60% at 78% 30%, black 0%, transparent 72%)', maskImage: 'radial-gradient(ellipse 65% 60% at 78% 30%, black 0%, transparent 72%)' }}
+        />
+        <div
+          className="absolute inset-0 -z-10 dark:hidden"
+          style={{ backgroundImage: 'radial-gradient(rgba(15,23,42,.06) 1px, transparent 1px)', backgroundSize: '22px 22px', WebkitMaskImage: 'radial-gradient(ellipse 65% 60% at 78% 30%, black 0%, transparent 72%)', maskImage: 'radial-gradient(ellipse 65% 60% at 78% 30%, black 0%, transparent 72%)' }}
+        />
+
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
+          <div>
+            <p className="hero-reveal text-xs font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400 mb-4" style={{ animationDelay: '.02s' }}>
+              For accountants, lawyers, real estate agents &amp; jewellers
+            </p>
+            <h1 className="hero-reveal text-4xl md:text-5xl font-bold leading-[1.08] tracking-tight mb-6" style={{ animationDelay: '.1s' }}>
+              Your AML/CTF program, <span className="text-blue-600 dark:text-blue-400 underline decoration-blue-300 dark:decoration-blue-500/50 decoration-[3px] underline-offset-4">built and defensible</span> — not just explained
+            </h1>
+            <p className="hero-reveal text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-8 max-w-lg" style={{ animationDelay: '.19s' }}>
+              AmlIntel walks Tranche 2 businesses through every obligation AUSTRAC now requires — enrolment, risk assessment, your Program, staff training, ongoing monitoring — with an AI compliance assistant on hand for the questions that don't fit a template. <strong className="text-slate-700 dark:text-slate-200">Free to start, no card required.</strong>
+            </p>
+            <div className="hero-reveal flex flex-col sm:flex-row items-center gap-4 mb-7" style={{ animationDelay: '.27s' }}>
               <button
-                onClick={onSignIn}
-                className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-sm text-center"
+                onClick={onOpenChat}
+                className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm"
               >
-                Sign in
+                {user?.premium ? 'Open Assistant →' : 'Start your free trial →'}
               </button>
-            )}
-            {user && (
-              <a
-                href="#features"
+              <button
+                onClick={onOpenSetupGuide}
                 className="w-full sm:w-auto px-7 py-3.5 border border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-sm text-center"
               >
-                See features
-              </a>
-            )}
+                See the setup checklist ↓
+              </button>
+            </div>
+            <div className="hero-reveal flex flex-wrap gap-2" style={{ animationDelay: '.35s' }}>
+              {['Accountants & bookkeepers', 'Legal & conveyancing', 'Real estate agents', 'Conveyancers & TCSPs', 'Jewellers & bullion dealers'].map((p) => (
+                <span key={p} className="text-xs font-semibold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-full px-3 py-1.5">
+                  {p}
+                </span>
+              ))}
+            </div>
           </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 mt-6">
+
+          <div className="hero-reveal bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-lg overflow-hidden transition-transform hover:-translate-y-1" style={{ animationDelay: '.19s' }}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700">
+              <p className="font-bold text-sm">Your Tranche 2 setup</p>
+              <p className="text-xs text-slate-400 dark:text-slate-500 font-mono">3 of 8 complete</p>
+            </div>
+            <div className="flex items-center gap-3 px-5 pt-4">
+              <div className="flex-1 h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+                <div className="h-full rounded-full bg-emerald-500" style={{ width: '37.5%' }} />
+              </div>
+              <p className="text-xs font-mono text-slate-400 dark:text-slate-500 whitespace-nowrap">37%</p>
+            </div>
+            <div className="py-2">
+              {HERO_SETUP_STEPS.map((step) => (
+                <div key={step.label} className="grid grid-cols-[22px_1fr_auto] items-center gap-3 px-5 py-2.5 border-b border-slate-100 dark:border-slate-700/60 last:border-0">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    step.status === 'done' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                    : step.status === 'active' ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500'
+                  }`}>
+                    {step.status === 'done' ? (
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                    ) : step.status === 'active' ? '4' : '5'}
+                  </span>
+                  <span className={`text-sm font-semibold ${step.status === 'todo' ? 'text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}`}>{step.label}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wide flex items-center gap-1.5 ${
+                    step.status === 'done' ? 'text-emerald-600 dark:text-emerald-400'
+                    : step.status === 'active' ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-slate-400 dark:text-slate-500'
+                  }`}>
+                    {step.status === 'active' && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 hero-pulse-dot" />}
+                    {step.status === 'done' ? 'Done' : step.status === 'active' ? 'In progress' : 'Not started'}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <button onClick={onOpenSetupGuide} className="w-full text-left px-5 py-3.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
+              → Full 8-step checklist &amp; AI drafting inside
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond the checklist */}
+      <section className="pb-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-bold mb-2">Beyond the checklist</p>
+          <h2 className="text-2xl md:text-3xl font-bold mb-8 max-w-md">Practise the judgement calls, not just the paperwork</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-transform hover:-translate-y-1 shadow-sm hover:shadow-lg flex flex-col">
+              <div className="px-5 py-4">
+                <p className="font-bold text-sm">Case simulations by industry</p>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 px-5 pb-4 border-b border-slate-200 dark:border-slate-700 leading-relaxed">
+                Realistic CDD, red-flag, and escalation scenarios — graded, with regulation-backed feedback on every answer.
+              </p>
+              <div className="grid grid-cols-2 gap-2 px-5 py-4">
+                {HERO_INDUSTRIES.map((ind) => (
+                  <div key={ind.label} className={`flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2.5 text-xs font-semibold transition-colors ${ind.soon ? 'opacity-50' : 'hover:border-blue-400 dark:hover:border-blue-500'}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${ind.soon ? 'bg-slate-400' : 'bg-emerald-500'}`} />
+                    {ind.label}
+                    {ind.soon && <span className="ml-auto text-[10px] uppercase tracking-wide text-slate-400 dark:text-slate-500">Soon</span>}
+                  </div>
+                ))}
+              </div>
+              <button onClick={onOpenTraining} className="mt-auto w-full text-left px-5 py-3.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
+                → Free for every Analyst &amp; MLRO module
+              </button>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden transition-transform hover:-translate-y-1 shadow-sm hover:shadow-lg flex flex-col">
+              <div className="flex items-center justify-between px-5 py-4">
+                <p className="font-bold text-sm">CAMS certification prep</p>
+                <p className="text-xs text-slate-400 dark:text-slate-500 font-mono">258 questions</p>
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 px-5 pb-4 border-b border-slate-200 dark:border-slate-700 leading-relaxed">
+                All four exam chapters, with worked explanations — the first 6 questions per chapter free, full bank with Premium.
+              </p>
+              <div className="py-1">
+                {HERO_CAMS_CHAPTERS.map((c) => (
+                  <div key={c.title} className="flex items-center justify-between gap-3 px-5 py-2.5 border-b border-slate-100 dark:border-slate-700/60 last:border-0 hover:bg-blue-50/60 dark:hover:bg-blue-500/5 transition-colors">
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{c.title}</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 font-mono">{c.count} questions</p>
+                    </div>
+                    <span className="text-[11px] font-bold bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-full px-2.5 py-1 whitespace-nowrap">6 free</span>
+                  </div>
+                ))}
+              </div>
+              <button onClick={onOpenTraining} className="mt-auto w-full text-left px-5 py-3.5 bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors">
+                → Sourced &amp; reviewed by a CAMS-certified professional
+              </button>
+            </div>
+
+          </div>
+
+          <div className="flex flex-wrap gap-x-10 gap-y-6 mt-14 pt-10 border-t border-slate-200 dark:border-slate-700">
+            <div>
+              <p className="text-2xl font-bold"><CountUp to={8} suffix=" steps" /></p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[22ch] leading-relaxed mt-1">From AUSTRAC enrolment to your first Suspicious Matter Report — the whole program, in order.</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold"><CountUp to={258} suffix=" Qs" /></p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[22ch] leading-relaxed mt-1">CAMS certification exam prep included, across all four exam chapters.</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold"><CountUp to={36.4} decimals={1} prefix="$" suffix="M" /></p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-[22ch] leading-relaxed mt-1">Maximum civil penalty per contravention for a company under the AML/CTF Act.</p>
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-400 dark:text-slate-500 mt-10">
             Fictional scenarios for educational purposes only. Not legal advice.
           </p>
         </div>
