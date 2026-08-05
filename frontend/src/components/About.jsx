@@ -10,7 +10,7 @@ const FEATURES = [
     desc: 'Every response is grounded in FATF 40 Recommendations, BSA requirements, EU AML Directives, and FinCEN guidance — the global regulatory standard.',
   },
   {
-    title: 'AI compliance co-pilot',
+    title: 'AI compliance assistant',
     desc: 'Ask anything — red flags, structuring, PEPs, OFAC sanctions, beneficial ownership, correspondent banking, trade-based money laundering, and more.',
   },
   {
@@ -53,7 +53,7 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
       <div className="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
         <h1 className="text-4xl font-bold mb-4">About AmlIntel</h1>
         <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">
-          An AI-powered AML compliance co-pilot and training platform for analysts, MLROs, and compliance teams —
+          An AI-powered AML compliance assistant and training platform for analysts, MLROs, and compliance teams —
           built around real regulatory frameworks, not generic AI advice.
         </p>
       </div>

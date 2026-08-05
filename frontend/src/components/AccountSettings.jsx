@@ -192,7 +192,7 @@ function SubscriptionTab({ user, onUpgrade, onManageBilling }) {
         <>
           <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-1">Current plan</p>
           <p className="text-xl font-bold text-slate-900 dark:text-white mb-1">Free</p>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Upgrade to unlock the AI compliance co-pilot.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Upgrade to unlock the AI compliance assistant.</p>
           <button
             onClick={onUpgrade}
             className="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold text-sm text-white transition-colors"
