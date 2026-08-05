@@ -106,7 +106,7 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
               </div>
               <div>
                 <p className="font-semibold text-sm text-white">Senior Compliance Officer</p>
-                <p className="text-xs text-slate-400 mt-0.5">10+ years · AML/CTF · AUSTRAC regulated entities · Financial crime investigations · FATF typologies</p>
+                <p className="text-xs text-slate-400 mt-0.5">AML/CTF · AUSTRAC regulated entities · Financial crime investigations · FATF typologies</p>
               </div>
             </div>
           </div>
@@ -114,8 +114,8 @@ export default function About({ user, onGoHome, onNavigateSection, onStart, onSi
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[
               {
-                stat: '10+',
-                label: 'Years in AML compliance',
+                stat: 'Multi-sector',
+                label: 'AML compliance experience',
                 desc: 'Front-line experience across banking, remittance, fintech, and digital asset sectors.',
               },
               {
