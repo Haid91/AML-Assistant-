@@ -86,6 +86,32 @@ create table if not exists client_risk_entries (
   updated_at timestamptz not null default now()
 );
 
+-- Multiple rows per user — synced AI Assistant chat sessions, replacing
+-- localStorage-only history so it survives clearing browser data or
+-- switching devices.
+create table if not exists chat_sessions (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  title text not null,
+  messages jsonb not null default '[]',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Append-only — a parallel history log for program_drafts/privacy_drafts,
+-- which remain one-row-per-user "current" pointers. Every successful
+-- /program-draft or /privacy-draft generation also inserts a row here so
+-- prior versions aren't lost when a draft is regenerated.
+create table if not exists document_versions (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  doc_type text not null,
+  business_name text,
+  intake jsonb not null,
+  draft_text text,
+  created_at timestamptz not null default now()
+);
+
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
@@ -102,3 +128,5 @@ alter table privacy_drafts enable row level security;
 alter table mock_exam_attempts enable row level security;
 alter table compliance_checklist enable row level security;
 alter table client_risk_entries enable row level security;
+alter table chat_sessions enable row level security;
+alter table document_versions enable row level security;

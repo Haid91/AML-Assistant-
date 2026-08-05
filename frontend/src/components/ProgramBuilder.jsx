@@ -62,6 +62,19 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
   const [hasRiskAssessment, setHasRiskAssessment] = useState(null)
   const [draft, setDraft] = useState(null)
   const [error, setError] = useState(null)
+  const [showHistory, setShowHistory] = useState(false)
+  const [versions, setVersions] = useState(null)
+  const [viewingVersion, setViewingVersion] = useState(null)
+
+  const openHistory = () => {
+    setShowHistory(true)
+    if (versions !== null) return
+    const token = localStorage.getItem('aml_token')
+    fetch(`${API_URL}/document-versions?type=program`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then((data) => setVersions(data.versions || []))
+      .catch(() => setVersions([]))
+  }
 
   useEffect(() => {
     if (!user?.premium) {
@@ -120,6 +133,9 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
       }
       setDraft(data.draft)
       setPhase('result')
+      setVersions(null)
+      setViewingVersion(null)
+      setShowHistory(false)
     } catch {
       setError('Network error. Please check your connection and try again.')
       setPhase('form')
@@ -214,13 +230,24 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
             </p>
           </div>
 
+          {viewingVersion && (
+            <div className="print:hidden bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-2xl px-5 py-3 mb-6 flex items-center justify-between gap-4 flex-wrap">
+              <p className="text-sm text-blue-700 dark:text-blue-300">
+                Viewing an older version from {new Date(viewingVersion.createdAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
+              </p>
+              <button onClick={() => setViewingVersion(null)} className="text-sm font-semibold text-blue-700 dark:text-blue-300 underline hover:no-underline">
+                Back to current →
+              </button>
+            </div>
+          )}
+
           <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 md:p-8 mb-6">
-            <pre className="whitespace-pre-wrap font-sans text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{draft.draftText}</pre>
+            <pre className="whitespace-pre-wrap font-sans text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{(viewingVersion || draft).draftText}</pre>
           </div>
 
-          <div className="print:hidden flex flex-wrap gap-3">
+          <div className="print:hidden flex flex-wrap gap-3 mb-8">
             <button
-              onClick={() => navigator.clipboard?.writeText(draft.draftText)}
+              onClick={() => navigator.clipboard?.writeText((viewingVersion || draft).draftText)}
               className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
             >
               Copy to clipboard
@@ -237,7 +264,40 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
             >
               Regenerate
             </button>
+            <button
+              onClick={openHistory}
+              className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
+            >
+              Version history
+            </button>
           </div>
+
+          {showHistory && (
+            <div className="print:hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 mb-8">
+              <p className="font-semibold text-sm mb-4">Version history</p>
+              {versions === null ? (
+                <p className="text-sm text-slate-400 dark:text-slate-500">Loading…</p>
+              ) : versions.length === 0 ? (
+                <p className="text-sm text-slate-400 dark:text-slate-500">No earlier versions yet — this is your first draft.</p>
+              ) : (
+                <div className="space-y-2">
+                  {versions.map((v) => (
+                    <div key={v.id} className="flex items-center justify-between gap-4 px-4 py-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                      <div>
+                        <p className="text-sm font-medium">{v.businessName || 'Untitled'}</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          {new Date(v.createdAt).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                        </p>
+                      </div>
+                      <button onClick={() => setViewingVersion(v)} className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 shrink-0">
+                        View →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {draft.intake?.industry === 'accountant' && (
             <div className="print:hidden mt-8 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

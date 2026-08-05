@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -120,6 +120,16 @@ const complianceLimiter = rateLimit({
 const clientRegisterLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   limit: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
+
+// Higher limit than other CRUD limiters — a single conversation can fire a
+// PUT after every exchange, so normal chat use can rack up many requests.
+const chatSessionLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down and try again shortly.' },
@@ -815,6 +825,7 @@ app.post('/program-draft', programDraftLimiter, asyncRoute(async (req, res) => {
 
     const businessName = intake.businessName || null
     await saveProgramDraft({ id: crypto.randomUUID(), userId: user.id, businessName, intake, draftText })
+    await createDocumentVersion({ id: crypto.randomUUID(), userId: user.id, docType: 'program', businessName, intake, draftText })
     res.json({ draft: { businessName, intake, draftText } })
   } catch (err) {
     console.error('Claude API error (program draft):', err.message)
@@ -862,6 +873,7 @@ app.post('/privacy-draft', programDraftLimiter, asyncRoute(async (req, res) => {
 
     const businessName = intake.businessName || null
     await savePrivacyDraft({ id: crypto.randomUUID(), userId: user.id, businessName, intake, draftText })
+    await createDocumentVersion({ id: crypto.randomUUID(), userId: user.id, docType: 'privacy', businessName, intake, draftText })
     res.json({ draft: { businessName, intake, draftText } })
   } catch (err) {
     console.error('Claude API error (privacy draft):', err.message)
@@ -1017,6 +1029,65 @@ app.delete('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (
   const deleted = await deleteClientRiskEntry(req.params.id, user.id)
   if (!deleted) return res.status(404).json({ error: 'Entry not found' })
   res.json({ ok: true })
+}))
+
+// ── Chat session sync ───────────────────────────────────────────────────────
+app.get('/chat-sessions', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const sessions = await getChatSessions(user.id)
+  res.json({ sessions })
+}))
+
+app.post('/chat-sessions', chatSessionLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const { id, title, messages } = req.body || {}
+  if (!title || typeof title !== 'string') return res.status(400).json({ error: 'title is required' })
+  if (messages != null && !Array.isArray(messages)) return res.status(400).json({ error: 'messages must be an array' })
+
+  const session = await createChatSession({ id: id && UUID_RE.test(id) ? id : crypto.randomUUID(), userId: user.id, title, messages })
+  res.json({ session })
+}))
+
+app.put('/chat-sessions/:id', chatSessionLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const { title, messages } = req.body || {}
+  if (title != null && typeof title !== 'string') return res.status(400).json({ error: 'Invalid title' })
+  if (messages != null && !Array.isArray(messages)) return res.status(400).json({ error: 'messages must be an array' })
+
+  const session = await updateChatSession({ id: req.params.id, userId: user.id, title: title ?? null, messages: messages ?? null })
+  if (!session) return res.status(404).json({ error: 'Session not found' })
+  res.json({ session })
+}))
+
+app.delete('/chat-sessions/:id', chatSessionLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const deleted = await deleteChatSession(req.params.id, user.id)
+  if (!deleted) return res.status(404).json({ error: 'Session not found' })
+  res.json({ ok: true })
+}))
+
+// ── Document version history ───────────────────────────────────────────────────
+app.get('/document-versions', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const docType = req.query.type
+  if (docType !== 'program' && docType !== 'privacy') return res.status(400).json({ error: 'Invalid type — expected "program" or "privacy"' })
+
+  const versions = await getDocumentVersions(user.id, docType)
+  res.json({ versions })
 }))
 
 // ── Cost estimate email ───────────────────────────────────────────────────────

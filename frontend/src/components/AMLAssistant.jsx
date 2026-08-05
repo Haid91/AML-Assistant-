@@ -93,6 +93,7 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
 
   const currentSession = sessions.find((s) => s.id === currentId) || sessions[0]
   const messages = currentSession?.messages || []
+  const syncedRef = useRef(false)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -102,14 +103,66 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
     localStorage.setItem(storageKey, JSON.stringify(sessions))
   }, [sessions])
 
+  // One-time sync with the backend on mount: if this account already has
+  // synced history, it becomes the source of truth (replaces whatever's in
+  // this browser's localStorage). If the backend has nothing yet, upload the
+  // existing local sessions once so nobody's history is silently dropped —
+  // after that, every mutation below keeps both in sync going forward.
+  useEffect(() => {
+    if (!user?.id) return
+    const token = localStorage.getItem('aml_token')
+    fetch(`${API_URL}/chat-sessions`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => res.json())
+      .then(async (data) => {
+        const remote = data.sessions || []
+        if (remote.length > 0) {
+          setSessions(remote)
+          setCurrentId(remote[0].id)
+        } else {
+          for (const s of sessions) {
+            if (s.messages.length === 0) continue
+            await fetch(`${API_URL}/chat-sessions`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+              body: JSON.stringify({ id: s.id, title: s.title, messages: s.messages }),
+            }).catch(() => {})
+          }
+        }
+        syncedRef.current = true
+      })
+      .catch(() => { syncedRef.current = true })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id])
+
   if (!user?.premium) {
     return <PremiumGate onBack={onGoHome} onSignOut={onSignOut} onUpgrade={onUpgrade} />
   }
 
+  const syncSession = async (id, title, msgs) => {
+    const token = localStorage.getItem('aml_token')
+    const res = await fetch(`${API_URL}/chat-sessions/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ title, messages: msgs }),
+    }).catch(() => null)
+    // Session doesn't exist on the backend yet (created locally before the
+    // initial sync resolved) — create it instead of silently dropping the update.
+    if (res && res.status === 404) {
+      await fetch(`${API_URL}/chat-sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ id, title, messages: msgs }),
+      }).catch(() => {})
+    }
+  }
+
   const updateSession = (id, msgs) => {
+    const session = sessions.find((s) => s.id === id)
+    const newTitle = session ? sessionTitle({ ...session, messages: msgs }) : 'New Chat'
     setSessions((prev) =>
-      prev.map((s) => s.id === id ? { ...s, messages: msgs, title: sessionTitle({ ...s, messages: msgs }) } : s)
+      prev.map((s) => (s.id === id ? { ...s, messages: msgs, title: newTitle } : s))
     )
+    if (syncedRef.current) syncSession(id, newTitle, msgs)
   }
 
   const sendToAPI = async (text, msgs, sessionId) => {
@@ -175,6 +228,10 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
       if (id === currentId) setCurrentId(next[0].id)
       return next
     })
+    if (syncedRef.current) {
+      const token = localStorage.getItem('aml_token')
+      fetch(`${API_URL}/chat-sessions/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } }).catch(() => {})
+    }
   }
 
   const roleLabel = user?.role === 'mlro' ? 'MLRO Mode' : 'Analyst Mode'

@@ -168,6 +168,60 @@ export async function deleteClientRiskEntry(id, userId) {
   return rowCount > 0
 }
 
+const CHAT_SESSION_COLUMNS = `id, title, messages, created_at AS "createdAt", updated_at AS "updatedAt"`
+
+export async function getChatSessions(userId) {
+  const { rows } = await pool.query(
+    `SELECT ${CHAT_SESSION_COLUMNS} FROM chat_sessions WHERE user_id = $1 ORDER BY updated_at DESC`,
+    [userId]
+  )
+  return rows
+}
+
+export async function createChatSession({ id, userId, title, messages }) {
+  const { rows } = await pool.query(
+    `INSERT INTO chat_sessions (id, user_id, title, messages) VALUES ($1, $2, $3, $4) RETURNING ${CHAT_SESSION_COLUMNS}`,
+    [id, userId, title, JSON.stringify(messages || [])]
+  )
+  return rows[0]
+}
+
+export async function updateChatSession({ id, userId, title, messages }) {
+  const { rows } = await pool.query(
+    `UPDATE chat_sessions SET
+       title = COALESCE($3, title),
+       messages = COALESCE($4, messages),
+       updated_at = now()
+     WHERE id = $1 AND user_id = $2
+     RETURNING ${CHAT_SESSION_COLUMNS}`,
+    [id, userId, title ?? null, messages ? JSON.stringify(messages) : null]
+  )
+  return rows[0] || null
+}
+
+export async function deleteChatSession(id, userId) {
+  const { rowCount } = await pool.query(
+    'DELETE FROM chat_sessions WHERE id = $1 AND user_id = $2',
+    [id, userId]
+  )
+  return rowCount > 0
+}
+
+export async function createDocumentVersion({ id, userId, docType, businessName, intake, draftText }) {
+  await pool.query(
+    'INSERT INTO document_versions (id, user_id, doc_type, business_name, intake, draft_text) VALUES ($1, $2, $3, $4, $5, $6)',
+    [id, userId, docType, businessName ?? null, intake, draftText ?? null]
+  )
+}
+
+export async function getDocumentVersions(userId, docType, limit = 20) {
+  const { rows } = await pool.query(
+    'SELECT id, business_name AS "businessName", intake, draft_text AS "draftText", created_at AS "createdAt" FROM document_versions WHERE user_id = $1 AND doc_type = $2 ORDER BY created_at DESC LIMIT $3',
+    [userId, docType, limit]
+  )
+  return rows
+}
+
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
   await pool.query(
     'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',
