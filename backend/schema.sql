@@ -65,6 +65,27 @@ create table if not exists compliance_checklist (
   updated_at timestamptz not null default now()
 );
 
+-- Multiple rows per user — an ongoing client risk-tracking register.
+-- Deliberately metadata-only: no fields for names, DOB, ID numbers, or
+-- addresses, so AmlIntel never becomes a holder of its subscribers'
+-- clients' identifying CDD data. reference_label is free text the
+-- business chooses (a matter number, initials, whatever they're
+-- comfortable with) — the UI warns against entering identity documents.
+create table if not exists client_risk_entries (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  reference_label text not null,
+  risk_rating text not null,
+  cdd_type text not null,
+  onboarded_date date,
+  last_review_date date,
+  next_review_date date,
+  status text not null default 'active',
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
@@ -80,3 +101,4 @@ alter table sessions enable row level security;
 alter table privacy_drafts enable row level security;
 alter table mock_exam_attempts enable row level security;
 alter table compliance_checklist enable row level security;
+alter table client_risk_entries enable row level security;

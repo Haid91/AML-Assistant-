@@ -121,6 +121,53 @@ export async function saveComplianceChecklist({ id, userId, programReviewDate, i
   )
 }
 
+const CLIENT_RISK_ENTRY_COLUMNS = `id, reference_label AS "referenceLabel", risk_rating AS "riskRating", cdd_type AS "cddType", onboarded_date AS "onboardedDate", last_review_date AS "lastReviewDate", next_review_date AS "nextReviewDate", status, notes, created_at AS "createdAt", updated_at AS "updatedAt"`
+
+export async function getClientRiskEntries(userId) {
+  const { rows } = await pool.query(
+    `SELECT ${CLIENT_RISK_ENTRY_COLUMNS} FROM client_risk_entries WHERE user_id = $1 ORDER BY next_review_date ASC NULLS LAST, created_at DESC`,
+    [userId]
+  )
+  return rows
+}
+
+export async function createClientRiskEntry({ id, userId, referenceLabel, riskRating, cddType, onboardedDate, nextReviewDate, notes }) {
+  const { rows } = await pool.query(
+    `INSERT INTO client_risk_entries (id, user_id, reference_label, risk_rating, cdd_type, onboarded_date, next_review_date, notes)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     RETURNING ${CLIENT_RISK_ENTRY_COLUMNS}`,
+    [id, userId, referenceLabel, riskRating, cddType, onboardedDate ?? null, nextReviewDate ?? null, notes ?? null]
+  )
+  return rows[0]
+}
+
+export async function updateClientRiskEntry({ id, userId, referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, notes }) {
+  const { rows } = await pool.query(
+    `UPDATE client_risk_entries SET
+       reference_label = COALESCE($3, reference_label),
+       risk_rating = COALESCE($4, risk_rating),
+       cdd_type = COALESCE($5, cdd_type),
+       onboarded_date = COALESCE($6, onboarded_date),
+       last_review_date = COALESCE($7, last_review_date),
+       next_review_date = COALESCE($8, next_review_date),
+       status = COALESCE($9, status),
+       notes = COALESCE($10, notes),
+       updated_at = now()
+     WHERE id = $1 AND user_id = $2
+     RETURNING ${CLIENT_RISK_ENTRY_COLUMNS}`,
+    [id, userId, referenceLabel ?? null, riskRating ?? null, cddType ?? null, onboardedDate ?? null, lastReviewDate ?? null, nextReviewDate ?? null, status ?? null, notes ?? null]
+  )
+  return rows[0] || null
+}
+
+export async function deleteClientRiskEntry(id, userId) {
+  const { rowCount } = await pool.query(
+    'DELETE FROM client_risk_entries WHERE id = $1 AND user_id = $2',
+    [id, userId]
+  )
+  return rowCount > 0
+}
+
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
   await pool.query(
     'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',

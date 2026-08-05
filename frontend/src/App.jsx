@@ -25,6 +25,7 @@ import ProgramBuilder from './components/ProgramBuilder'
 import PrivacyReadinessCheck from './components/PrivacyReadinessCheck'
 import PrivacyPack from './components/PrivacyPack'
 import ComplianceCalendar from './components/ComplianceCalendar'
+import ClientRiskRegister from './components/ClientRiskRegister'
 import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
@@ -210,6 +211,7 @@ function App() {
     onOpenPrivacyCheck: () => setView('privacyCheck'),
     onOpenPrivacyPack: (payload) => { setPrivacyPackPrefill(payload || null); setView('privacyPack') },
     onOpenComplianceCalendar: () => setView('complianceCalendar'),
+    onOpenClientRiskRegister: () => setView('clientRiskRegister'),
   }
 
   if (view === 'signin') {
@@ -376,6 +378,16 @@ function App() {
   if (view === 'complianceCalendar') {
     return (
       <ComplianceCalendar
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'clientRiskRegister') {
+    return (
+      <ClientRiskRegister
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}

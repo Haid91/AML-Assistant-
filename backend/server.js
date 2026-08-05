@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -112,6 +112,14 @@ const mockExamLimiter = rateLimit({
 const complianceLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
+
+const clientRegisterLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 60,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down and try again shortly.' },
@@ -927,6 +935,82 @@ app.post('/compliance-checklist', complianceLimiter, asyncRoute(async (req, res)
   })
   const checklist = await getComplianceChecklist(user.id)
   res.json({ checklist })
+}))
+
+// ── Client risk register ───────────────────────────────────────────────────────
+const RISK_RATINGS = new Set(['low', 'medium', 'high'])
+const CDD_TYPES = new Set(['standard', 'edd'])
+const ENTRY_STATUSES = new Set(['active', 'offboarded'])
+
+function validateClientRiskFields(body, { requireCore }) {
+  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status } = body || {}
+  if (requireCore) {
+    if (!referenceLabel || typeof referenceLabel !== 'string' || !referenceLabel.trim()) return 'referenceLabel is required'
+    if (!riskRating || !RISK_RATINGS.has(riskRating)) return 'Invalid riskRating'
+    if (!cddType || !CDD_TYPES.has(cddType)) return 'Invalid cddType'
+  } else {
+    if (riskRating != null && !RISK_RATINGS.has(riskRating)) return 'Invalid riskRating'
+    if (cddType != null && !CDD_TYPES.has(cddType)) return 'Invalid cddType'
+    if (referenceLabel != null && (typeof referenceLabel !== 'string' || !referenceLabel.trim())) return 'Invalid referenceLabel'
+  }
+  if (status != null && !ENTRY_STATUSES.has(status)) return 'Invalid status'
+  for (const [name, value] of Object.entries({ onboardedDate, lastReviewDate, nextReviewDate })) {
+    if (value != null && !ISO_DATE_RE.test(value)) return `Invalid date for ${name}`
+  }
+  return null
+}
+
+app.get('/client-risk-entries', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const entries = await getClientRiskEntries(user.id)
+  res.json({ entries })
+}))
+
+app.post('/client-risk-entries', clientRegisterLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const err = validateClientRiskFields(req.body, { requireCore: true })
+  if (err) return res.status(400).json({ error: err })
+
+  const { referenceLabel, riskRating, cddType, onboardedDate, nextReviewDate, notes } = req.body
+  const entry = await createClientRiskEntry({
+    id: crypto.randomUUID(), userId: user.id, referenceLabel: referenceLabel.trim(), riskRating, cddType,
+    onboardedDate: onboardedDate ?? null, nextReviewDate: nextReviewDate ?? null, notes: notes ?? null,
+  })
+  res.json({ entry })
+}))
+
+app.put('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const err = validateClientRiskFields(req.body, { requireCore: false })
+  if (err) return res.status(400).json({ error: err })
+
+  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, notes } = req.body || {}
+  const entry = await updateClientRiskEntry({
+    id: req.params.id, userId: user.id,
+    referenceLabel: referenceLabel?.trim() ?? null, riskRating: riskRating ?? null, cddType: cddType ?? null,
+    onboardedDate: onboardedDate ?? null, lastReviewDate: lastReviewDate ?? null, nextReviewDate: nextReviewDate ?? null,
+    status: status ?? null, notes: notes ?? null,
+  })
+  if (!entry) return res.status(404).json({ error: 'Entry not found' })
+  res.json({ entry })
+}))
+
+app.delete('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const deleted = await deleteClientRiskEntry(req.params.id, user.id)
+  if (!deleted) return res.status(404).json({ error: 'Entry not found' })
+  res.json({ ok: true })
 }))
 
 // ── Cost estimate email ───────────────────────────────────────────────────────
