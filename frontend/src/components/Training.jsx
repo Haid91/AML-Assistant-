@@ -1254,6 +1254,168 @@ const INDUSTRY_LABELS = {
   accountant: 'Accountant / TCSPs',
 }
 
+export const INDUCTION_MODULES = [
+  {
+    id: 'induction1', number: 'Module 1',
+    title: 'Staff AML/CTF Induction',
+    tags: ['Induction'], sector: 'Induction', premium: true,
+    shortDesc: 'A short awareness course for your own staff — what money laundering is, spotting red flags in day-to-day work, who to escalate to, and the tipping-off rule. Not analyst-level casework.',
+    fullScenario: `STAFF AML/CTF INDUCTION\n\n15 short questions covering the basics every employee needs to know:\n• What money laundering is and why the business is regulated\n• Recognising red flags in everyday client interactions\n• Who to escalate a concern to internally\n• The tipping-off prohibition\n• Why identity checks can't be skipped, even for familiar clients`,
+    steps: [
+      {
+        id: 1, title: 'What Is Money Laundering?',
+        question: 'In simple terms, what is money laundering?',
+        options: [
+          { text: 'Making money that came from crime look like it came from a legitimate source', correct: true, feedback: "Correct. That's the whole point of money laundering — disguising the criminal origin of funds so they can be used freely without drawing attention." },
+          { text: 'Any large cash transaction over $10,000', correct: false, feedback: "A large cash transaction can be part of money laundering, but the amount alone doesn't define it — it's about disguising the criminal source of funds, of any size." },
+          { text: 'A type of tax avoidance', correct: false, feedback: 'Money laundering and tax evasion are different things, though they can overlap. Laundering is specifically about disguising the origin of criminal proceeds.' },
+          { text: "Something that only happens in banks, not in our industry", correct: false, feedback: "Money launderers deliberately target businesses across many industries — including ours — precisely because they're not always the first place people expect scrutiny." },
+        ],
+      },
+      {
+        id: 2, title: 'Why Are We Regulated?',
+        question: 'Why has our business recently become subject to AML/CTF obligations?',
+        options: [
+          { text: "The Tranche 2 reforms extended AML/CTF law to our sector because it can be used, knowingly or not, to move or hide criminal funds", correct: true, feedback: 'Correct. The reforms captured lawyers, accountants, real estate agents, trust and company service providers, and precious metals dealers because these services can be misused for laundering if there are no checks in place.' },
+          { text: 'Because our business has been suspected of wrongdoing', correct: false, feedback: "Being a regulated entity isn't an accusation — the whole sector was brought into scope because of the type of services provided, not because of any specific suspicion about us." },
+          { text: "It's optional guidance, not a legal requirement", correct: false, feedback: 'These are legal obligations under the AML/CTF Act, not optional guidance — non-compliance carries real penalties.' },
+          { text: 'Only large firms need to comply, not smaller ones', correct: false, feedback: 'AML/CTF obligations apply regardless of business size once you provide a designated service — there is no small-business exemption from the AML/CTF Act itself.' },
+        ],
+      },
+      {
+        id: 3, title: 'Spotting Red Flags',
+        question: 'A client seems unusually keen to complete a transaction quickly and avoid providing documentation. What should you do?',
+        options: [
+          { text: "Note what happened and raise it with your AML/CTF Compliance Officer or manager, rather than deciding yourself whether it's a problem", correct: true, feedback: "Correct. It's not your job to decide whether something is suspicious enough to report — that's what the Compliance Officer assesses. Your job is to notice unusual behaviour and escalate it." },
+          { text: 'Proceed as normal — it\'s not your place to question a client', correct: false, feedback: "Unusual urgency and reluctance to provide documentation are common red flags. Staying quiet because it feels awkward is exactly how genuine concerns go unreported." },
+          { text: "Refuse to serve the client immediately", correct: false, feedback: "You're not expected to make that call on the spot. Escalate internally so someone trained to assess it can decide what happens next." },
+          { text: "Ask the client directly whether they're doing something illegal", correct: false, feedback: 'Confronting a client directly can tip them off and is not your role — escalate internally instead.' },
+        ],
+      },
+      {
+        id: 4, title: 'Who To Escalate To',
+        question: 'You notice something that doesn\'t sit right about a transaction. Who should you tell?',
+        options: [
+          { text: 'Your AML/CTF Compliance Officer or MLRO, following the business\'s internal escalation process', correct: true, feedback: "Correct. Every regulated business has a designated Compliance Officer whose job includes assessing staff concerns and deciding whether a report to AUSTRAC is required." },
+          { text: 'The client, so they can explain themselves', correct: false, feedback: "Never raise a concern directly with the client — that risks tipping them off, which is a separate legal problem." },
+          { text: 'Nobody, unless you are completely certain something illegal happened', correct: false, feedback: 'You never need to be certain — reasonable grounds for suspicion is the standard, and it\'s the Compliance Officer\'s job to make that assessment, not yours.' },
+          { text: 'Post about it on social media to warn others', correct: false, feedback: 'This would be a serious breach of confidentiality and could itself be unlawful. Internal escalation only.' },
+        ],
+      },
+      {
+        id: 5, title: 'The Tipping-Off Rule',
+        question: 'A colleague tells a client, "Don\'t worry, we haven\'t reported you to AUSTRAC." Is this a problem?',
+        options: [
+          { text: "Yes — telling someone they have or haven't been reported can breach the tipping-off prohibition, whichever way it's phrased", correct: true, feedback: "Correct. The tipping-off prohibition makes it an offence to disclose that a suspicion exists or that a report has been made — even indirectly, and even when reassuring someone they haven't been reported." },
+          { text: "No, it's fine as long as it's true", correct: false, feedback: "Truthfulness isn't the issue — even confirming that no report was made can reveal that reporting was considered, which the tipping-off rule is designed to prevent." },
+          { text: 'It\'s only a problem if a report was actually filed', correct: false, feedback: "The prohibition covers more than confirmed reports — discussing the existence or absence of a suspicion with a client at all is the risk, regardless of the outcome." },
+          { text: "It's fine between colleagues, just not with outsiders", correct: false, feedback: "This scenario is a colleague speaking directly to the client — exactly the situation the tipping-off rule is meant to prevent." },
+        ],
+      },
+      {
+        id: 6, title: 'Why We Collect ID',
+        question: "Why do we need to verify identity for every client, even ones we've worked with for years?",
+        options: [
+          { text: 'Customer due diligence is an ongoing legal obligation, not a one-off box to tick — and criminals sometimes target long-standing, trusted relationships precisely because checks get relaxed', correct: true, feedback: "Correct. Familiarity is exactly what some launderers exploit. AML/CTF obligations apply to the relationship on an ongoing basis, not just at onboarding." },
+          { text: 'Only new clients need to be verified', correct: false, feedback: 'Ongoing due diligence applies throughout the relationship, not just at the start — client circumstances and risk can change over time.' },
+          { text: "It's just internal paperwork with no legal basis", correct: false, feedback: 'Customer due diligence is a specific legal requirement under the AML/CTF Act, not internal process for its own sake.' },
+          { text: 'Only for clients who seem suspicious', correct: false, feedback: 'Due diligence applies to all clients by default — you check first, rather than only checking the ones who already look suspicious.' },
+        ],
+      },
+      {
+        id: 7, title: 'Skipping Verification',
+        question: 'A regular, valued client is in a hurry and asks you to skip the usual ID verification "just this once." What should you do?',
+        options: [
+          { text: 'Politely explain that verification is a legal requirement you can\'t skip, and if they push back, escalate to your Compliance Officer', correct: true, feedback: "Correct. Pressure to skip identification is itself a red flag worth escalating, not just a client being impatient." },
+          { text: "Make an exception since they're a trusted, long-term client", correct: false, feedback: "This is exactly the kind of pressure that should make you more cautious, not less — trusted relationships are a common target for exploitation." },
+          { text: 'Do it, but make a mental note to verify later', correct: false, feedback: 'Verification needs to happen before or as part of the transaction, not as an afterthought — and "mental notes" aren\'t a compliant record.' },
+          { text: "Ask a colleague to approve skipping it instead of you", correct: false, feedback: "Passing the decision to a colleague doesn't remove the legal requirement — the right step is escalating to the Compliance Officer, not finding someone else to sign off." },
+        ],
+      },
+      {
+        id: 8, title: 'Cash Red Flags',
+        question: 'Which of these is a common red flag involving cash?',
+        options: [
+          { text: 'A client makes several cash payments just under a reporting threshold in a short period', correct: true, feedback: "Correct. This pattern — called structuring — is a classic red flag, since it looks like a deliberate attempt to stay under a reporting threshold." },
+          { text: 'A client pays a small amount in cash for a routine, low-value purchase', correct: false, feedback: 'Small, ordinary cash payments for everyday transactions are normal and not inherently suspicious.' },
+          { text: 'A client uses cash because they don\'t have a bank account', correct: false, feedback: "This alone isn't a red flag — plenty of legitimate reasons exist for someone to be unbanked. It's patterns like structuring, not cash use itself, that raise concern." },
+          { text: 'A client asks for a receipt', correct: false, feedback: 'Asking for a receipt is completely normal and not a red flag at all.' },
+        ],
+      },
+      {
+        id: 9, title: 'Source of Funds',
+        question: "A client's explanation for where a large sum of money came from doesn't match what you'd expect given what you know about them. What's the concern?",
+        options: [
+          { text: 'An implausible or inconsistent explanation for the source of funds is a recognised red flag worth escalating', correct: true, feedback: "Correct. You don't need to prove anything — noticing that an explanation doesn't add up and raising it is enough. Let the Compliance Officer assess it further." },
+          { text: 'Nothing — it\'s rude to question how someone got their money', correct: false, feedback: "Understanding the source of funds is a normal, expected part of due diligence — it's not about being rude, it's a legal obligation." },
+          { text: 'You should demand bank statements on the spot to verify it yourself', correct: false, feedback: 'That\'s not your role — escalate the concern rather than trying to investigate or verify it yourself.' },
+          { text: 'It only matters for transactions over $1 million', correct: false, feedback: "There's no dollar threshold for noticing an implausible explanation — concerns can arise at any transaction size." },
+        ],
+      },
+      {
+        id: 10, title: 'Whose Responsibility?',
+        question: 'Whose job is AML/CTF compliance in the business?',
+        options: [
+          { text: 'Everyone\'s — the Compliance Officer coordinates the program, but every staff member is expected to notice red flags and escalate them', correct: true, feedback: "Correct. AML/CTF compliance only works if everyone who deals with clients plays their part in noticing and escalating concerns — it's not solely the Compliance Officer's job to catch everything alone." },
+          { text: 'Only the Compliance Officer — everyone else can ignore it', correct: false, feedback: 'The Compliance Officer coordinates the program and makes reporting decisions, but relies on all staff to notice and escalate concerns in the first place.' },
+          { text: 'Only senior management', correct: false, feedback: 'Front-line staff are often best placed to notice red flags since they interact directly with clients — responsibility isn\'t limited to management.' },
+          { text: 'Only staff who work directly with cash', correct: false, feedback: 'Red flags can show up in many forms, not just cash handling — document requests, urgency, evasiveness, and more all matter.' },
+        ],
+      },
+      {
+        id: 11, title: 'What Is an SMR?',
+        question: "You've heard of a 'Suspicious Matter Report' or SMR. Do general staff need to file these themselves?",
+        options: [
+          { text: 'No — staff escalate concerns internally, and the Compliance Officer decides whether to file an SMR with AUSTRAC', correct: true, feedback: "Correct. An SMR is a formal report the business files with AUSTRAC when there are reasonable grounds for suspicion. That decision and filing sits with the Compliance Officer, not individual staff." },
+          { text: "Yes — any staff member who suspects something must file an SMR directly with AUSTRAC themselves", correct: false, feedback: 'Filing is centralised through the Compliance Officer, not done individually by whoever noticed the concern — your job is to escalate internally.' },
+          { text: 'SMRs are only for banks, not our industry', correct: false, feedback: 'Any AML/CTF reporting entity, including ours, can be required to file an SMR when the suspicion threshold is met.' },
+          { text: 'SMRs are optional paperwork with no real deadline', correct: false, feedback: 'SMRs have strict statutory filing deadlines once a suspicion is formed — they are a serious legal obligation, not optional paperwork.' },
+        ],
+      },
+      {
+        id: 12, title: 'Small, Unusual Patterns',
+        question: 'You notice something small and unusual about a transaction, but it seems minor. Should you mention it?',
+        options: [
+          { text: "Yes — raise it anyway. It's the Compliance Officer's role to judge whether small details add up to something significant, not yours to filter out in advance", correct: true, feedback: "Correct. Individually minor details can form part of a bigger pattern the Compliance Officer can see across multiple clients or transactions that you can't." },
+          { text: "No — only report things you're completely sure about", correct: false, feedback: "Waiting for certainty means genuine concerns often go unreported. The threshold is reasonable grounds for suspicion, not certainty." },
+          { text: "Only mention it if it happens more than five times", correct: false, feedback: "There's no minimum number of occurrences — a single unusual detail is worth raising if it doesn't sit right." },
+          { text: 'Keep a private list and only report it if you get formally asked', correct: false, feedback: 'Concerns should be escalated when noticed, not held back until someone asks — timely escalation matters because reporting deadlines can be short.' },
+        ],
+      },
+      {
+        id: 13, title: 'Consequences of Non-Compliance',
+        question: 'What is a realistic consequence of ignoring AML/CTF procedures at work?',
+        options: [
+          { text: 'Both the business and, in some cases, individuals can face serious civil penalties, and the business could unknowingly facilitate real crime', correct: true, feedback: 'Correct. AML/CTF non-compliance carries real regulatory and reputational consequences for the business, and in serious cases individual accountability too — beyond the human cost of enabling actual crime.' },
+          { text: 'Nothing serious — it\'s just a formality', correct: false, feedback: "AML/CTF obligations are backed by real civil penalties and enforcement action, not just formalities." },
+          { text: 'Only the Compliance Officer would ever be at risk', correct: false, feedback: 'While the Compliance Officer holds specific accountability, the business itself and, depending on the circumstances, individual staff can also face consequences.' },
+          { text: 'It would only matter if a regulator happened to audit us that year', correct: false, feedback: "Obligations apply continuously, not just when you might get audited — and the real-world harm of enabling crime doesn't depend on whether you get caught." },
+        ],
+      },
+      {
+        id: 14, title: 'Staying Alert, Not Suspicious of Everyone',
+        question: 'Does AML/CTF awareness mean treating every client as a potential criminal?',
+        options: [
+          { text: 'No — it means staying alert to specific red flags and unusual patterns, not treating every client with suspicion by default', correct: true, feedback: "Correct. The overwhelming majority of clients are entirely legitimate. AML/CTF awareness is about recognising specific warning signs when they appear, not blanket suspicion." },
+          { text: "Yes — you should assume every client might be a criminal", correct: false, feedback: "That's not the intent, and it would also make the business impossible to run. The goal is targeted awareness of genuine red flags, not blanket distrust." },
+          { text: 'Only clients from certain countries need extra scrutiny', correct: false, feedback: "Red flags are about behaviour and transaction patterns, not making assumptions based on where someone is from." },
+          { text: 'Only cash clients need to be watched', correct: false, feedback: 'Red flags can appear in any type of transaction, not just cash-based ones.' },
+        ],
+      },
+      {
+        id: 15, title: 'Refresher Training',
+        question: 'Why does the business run AML/CTF training more than once, instead of just at induction?',
+        options: [
+          { text: 'Regulations, risks, and typologies change over time, and refresher training keeps awareness current rather than letting it fade', correct: true, feedback: "Correct. AUSTRAC expects ongoing, regular training — not a single induction session — because red flags and criminal methods evolve, and awareness naturally fades without reinforcement." },
+          { text: "It doesn't — one induction session is legally sufficient forever", correct: false, feedback: "AUSTRAC guidance expects regular, ongoing training appropriate to role and risk — a single one-off induction isn't treated as sufficient on its own." },
+          { text: 'Only new starters ever need training', correct: false, feedback: 'Existing staff need refreshers too, not just new starters — obligations and typologies change, and awareness fades over time without reinforcement.' },
+          { text: 'It\'s just a formality with no real regulatory expectation', correct: false, feedback: 'Ongoing training is a genuine, expected part of an effective AML/CTF program, not a box-ticking formality.' },
+        ],
+      },
+    ],
+  },
+]
+
 export const CAMS_MODULES = [
   {
     id: 'cams1', number: 'Chapter 1', isExam: true,
@@ -4045,6 +4207,7 @@ const TAG_STYLE = {
   'In Progress': 'bg-blue-100 text-blue-700 border border-blue-200',
   Completed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
   'Free Preview': 'bg-violet-100 text-violet-600 border border-violet-200',
+  Induction: 'bg-teal-100 text-teal-700 border border-teal-200',
 }
 
 const CAMS_FREE_QUESTIONS = 6
@@ -4074,7 +4237,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
   const [activeIndustry, setActiveIndustry] = useState(user?.industry || 'banking')
   const caseset = CASES_BY_INDUSTRY[activeIndustry] || CASES_BY_INDUSTRY.banking
-  const cases = activeRole === 'cams' ? CAMS_MODULES : activeRole === 'mlro' ? caseset.mlro : activeRole === 'simulations' ? [] : caseset.analyst
+  const cases = activeRole === 'cams' ? CAMS_MODULES : activeRole === 'induction' ? INDUCTION_MODULES : activeRole === 'mlro' ? caseset.mlro : activeRole === 'simulations' ? [] : caseset.analyst
 
   const handleIndustryChange = (ind) => {
     setActiveIndustry(ind)
@@ -4332,6 +4495,8 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
               {activeRole === 'simulations'
                 ? 'AML Simulations'
+                : activeRole === 'induction'
+                ? 'Staff Induction'
                 : (activeRole === 'mlro' ? 'MLRO' : activeRole === 'cams' ? 'CAMS Certification Prep' : 'Analyst') + ' Training Modules'}
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
@@ -4339,6 +4504,8 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
                 ? 'Review escalated cases from analysts. Sign off, send back with conditions, or escalate to SAR / DAML.'
                 : activeRole === 'cams'
                 ? `Genuine, exam-style questions sourced from real CAMS exam question banks and reviewed by a CAMS-certified AML professional. Free plan: the first ${CAMS_FREE_QUESTIONS} questions per chapter — Premium unlocks every remaining question in every chapter.`
+                : activeRole === 'induction'
+                ? 'A short awareness course for your own staff — general AML/CTF basics, not analyst-level casework. Useful for onboarding new hires and periodic refreshers.'
                 : activeRole === 'simulations'
                 ? 'Gamified mini-games to sharpen specific AML skills.'
                 : 'Investigative training for AML case analysis and decision-making.'}
@@ -4387,6 +4554,19 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               CAMS Prep
             </button>
             <button
+              onClick={() => setActiveRole('induction')}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                activeRole === 'induction'
+                  ? 'bg-teal-600 text-white shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-700'
+              }`}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422A12.083 12.083 0 0121 13.5c0 2.998-1.033 5.756-2.756 7.94A11.955 11.955 0 0112 21.056c-2.552 0-4.909-.775-6.874-2.106A12.09 12.09 0 013 13.5a12.083 12.083 0 012.84-4.922L12 14z" />
+              </svg>
+              Induction
+            </button>
+            <button
               onClick={() => setActiveRole('simulations')}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                 activeRole === 'simulations'
@@ -4403,7 +4583,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
         </div>
 
         {/* Industry switcher */}
-        {activeRole === 'simulations' ? null : activeRole === 'cams' ? (
+        {activeRole === 'simulations' || activeRole === 'induction' ? null : activeRole === 'cams' ? (
           <>
             <div className="w-full bg-violet-100 dark:bg-violet-900/30 rounded-full py-2 text-center text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-6">
               ACAMS CAMS Certification — 6th Edition
