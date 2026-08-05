@@ -22,6 +22,8 @@ import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
 import ProgramBuilder from './components/ProgramBuilder'
+import PrivacyReadinessCheck from './components/PrivacyReadinessCheck'
+import PrivacyPack from './components/PrivacyPack'
 import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
@@ -38,6 +40,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [selectedIndustry, setSelectedIndustry] = useState(null)
   const [selectedSectorGuide, setSelectedSectorGuide] = useState(null)
+  const [privacyPackPrefill, setPrivacyPackPrefill] = useState(null)
   const [resetToken, setResetToken] = useState(null)
   const [scrollTarget, setScrollTarget] = useState(null)
 
@@ -203,6 +206,8 @@ function App() {
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
     onOpenProgramBuilder: () => setView('programbuilder'),
+    onOpenPrivacyCheck: () => setView('privacyCheck'),
+    onOpenPrivacyPack: (payload) => { setPrivacyPackPrefill(payload || null); setView('privacyPack') },
   }
 
   if (view === 'signin') {
@@ -342,6 +347,26 @@ function App() {
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'privacyCheck') {
+    return (
+      <PrivacyReadinessCheck
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'privacyPack') {
+    return (
+      <PrivacyPack
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+        prefill={privacyPackPrefill}
       />
     )
   }

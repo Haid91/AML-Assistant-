@@ -74,7 +74,7 @@ function groupSessions(sessions) {
   return { today, yesterday, older }
 }
 
-export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onUpgrade }) {
+export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onUpgrade }) {
   const storageKey = `aml_chats_${user?.id || 'guest'}`
 
   const [sessions, setSessions] = useState(() => {
@@ -202,6 +202,7 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
+        onOpenPrivacyCheck={onOpenPrivacyCheck}
       />
 
       <div className="flex flex-1 min-h-0">

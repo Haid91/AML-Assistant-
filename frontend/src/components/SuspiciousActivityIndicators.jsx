@@ -66,7 +66,7 @@ const CROSS_INDUSTRY_FLAGS = [
   'A pattern of activity that only really makes sense if its purpose is to move or obscure funds, not the stated one',
 ]
 
-export default function SuspiciousActivityIndicators({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment }) {
+export default function SuspiciousActivityIndicators({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenPrivacyCheck }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
       <Navbar
@@ -90,6 +90,7 @@ export default function SuspiciousActivityIndicators({ user, onGoHome, onNavigat
         onOpenSmrGuide={onOpenSmrGuide}
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}
+        onOpenPrivacyCheck={onOpenPrivacyCheck}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

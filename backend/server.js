@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -556,6 +556,44 @@ function buildBusinessProfileText(intake) {
 Draft a first-pass AML/CTF Program (Part A and Part B) for this business, following the mandatory structure and grounding every section in these specific details.`
 }
 
+const PRIVACY_PACK_SYSTEM_PROMPT = `You are a privacy compliance drafting assistant. Given a Business Profile for an Australian Tranche 2 AML/CTF reporting entity, draft the specific Privacy Act 1988 (Cth) documents requested, grounded in the following facts:
+
+- Under section 6E(1A) of the Privacy Act, a small business operator that becomes an AML/CTF reporting entity is bound by the Australian Privacy Principles (APPs) for the personal information it handles in connection with its AML/CTF obligations, regardless of annual turnover. This removes the usual small-business exemption. Tranche 2 entities are captured from the date they start providing a designated service (from 1 July 2026 for the Tranche 2 reforms).
+- APP 1 requires a clearly expressed, up-to-date, accessible privacy policy covering: what personal information is collected and why, how it's collected and held, the purposes of use and disclosure, and how an individual can access or correct their information or make a complaint.
+- APP 5 requires a collection notice given at or before the point personal information is collected (or as soon as practicable after), covering the matters APP 5.2 requires. For an AML/CTF reporting entity, this notice must be worded carefully so it does not conflict with the tipping-off prohibition (Section 123, AML/CTF Act 2006) — it should describe routine CDD/AML data handling in general terms, never anything that could reveal a specific suspicion or SMR.
+- The Notifiable Data Breaches (NDB) scheme (Part IIIC of the Privacy Act) applies to any entity bound by APP 11. An eligible data breach — unauthorised access, disclosure, or loss of personal information likely to result in serious harm that can't be prevented with remedial action — must be assessed and, if it qualifies, notified to the OAIC and affected individuals.
+- APP 11 requires reasonable steps to destroy or de-identify personal information once it's no longer needed for the purpose it was collected for, except where a law (such as the AML/CTF Act's 7-year CDD/transaction record-keeping requirement) requires it to be kept.
+
+OUTPUT FORMAT — MANDATORY:
+Output plain text only. Do not use markdown syntax (no #, no **, no backticks). Use ALL-CAPS section headers, with blank lines between sections, so the document reads clearly as plain text. Draft ONLY the documents listed in the Business Profile's "Documents requested" field, each as its own clearly separated section headed with the document's full name.
+
+For each requested document, ground it in the submitted Business Profile (business name, industry, designated services) rather than writing generic boilerplate:
+- PRIVACY POLICY (APP 1): what personal information this specific type of business collects for AML/CTF purposes (identity documents, beneficial ownership details, transaction records), why, how it's held and secured, disclosure practices (including to AUSTRAC where legally required), and how someone can access/correct their information or complain.
+- COLLECTION NOTICE (APP 5): a notice suitable for use at the point of collecting client ID/CDD information, worded generally about AML/CTF compliance obligations without ever referencing suspicion, investigations, or SMRs (tipping-off risk).
+- DATA BREACH RESPONSE PLAN (NDB SCHEME): steps to assess a suspected breach, the seriousness/harm assessment, escalation and notification steps to the OAIC and affected individuals within the required timeframe, and roles/responsibilities.
+- RETENTION & DESTRUCTION SCHEDULE (APP 11): what must be kept for the AML/CTF Act's 7-year requirement, what can be destroyed/de-identified sooner, and the practical process for doing so securely.
+
+Close with a section titled DISCLAIMER containing 2-3 sentences stating plainly that this is an AI-generated first-pass draft based only on the information provided, is a starting point, is not legal advice, and must be reviewed and finalised by a qualified privacy or legal professional before being relied on or published.`
+
+function buildPrivacyProfileText(intake) {
+  const { businessName, industry, documents } = intake || {}
+  const docLabels = {
+    privacyPolicy: 'Privacy Policy (APP 1)',
+    collectionNotice: 'Collection Notice (APP 5)',
+    dataBreachPlan: 'Data Breach Response Plan (NDB Scheme)',
+    retentionSchedule: 'Retention & Destruction Schedule (APP 11)',
+  }
+  const requested = Array.isArray(documents) && documents.length
+    ? documents.map((d) => docLabels[d] || d).join(', ')
+    : Object.values(docLabels).join(', ')
+  return `Business Profile
+- Business name: ${businessName || 'Not provided'}
+- Industry: ${industry || 'Not provided'}
+- Documents requested: ${requested}
+
+Draft each requested document as its own section, following the mandatory structure and grounding every section in these specific details.`
+}
+
 // ── Fallback responses (used when no API key is configured) ──────────────────
 const SMR_SAR_DRAFT_TEMPLATE = `SUSPICIOUS MATTER REPORT (SMR) / SUSPICIOUS ACTIVITY REPORT (SAR)
 
@@ -740,6 +778,53 @@ app.get('/program-draft', asyncRoute(async (req, res) => {
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
   const draft = await getProgramDraft(user.id)
+  res.json({ draft })
+}))
+
+// ── Privacy Pack (Privacy Act documents) ──────────────────────────────────────
+app.post('/privacy-draft', programDraftLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const intake = req.body?.intake
+  if (!intake || typeof intake !== 'object') {
+    return res.status(400).json({ error: 'Business intake details are required' })
+  }
+
+  if (!anthropic) {
+    return res.status(503).json({ error: 'AI document drafting is not available right now. Please try again later.' })
+  }
+
+  try {
+    const profileText = buildPrivacyProfileText(intake)
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 16000,
+      system: PRIVACY_PACK_SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: profileText }],
+    })
+
+    const draftText = response.content[0]?.text || ''
+    if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
+
+    const businessName = intake.businessName || null
+    await savePrivacyDraft({ id: crypto.randomUUID(), userId: user.id, businessName, intake, draftText })
+    res.json({ draft: { businessName, intake, draftText } })
+  } catch (err) {
+    console.error('Claude API error (privacy draft):', err.message)
+    if (err.status === 401) {
+      return res.status(500).json({ error: 'Invalid API key. Please check your ANTHROPIC_API_KEY in backend/.env and restart the server.' })
+    }
+    res.status(500).json({ error: 'The AI service encountered an error while drafting your documents. Please try again in a moment.' })
+  }
+}))
+
+app.get('/privacy-draft', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const draft = await getPrivacyDraft(user.id)
   res.json({ draft })
 }))
 

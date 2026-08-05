@@ -55,6 +55,27 @@ export async function saveProgramDraft({ id, userId, businessName, intake, draft
   )
 }
 
+export async function getPrivacyDraft(userId) {
+  const { rows } = await pool.query(
+    'SELECT id, business_name AS "businessName", intake, draft_text AS "draftText", created_at AS "createdAt", updated_at AS "updatedAt" FROM privacy_drafts WHERE user_id = $1',
+    [userId]
+  )
+  return rows[0] || null
+}
+
+export async function savePrivacyDraft({ id, userId, businessName, intake, draftText }) {
+  await pool.query(
+    `INSERT INTO privacy_drafts (id, user_id, business_name, intake, draft_text, updated_at)
+     VALUES ($1, $2, $3, $4, $5, now())
+     ON CONFLICT (user_id) DO UPDATE SET
+       business_name = EXCLUDED.business_name,
+       intake = EXCLUDED.intake,
+       draft_text = EXCLUDED.draft_text,
+       updated_at = now()`,
+    [id, userId, businessName, intake, draftText]
+  )
+}
+
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
   await pool.query(
     'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',

@@ -38,7 +38,7 @@ Date: [DD/MM/YYYY]
 
 Note: This appointment must also be notified to AUSTRAC within 14 days via AUSTRAC Online.`
 
-export default function ComplianceOfficerGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenRiskAssessment, onOpenSuspiciousIndicators }) {
+export default function ComplianceOfficerGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = () => {
@@ -70,6 +70,7 @@ export default function ComplianceOfficerGuide({ user, onGoHome, onNavigateSecti
         onOpenSmrGuide={onOpenSmrGuide}
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
+        onOpenPrivacyCheck={onOpenPrivacyCheck}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

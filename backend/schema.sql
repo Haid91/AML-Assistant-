@@ -25,6 +25,18 @@ create table if not exists sessions (
   created_at timestamptz not null default now()
 );
 
+-- Separate from program_drafts (which is one-row-per-user) so a user can
+-- have both an AML/CTF Program draft and a Privacy Pack draft at once.
+create table if not exists privacy_drafts (
+  id uuid primary key,
+  user_id uuid not null unique references users(id),
+  business_name text,
+  intake jsonb not null,
+  draft_text text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
@@ -37,3 +49,4 @@ alter table users add column if not exists stripe_subscription_id text;
 alter table users enable row level security;
 alter table program_drafts enable row level security;
 alter table sessions enable row level security;
+alter table privacy_drafts enable row level security;

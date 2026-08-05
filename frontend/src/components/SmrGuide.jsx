@@ -121,7 +121,7 @@ const FAQ = [
   },
 ]
 
-export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators }) {
+export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -164,6 +164,7 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
+        onOpenPrivacyCheck={onOpenPrivacyCheck}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">
