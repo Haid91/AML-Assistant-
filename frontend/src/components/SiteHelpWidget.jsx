@@ -25,7 +25,7 @@ const FAQS = [
     answer: "Every Analyst & MLRO case simulation, across Banking, Law, Crypto, Fintech, and Accountant & TCSP, is completely free. CAMS exam prep gives you the first 6 questions free in every chapter (258 questions across all 4 chapters total) — Premium unlocks the rest, plus timed, scored mock exams modelled on the real CAMS exam's length and passing benchmark.",
   },
   {
-    keywords: ['ai assistant', 'chat', 'ask question', 'chatbot', 'ai chat'],
+    keywords: ['ai assistant', 'chat', 'ask question', 'chatbot', 'ai chat', 'ai', 'beneficial', 'worth it', 'benefit'],
     answer: "The AI compliance assistant (Premium) gives instant, regulation-backed answers on KYC, SMRs/SARs, FATF, sanctions, AUSTRAC guidance, and more. If you've used Program Builder, it's also aware of your saved business profile, so answers can be specific to your industry and services.",
   },
   {
@@ -66,12 +66,22 @@ const FAQS = [
   },
 ]
 
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+// Word-boundary matching, not plain substring — short keywords like 'ai'
+// would otherwise false-positive inside unrelated words (e.g. "training"
+// contains "ai").
 function matchFaq(text) {
   const lower = text.toLowerCase()
   let best = null
   let bestScore = 0
   for (const faq of FAQS) {
-    const score = faq.keywords.reduce((n, kw) => (lower.includes(kw) ? n + 1 : n), 0)
+    const score = faq.keywords.reduce((n, kw) => {
+      const re = new RegExp(`\\b${escapeRegExp(kw)}\\b`, 'i')
+      return re.test(lower) ? n + 1 : n
+    }, 0)
     if (score > bestScore) { bestScore = score; best = faq }
   }
   return best
