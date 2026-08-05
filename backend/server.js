@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -99,6 +99,14 @@ const contactLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many messages. Please try again later.' },
+})
+
+const mockExamLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
 })
 
 const billingLimiter = rateLimit({
@@ -826,6 +834,30 @@ app.get('/privacy-draft', asyncRoute(async (req, res) => {
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
   const draft = await getPrivacyDraft(user.id)
   res.json({ draft })
+}))
+
+// ── CAMS mock exam attempts ────────────────────────────────────────────────────
+app.post('/mock-exam-attempt', mockExamLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const { score, total, chapterBreakdown } = req.body || {}
+  if (!Number.isInteger(score) || !Number.isInteger(total) || total <= 0 || score < 0 || score > total) {
+    return res.status(400).json({ error: 'Invalid attempt data' })
+  }
+
+  const passed = score / total >= 0.625
+  await saveMockExamAttempt({ id: crypto.randomUUID(), userId: user.id, score, total, passed, chapterBreakdown: chapterBreakdown || null })
+  res.json({ attempt: { score, total, passed } })
+}))
+
+app.get('/mock-exam-attempts', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const attempts = await getMockExamAttempts(user.id)
+  res.json({ attempts })
 }))
 
 // ── Cost estimate email ───────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import ThemeToggle from './ThemeToggle'
 import OwnershipSimulation from './OwnershipSimulation'
+import CamsMockExam from './CamsMockExam'
 import Navbar from './Navbar'
 
 const ANALYST_CASES = [
@@ -1253,7 +1254,7 @@ const INDUSTRY_LABELS = {
   accountant: 'Accountant / TCSPs',
 }
 
-const CAMS_MODULES = [
+export const CAMS_MODULES = [
   {
     id: 'cams1', number: 'Chapter 1', isExam: true,
     title: 'Risks and Methods of ML & Terrorist Financing',
@@ -4051,7 +4052,7 @@ const CAMS_FREE_QUESTIONS = 6
 // Deterministic per-question shuffle so the same question always renders in the
 // same scrambled order (stable across re-renders/revisits) without needing to
 // hand-reorder every option in the source data.
-function seededShuffle(arr, seed) {
+export function seededShuffle(arr, seed) {
   let h = 0
   for (let i = 0; i < seed.length; i++) h = (Math.imul(h, 31) + seed.charCodeAt(i)) >>> 0
   const next = () => {
@@ -4087,6 +4088,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   }
 
   const [activeSimView, setActiveSimView] = useState(null)
+  const [mockExamOpen, setMockExamOpen] = useState(false)
   const [progress, setProgress] = useState({})
   const [activeCase, setActiveCase] = useState(null)
   const [activeStep, setActiveStep] = useState(0)
@@ -4153,6 +4155,11 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
   /* ── Ownership simulation view ── */
   if (activeSimView === 'ownership') {
     return <OwnershipSimulation user={user} onBack={() => setActiveSimView(null)} />
+  }
+
+  /* ── CAMS mock exam view ── */
+  if (mockExamOpen) {
+    return <CamsMockExam user={user} onBack={() => setMockExamOpen(false)} onUpgrade={onUpgrade} />
   }
 
   /* ── Case simulation view ── */
@@ -4394,9 +4401,26 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
 
         {/* Industry switcher */}
         {activeRole === 'simulations' ? null : activeRole === 'cams' ? (
-          <div className="w-full bg-violet-100 dark:bg-violet-900/30 rounded-full py-2 text-center text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-6">
-            ACAMS CAMS Certification — 6th Edition
-          </div>
+          <>
+            <div className="w-full bg-violet-100 dark:bg-violet-900/30 rounded-full py-2 text-center text-xs font-semibold text-violet-600 dark:text-violet-400 uppercase tracking-widest mb-6">
+              ACAMS CAMS Certification — 6th Edition
+            </div>
+
+            <div className="bg-gradient-to-br from-violet-600 to-indigo-700 rounded-2xl p-6 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-white font-bold text-lg mb-1">Mock Exam</p>
+                <p className="text-violet-100 text-sm leading-relaxed">
+                  Timed, scored practice exams modelled on the real CAMS exam's length and passing benchmark — Quick (40 questions, 70 min) or Full-length (120 questions, 210 min). Premium.
+                </p>
+              </div>
+              <button
+                onClick={() => setMockExamOpen(true)}
+                className="px-6 py-3 bg-white hover:bg-violet-50 text-violet-700 rounded-xl font-semibold text-sm transition-colors shrink-0 whitespace-nowrap"
+              >
+                Start a mock exam →
+              </button>
+            </div>
+          </>
         ) : (
           <div className="flex items-center gap-2 mb-6 flex-wrap">
             <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider shrink-0">Industry</span>

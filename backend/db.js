@@ -76,6 +76,21 @@ export async function savePrivacyDraft({ id, userId, businessName, intake, draft
   )
 }
 
+export async function saveMockExamAttempt({ id, userId, score, total, passed, chapterBreakdown }) {
+  await pool.query(
+    'INSERT INTO mock_exam_attempts (id, user_id, score, total, passed, chapter_breakdown) VALUES ($1, $2, $3, $4, $5, $6)',
+    [id, userId, score, total, passed, chapterBreakdown]
+  )
+}
+
+export async function getMockExamAttempts(userId, limit = 20) {
+  const { rows } = await pool.query(
+    'SELECT id, score, total, passed, chapter_breakdown AS "chapterBreakdown", created_at AS "createdAt" FROM mock_exam_attempts WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2',
+    [userId, limit]
+  )
+  return rows
+}
+
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
   await pool.query(
     'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',
