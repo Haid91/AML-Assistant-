@@ -91,7 +91,7 @@ const CONSULTANT_LOW = 1500
 const CONSULTANT_HIGH = 4000
 const PREMIUM_MONTHLY = 49.99
 
-export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck }) {
+export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar }) {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans scroll-smooth">
       <Navbar
@@ -115,6 +115,7 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
         onOpenPrivacyCheck={onOpenPrivacyCheck}
+        onOpenComplianceCalendar={onOpenComplianceCalendar}
       />
 
       {/* Hero */}

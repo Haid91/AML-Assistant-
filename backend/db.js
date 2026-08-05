@@ -1,6 +1,13 @@
 import pg from 'pg'
 
-const { Pool } = pg
+const { Pool, types } = pg
+
+// Return SQL `date` columns as plain 'YYYY-MM-DD' strings instead of JS Date
+// objects — pg's default parsing interprets the string in the server's local
+// timezone before converting to a UTC Date, which can shift the calendar day
+// by one once the app formats it back. Compliance-calendar due-date math
+// depends on getting the literal date, not a timezone-shifted timestamp.
+types.setTypeParser(1082, (val) => val)
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not set. Add your Supabase Postgres connection string to backend/.env — see .env.example.')
@@ -89,6 +96,29 @@ export async function getMockExamAttempts(userId, limit = 20) {
     [userId, limit]
   )
   return rows
+}
+
+export async function getComplianceChecklist(userId) {
+  const { rows } = await pool.query(
+    'SELECT program_review_date AS "programReviewDate", independent_eval_date AS "independentEvalDate", staff_training_date AS "staffTrainingDate", privacy_review_date AS "privacyReviewDate", acr_lodged_year AS "acrLodgedYear", updated_at AS "updatedAt" FROM compliance_checklist WHERE user_id = $1',
+    [userId]
+  )
+  return rows[0] || null
+}
+
+export async function saveComplianceChecklist({ id, userId, programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate, acrLodgedYear }) {
+  await pool.query(
+    `INSERT INTO compliance_checklist (id, user_id, program_review_date, independent_eval_date, staff_training_date, privacy_review_date, acr_lodged_year, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, now())
+     ON CONFLICT (user_id) DO UPDATE SET
+       program_review_date = COALESCE($3, compliance_checklist.program_review_date),
+       independent_eval_date = COALESCE($4, compliance_checklist.independent_eval_date),
+       staff_training_date = COALESCE($5, compliance_checklist.staff_training_date),
+       privacy_review_date = COALESCE($6, compliance_checklist.privacy_review_date),
+       acr_lodged_year = COALESCE($7, compliance_checklist.acr_lodged_year),
+       updated_at = now()`,
+    [id, userId, programReviewDate ?? null, independentEvalDate ?? null, staffTrainingDate ?? null, privacyReviewDate ?? null, acrLodgedYear ?? null]
+  )
 }
 
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {

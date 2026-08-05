@@ -50,6 +50,21 @@ create table if not exists mock_exam_attempts (
   created_at timestamptz not null default now()
 );
 
+-- One row per user — tracks the recurring Tranche 2 compliance obligations
+-- (program/risk-assessment review, independent evaluation, staff training,
+-- privacy policy review, and which financial year's Annual Compliance
+-- Report has been lodged) rather than one-time generated documents.
+create table if not exists compliance_checklist (
+  id uuid primary key,
+  user_id uuid not null unique references users(id),
+  program_review_date date,
+  independent_eval_date date,
+  staff_training_date date,
+  privacy_review_date date,
+  acr_lodged_year integer,
+  updated_at timestamptz not null default now()
+);
+
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
@@ -64,3 +79,4 @@ alter table program_drafts enable row level security;
 alter table sessions enable row level security;
 alter table privacy_drafts enable row level security;
 alter table mock_exam_attempts enable row level security;
+alter table compliance_checklist enable row level security;

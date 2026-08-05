@@ -24,6 +24,7 @@ import EligibilityCheck from './components/EligibilityCheck'
 import ProgramBuilder from './components/ProgramBuilder'
 import PrivacyReadinessCheck from './components/PrivacyReadinessCheck'
 import PrivacyPack from './components/PrivacyPack'
+import ComplianceCalendar from './components/ComplianceCalendar'
 import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
@@ -208,6 +209,7 @@ function App() {
     onOpenProgramBuilder: () => setView('programbuilder'),
     onOpenPrivacyCheck: () => setView('privacyCheck'),
     onOpenPrivacyPack: (payload) => { setPrivacyPackPrefill(payload || null); setView('privacyPack') },
+    onOpenComplianceCalendar: () => setView('complianceCalendar'),
   }
 
   if (view === 'signin') {
@@ -367,6 +369,16 @@ function App() {
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
         prefill={privacyPackPrefill}
+      />
+    )
+  }
+
+  if (view === 'complianceCalendar') {
+    return (
+      <ComplianceCalendar
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
       />
     )
   }

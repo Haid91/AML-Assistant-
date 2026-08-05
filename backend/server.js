@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -102,6 +102,14 @@ const contactLimiter = rateLimit({
 })
 
 const mockExamLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
+
+const complianceLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   limit: 30,
   standardHeaders: true,
@@ -858,6 +866,45 @@ app.get('/mock-exam-attempts', asyncRoute(async (req, res) => {
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
   const attempts = await getMockExamAttempts(user.id)
   res.json({ attempts })
+}))
+
+// ── Compliance calendar ────────────────────────────────────────────────────────
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+
+app.get('/compliance-checklist', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const checklist = await getComplianceChecklist(user.id)
+  res.json({ checklist })
+}))
+
+app.post('/compliance-checklist', complianceLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const { programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate, acrLodgedYear } = req.body || {}
+  for (const [name, value] of Object.entries({ programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate })) {
+    if (value != null && !ISO_DATE_RE.test(value)) {
+      return res.status(400).json({ error: `Invalid date for ${name}` })
+    }
+  }
+  if (acrLodgedYear != null && !Number.isInteger(acrLodgedYear)) {
+    return res.status(400).json({ error: 'Invalid acrLodgedYear' })
+  }
+
+  await saveComplianceChecklist({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    programReviewDate: programReviewDate ?? null,
+    independentEvalDate: independentEvalDate ?? null,
+    staffTrainingDate: staffTrainingDate ?? null,
+    privacyReviewDate: privacyReviewDate ?? null,
+    acrLodgedYear: acrLodgedYear ?? null,
+  })
+  const checklist = await getComplianceChecklist(user.id)
+  res.json({ checklist })
 }))
 
 // ── Cost estimate email ───────────────────────────────────────────────────────
