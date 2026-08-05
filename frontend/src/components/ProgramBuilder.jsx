@@ -48,8 +48,8 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onUpgrade }) {
-  const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility }
+export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenComplianceDashboard, onUpgrade }) {
+  const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenComplianceDashboard }
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
   const [businessName, setBusinessName] = useState('')

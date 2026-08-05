@@ -199,7 +199,7 @@ const REG_FAQS = [
   },
 ]
 
-export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
+export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
   const [camsOpen, setCamsOpen] = useState(false)
 
   useEffect(() => {
@@ -238,6 +238,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
         onOpenComplianceCalendar={onOpenComplianceCalendar}
         onOpenClientRiskRegister={onOpenClientRiskRegister}
         onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
+        onOpenComplianceDashboard={onOpenComplianceDashboard}
       />
 
       {/* CAMS strip */}

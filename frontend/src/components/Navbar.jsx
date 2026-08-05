@@ -38,7 +38,7 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
-export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck }) {
+export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard }) {
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
   const [tranche2Open, setTranche2Open] = useState(false)
@@ -288,6 +288,10 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
               </div>
             )}
           </div>
+
+          {user?.premium && (
+            <button onClick={onOpenComplianceDashboard} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Dashboard</button>
+          )}
 
           <button onClick={onOpenTraining} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
 

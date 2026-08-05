@@ -27,6 +27,7 @@ import PrivacyReadinessCheck from './components/PrivacyReadinessCheck'
 import PrivacyPack from './components/PrivacyPack'
 import ComplianceCalendar from './components/ComplianceCalendar'
 import ClientRiskRegister from './components/ClientRiskRegister'
+import ComplianceDashboard from './components/ComplianceDashboard'
 import SectorGuide from './components/SectorGuide'
 import { API_URL } from './config'
 
@@ -86,10 +87,10 @@ function App() {
         }
       }
     } catch { /* ignore */ }
-    setView('chat')
+    setView('dashboard')
   }
 
-  const goHome = (u) => setView(isPremium(u) ? 'chat' : 'training')
+  const goHome = (u) => setView(isPremium(u) ? 'dashboard' : 'training')
 
   // Users without a role/industry set yet need to go through onboarding
   // before reaching Training or the Assistant — triggered on demand (e.g.
@@ -214,6 +215,7 @@ function App() {
     onOpenComplianceCalendar: () => setView('complianceCalendar'),
     onOpenClientRiskRegister: () => setView('clientRiskRegister'),
     onOpenReportableTransactionCheck: () => setView('reportableTransactionCheck'),
+    onOpenComplianceDashboard: () => setView('dashboard'),
   }
 
   if (view === 'signin') {
@@ -399,6 +401,16 @@ function App() {
   if (view === 'clientRiskRegister') {
     return (
       <ClientRiskRegister
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'dashboard') {
+    return (
+      <ComplianceDashboard
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
