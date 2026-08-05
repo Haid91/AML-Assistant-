@@ -21,6 +21,7 @@ import SuspiciousActivityIndicators from './components/SuspiciousActivityIndicat
 import CostCalculator from './components/CostCalculator'
 import SetupGuide from './components/SetupGuide'
 import EligibilityCheck from './components/EligibilityCheck'
+import ReportableTransactionCheck from './components/ReportableTransactionCheck'
 import ProgramBuilder from './components/ProgramBuilder'
 import PrivacyReadinessCheck from './components/PrivacyReadinessCheck'
 import PrivacyPack from './components/PrivacyPack'
@@ -212,6 +213,7 @@ function App() {
     onOpenPrivacyPack: (payload) => { setPrivacyPackPrefill(payload || null); setView('privacyPack') },
     onOpenComplianceCalendar: () => setView('complianceCalendar'),
     onOpenClientRiskRegister: () => setView('clientRiskRegister'),
+    onOpenReportableTransactionCheck: () => setView('reportableTransactionCheck'),
   }
 
   if (view === 'signin') {
@@ -339,6 +341,15 @@ function App() {
   if (view === 'eligibility') {
     return (
       <EligibilityCheck
+        {...navProps}
+        user={user}
+      />
+    )
+  }
+
+  if (view === 'reportableTransactionCheck') {
+    return (
+      <ReportableTransactionCheck
         {...navProps}
         user={user}
       />

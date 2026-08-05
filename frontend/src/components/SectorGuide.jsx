@@ -157,7 +157,7 @@ function Section({ title, items }) {
   )
 }
 
-export default function SectorGuide({ sector, user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister }) {
+export default function SectorGuide({ sector, user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck }) {
   const data = SECTORS[sector] || SECTORS.accountant
   const Icon = data.icon
 
@@ -188,6 +188,7 @@ export default function SectorGuide({ sector, user, onGoHome, onNavigateSection,
         onOpenPrivacyCheck={onOpenPrivacyCheck}
         onOpenComplianceCalendar={onOpenComplianceCalendar}
         onOpenClientRiskRegister={onOpenClientRiskRegister}
+        onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
       />
       <div className="border-b border-slate-200 dark:border-slate-800 px-6 py-2.5">
         <button onClick={onOpenSetupGuide} className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
