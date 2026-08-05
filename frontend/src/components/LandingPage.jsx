@@ -654,11 +654,12 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
               <p className="text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">7-day free trial · cancel anytime</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  'AI compliance assistant trained on FATF, AUSTRAC & global regulations',
-                  'Full SMR/SAR drafting assistance',
+                  'AI compliance assistant trained on FATF, AUSTRAC & global regulations — aware of your business profile',
                   'AI-drafted AML/CTF Program (Part A & B)',
-                  'Full CAMS exam prep — 258 questions across all 4 chapters',
-                  'Personalised FATF & AUSTRAC compliance mapping',
+                  'AI-drafted Privacy Act documents (Privacy Policy, Collection Notice, Data Breach Plan, Retention Schedule)',
+                  'Full CAMS exam prep — 258 questions plus timed, scored mock exams',
+                  'Compliance Calendar — track your recurring AUSTRAC & Privacy Act deadlines',
+                  'Client Risk Register — ongoing CDD review tracking',
                   'Unlimited questions — no daily cap',
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
