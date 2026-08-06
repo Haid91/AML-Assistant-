@@ -42,9 +42,23 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
   const [tranche2Open, setTranche2Open] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileTopicsOpen, setMobileTopicsOpen] = useState(false)
+  const [mobileTranche2Open, setMobileTranche2Open] = useState(false)
   const dropdownRef = useRef(null)
   const moreInfoRef = useRef(null)
   const tranche2Ref = useRef(null)
+
+  // Below `lg`, the center link cluster doesn't fit and there's no wrap
+  // behavior, so it silently overflows the viewport instead of collapsing —
+  // closing the mobile menu on that breakpoint change keeps it from being
+  // stuck open behind a now-visible desktop nav if the window gets resized.
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const handler = () => setMobileOpen(false)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -64,7 +78,7 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
 
   return (
     <nav className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur-sm">
-      <div className="max-w-6xl mx-auto px-6 py-4 grid grid-cols-[auto_1fr_auto] items-center gap-4">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex lg:grid lg:grid-cols-[auto_1fr_auto] items-center gap-4">
 
         {/* Logo */}
         <button onClick={onGoHome} className="flex items-center gap-2.5">
@@ -72,8 +86,10 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
           <span className="font-semibold text-sm text-white">Intel</span>
         </button>
 
-        {/* Center nav cluster */}
-        <div className="flex items-center justify-center gap-4">
+        {/* Center nav cluster — desktop only; below `lg` this doesn't fit
+            and there's no wrap behavior, so it silently overflows the
+            viewport instead of collapsing (the bug this mobile menu fixes) */}
+        <div className="hidden lg:flex items-center justify-center gap-4">
           <button onClick={() => onNavigateSection?.('features')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">What you get</button>
           <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
           <button onClick={onOpenAbout} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Real-world experience</button>
@@ -341,8 +357,9 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
           </div>
         </div>
 
-        {/* Theme toggle + Auth buttons */}
-        <div className="flex items-center gap-3 justify-self-end">
+        {/* Theme toggle + Auth buttons — desktop only, mirrored inside the
+            mobile menu panel below */}
+        <div className="hidden lg:flex items-center gap-3 justify-self-end">
           <ThemeToggle />
           {user ? (
             <div className="flex items-center gap-3">
@@ -375,7 +392,191 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             </div>
           )}
         </div>
+
+        {/* Hamburger — mobile only */}
+        <button
+          onClick={() => setMobileOpen((v) => !v)}
+          className="lg:hidden ml-auto p-2 text-slate-300 hover:text-white transition-colors"
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+        >
+          {mobileOpen ? (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
       </div>
+
+      {/* Mobile menu panel */}
+      {mobileOpen && (
+        <div className="lg:hidden border-t border-slate-800 bg-slate-950 max-h-[calc(100vh-64px)] overflow-y-auto">
+          <div className="px-6 py-4 flex flex-col gap-1">
+            <button
+              onClick={() => { setMobileOpen(false); onNavigateSection?.('features') }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              What you get
+            </button>
+            <button
+              onClick={() => { setMobileOpen(false); onNavigateSection?.('pricing') }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Pricing
+            </button>
+            <button
+              onClick={() => { setMobileOpen(false); onOpenAbout?.() }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Real-world experience
+            </button>
+
+            {/* Topics accordion */}
+            <button
+              onClick={() => setMobileTopicsOpen((v) => !v)}
+              className="flex items-center justify-between text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Topics
+              <svg className={`w-4 h-4 transition-transform duration-200 ${mobileTopicsOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {mobileTopicsOpen && (
+              <div className="pl-3 pb-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+                <div>
+                  <p className="text-[11px] text-blue-400 uppercase tracking-widest font-semibold mt-2 mb-1 px-3">Global AML</p>
+                  {GLOBAL_TOPICS.map((topic) => (
+                    <button
+                      key={topic}
+                      onClick={() => { setMobileOpen(false); onStart() }}
+                      className="w-full text-left text-sm text-slate-400 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
+                <div>
+                  <p className="text-[11px] text-blue-400 uppercase tracking-widest font-semibold mt-2 mb-1 px-3">AUSTRAC Guidance</p>
+                  {AUSTRAC_TOPICS.map((topic) => (
+                    <button
+                      key={topic}
+                      onClick={() => { setMobileOpen(false); onStart() }}
+                      className="w-full text-left text-sm text-slate-400 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tranche 2 Setup accordion */}
+            <button
+              onClick={() => setMobileTranche2Open((v) => !v)}
+              className="flex items-center justify-between text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Tranche 2 Setup
+              <svg className={`w-4 h-4 transition-transform duration-200 ${mobileTranche2Open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {mobileTranche2Open && (
+              <div className="pl-3 pb-2 flex flex-col">
+                {[
+                  ['Eligibility Check', onOpenEligibility],
+                  ['Reportable Transaction Check', onOpenReportableTransactionCheck],
+                  ['Privacy Act Check', onOpenPrivacyCheck],
+                  ['AUSTRAC Enrolment', onOpenAustracEnrolment],
+                  ['File an SMR', onOpenSmrGuide],
+                  ['Suspicious Activity Indicators', onOpenSuspiciousIndicators],
+                  ['Compliance Officer', onOpenComplianceOfficer],
+                  ['Risk Assessment', onOpenRiskAssessment],
+                  ['Setup Guide', onOpenSetupGuide],
+                  ['AML Program Draft', onOpenProgramBuilder],
+                  ['Compliance Calendar', onOpenComplianceCalendar],
+                  ['Client Risk Register', onOpenClientRiskRegister],
+                  ['Cost', onOpenCost],
+                ].map(([label, handler]) => (
+                  <button
+                    key={label}
+                    onClick={() => { setMobileOpen(false); handler?.() }}
+                    className="w-full text-left text-sm text-slate-400 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {user?.premium && (
+              <button
+                onClick={() => { setMobileOpen(false); onOpenComplianceDashboard?.() }}
+                className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+              >
+                Dashboard
+              </button>
+            )}
+            <button
+              onClick={() => { setMobileOpen(false); onOpenTraining?.() }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Go to Training
+            </button>
+            <button
+              onClick={() => { setMobileOpen(false); onOpenAbout?.() }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              About
+            </button>
+            <button
+              onClick={() => { setMobileOpen(false); onOpenContact?.() }}
+              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            >
+              Contact
+            </button>
+
+            <div className="border-t border-slate-800 mt-3 pt-4 flex items-center justify-between">
+              <ThemeToggle />
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => { setMobileOpen(false); onOpenChat?.() }}
+                    title="Open AI Assistant"
+                    className="rounded-xl overflow-hidden hover:opacity-80 transition-opacity"
+                  >
+                    <Logo size={36} />
+                  </button>
+                  <ProfileMenu
+                    user={user}
+                    variant="dark"
+                    onGoToTraining={onOpenTraining}
+                    onOpenSettings={() => { setMobileOpen(false); onOpenSettings('profile') }}
+                    onSignOut={() => { setMobileOpen(false); onSignOut?.() }}
+                  />
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setMobileOpen(false); onSignIn?.() }}
+                    className="px-4 py-2 text-sm text-slate-300 hover:text-white transition-colors"
+                  >
+                    Sign in
+                  </button>
+                  <button
+                    onClick={() => { setMobileOpen(false); onSignUp?.() }}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Sign up free →
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }
