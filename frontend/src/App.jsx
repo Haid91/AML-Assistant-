@@ -39,19 +39,55 @@ function isPremium(u) {
   return u?.premium || OWNER_EMAILS.has(u?.email?.toLowerCase())
 }
 
-// A handful of views are directly linkable via a real URL path — everything
-// else in the app is pure client-side view state with no routing, so this
-// stays intentionally small rather than converting the whole app to a router.
-const ROUTED_VIEWS = { termsOfService: '/terms', privacyPolicy: '/privacy', signin: '/signin', signup: '/signup' }
+// Every "destination" page a user might reasonably land on and refresh (or
+// bookmark/share) gets a real URL. Deliberately excluded: onboarding-wizard
+// steps that depend on transient state (industryselect/simulationselect/
+// roleselect, checkout) — refreshing mid-flow reasonably restarts it, same
+// as most multi-step signup flows — and resetpassword, which already has
+// its own separate /?action=reset&token=... mechanism, untouched here.
+const ROUTED_VIEWS = {
+  termsOfService: '/terms',
+  privacyPolicy: '/privacy',
+  signin: '/signin',
+  signup: '/signup',
+  forgotpassword: '/forgot-password',
+  about: '/about',
+  contact: '/contact',
+  austracEnrolment: '/austrac-enrolment',
+  smrGuide: '/smr-guide',
+  complianceOfficer: '/compliance-officer',
+  riskAssessment: '/risk-assessment',
+  suspiciousIndicators: '/suspicious-activity-indicators',
+  cost: '/cost',
+  setupguide: '/setup-guide',
+  eligibility: '/eligibility-check',
+  reportableTransactionCheck: '/reportable-transaction-check',
+  programbuilder: '/program-builder',
+  privacyCheck: '/privacy-check',
+  privacyPack: '/privacy-pack',
+  complianceCalendar: '/compliance-calendar',
+  clientRiskRegister: '/client-risk-register',
+  dashboard: '/dashboard',
+  training: '/training',
+  chat: '/assistant',
+  settings: '/settings',
+}
 const PATH_TO_VIEW = Object.fromEntries(Object.entries(ROUTED_VIEWS).map(([v, p]) => [p, v]))
 
+// sectorguide takes an id (e.g. /sector-guide/lawyer) so it can't live in
+// the flat map above — handled as its own small prefix-matched case.
+const SECTOR_GUIDE_PREFIX = '/sector-guide/'
+const isRoutedPath = (path) => !!PATH_TO_VIEW[path] || path.startsWith(SECTOR_GUIDE_PREFIX)
+const resolveViewFromPath = (path) => (path.startsWith(SECTOR_GUIDE_PREFIX) ? 'sectorguide' : (PATH_TO_VIEW[path] || 'landing'))
+const resolveSectorFromPath = (path) => (path.startsWith(SECTOR_GUIDE_PREFIX) ? path.slice(SECTOR_GUIDE_PREFIX.length) : null)
+
 function App() {
-  const [view, setView] = useState(() => PATH_TO_VIEW[window.location.pathname] || 'landing')
+  const [view, setView] = useState(() => resolveViewFromPath(window.location.pathname))
   const [previousView, setPreviousView] = useState('landing')
   const [settingsTab, setSettingsTab] = useState('profile')
   const [user, setUser] = useState(null)
   const [selectedIndustry, setSelectedIndustry] = useState(null)
-  const [selectedSectorGuide, setSelectedSectorGuide] = useState(null)
+  const [selectedSectorGuide, setSelectedSectorGuide] = useState(() => resolveSectorFromPath(window.location.pathname))
   const [privacyPackPrefill, setPrivacyPackPrefill] = useState(null)
   const [resetToken, setResetToken] = useState(null)
   const [scrollTarget, setScrollTarget] = useState(null)
@@ -79,19 +115,25 @@ function App() {
 
   // Keep the URL in sync with the routed views — pushState (a real,
   // back-button-able history entry) when entering one, replaceState (no new
-  // entry) when leaving one for a normal in-app view, since the rest of the
-  // app doesn't use per-view routing and shouldn't spam browser history.
+  // entry) when leaving one for a normal in-app view, since onboarding-wizard
+  // steps and other un-routed views shouldn't spam browser history.
   useEffect(() => {
-    const path = ROUTED_VIEWS[view]
+    const path = view === 'sectorguide' && selectedSectorGuide
+      ? `${SECTOR_GUIDE_PREFIX}${selectedSectorGuide}`
+      : ROUTED_VIEWS[view]
     if (path) {
       if (window.location.pathname !== path) window.history.pushState(null, '', path)
-    } else if (PATH_TO_VIEW[window.location.pathname]) {
+    } else if (isRoutedPath(window.location.pathname)) {
       window.history.replaceState(null, '', '/')
     }
-  }, [view])
+  }, [view, selectedSectorGuide])
 
   useEffect(() => {
-    const onPopState = () => setView(PATH_TO_VIEW[window.location.pathname] || 'landing')
+    const onPopState = () => {
+      const path = window.location.pathname
+      setView(resolveViewFromPath(path))
+      setSelectedSectorGuide(resolveSectorFromPath(path))
+    }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
