@@ -768,8 +768,11 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
             </div>
 
             {/* Team */}
-            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
-              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Team</p>
+            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col opacity-60">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-bold text-slate-900 dark:text-white text-lg">Team</p>
+                <span className="text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-600 rounded-full px-2 py-0.5">Coming soon</span>
+              </div>
               <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Multi-office / large teams</p>
               <p className="text-4xl font-bold text-slate-900 dark:text-white mb-7">Custom</p>
               <ul className="space-y-3 mb-8 flex-1">
@@ -789,10 +792,10 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                 ))}
               </ul>
               <button
-                onClick={onOpenContact}
-                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                disabled
+                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-400 dark:text-slate-400 font-semibold text-sm cursor-not-allowed"
               >
-                Contact sales
+                Coming soon
               </button>
             </div>
 
