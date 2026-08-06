@@ -89,15 +89,53 @@ function matchFaq(text) {
 
 const FALLBACK = "I don't have an answer for that — try one of the questions above, or reach us via the Contact page under \"More info\" in the top navigation."
 
+const NUDGE_INTERVAL_MS = 10 * 60 * 1000
+const NUDGE_AUTO_DISMISS_MS = 8000
+
 export default function SiteHelpWidget() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
+  const [showNudge, setShowNudge] = useState(false)
   const scrollRef = useRef(null)
+  const isOpenRef = useRef(false)
+  const lastNudgeAt = useRef(0)
+  const hasNudgedOnce = useRef(false)
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [messages])
+
+  useEffect(() => {
+    isOpenRef.current = isOpen
+    if (isOpen) setShowNudge(false)
+  }, [isOpen])
+
+  // Nudges a logged-in user toward the widget: once as soon as a login is
+  // detected (checked via polling since this widget mounts once, outside
+  // App.jsx, with no direct access to auth state), then every 10 minutes
+  // after that for as long as they're signed in.
+  useEffect(() => {
+    const tick = () => {
+      const loggedIn = !!localStorage.getItem('aml_token')
+      if (!loggedIn || isOpenRef.current) return
+      const now = Date.now()
+      if (!hasNudgedOnce.current || now - lastNudgeAt.current >= NUDGE_INTERVAL_MS) {
+        hasNudgedOnce.current = true
+        lastNudgeAt.current = now
+        setShowNudge(true)
+      }
+    }
+    tick()
+    const id = setInterval(tick, 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  useEffect(() => {
+    if (!showNudge) return
+    const t = setTimeout(() => setShowNudge(false), NUDGE_AUTO_DISMISS_MS)
+    return () => clearTimeout(t)
+  }, [showNudge])
 
   const ask = (text) => {
     const q = text.trim()
@@ -198,6 +236,27 @@ export default function SiteHelpWidget() {
             </p>
           </div>
         </div>
+      )}
+
+      {showNudge && !isOpen && (
+        <button
+          onClick={() => { setShowNudge(false); setIsOpen(true) }}
+          className="mb-3 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm shadow-xl px-4 py-3 text-left animate-[fadeIn_0.2s_ease-out]"
+        >
+          <p className="text-sm font-medium text-slate-700 dark:text-slate-200 whitespace-nowrap">
+            Not sure where to start? I can help.
+          </p>
+          <span
+            onClick={(e) => { e.stopPropagation(); setShowNudge(false) }}
+            role="button"
+            aria-label="Dismiss"
+            className="text-slate-300 dark:text-slate-500 hover:text-slate-500 dark:hover:text-slate-300 transition-colors shrink-0"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </span>
+        </button>
       )}
 
       <button
