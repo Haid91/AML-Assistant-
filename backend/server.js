@@ -596,6 +596,70 @@ function buildBusinessProfileText(intake) {
 Draft a first-pass AML/CTF Program (Part A and Part B) for this business, following the mandatory structure and grounding every section in these specific details.`
 }
 
+// This intentionally never collects the customer's actual name, date of
+// birth, address, or ID document numbers — SmrDraft.jsx asks the user to
+// keep those as placeholders. The generated narrative uses bracketed
+// placeholders for that identifying detail, which the user fills in
+// themselves after copying the draft, consistent with how Client Risk
+// Register handles client data (metadata only, no real PII ever sent to
+// the AI or stored).
+const SMR_DRAFT_SYSTEM_PROMPT = `You are an AML/CTF compliance drafting assistant. Given details of a suspicious matter, draft a first-pass Suspicious Matter Report (SMR) narrative for an Australian reporting entity, grounded in Section 41 of the AML/CTF Act 2006 (Cth) and AUSTRAC's SMR guidance.
+
+IMPORTANT — the details provided deliberately exclude the customer's real name, date of birth, address, and identity document numbers. Do not invent these. Everywhere identifying detail would normally go, use a clearly bracketed placeholder instead, e.g. [Customer's full legal name], [Date of birth], [Residential address], [ID document type and number] — so the user can fill in the real detail themselves after copying the draft.
+
+OUTPUT FORMAT — MANDATORY:
+Output plain text only. Do not use markdown syntax (no #, no **, no backticks). Use ALL-CAPS section headers, with blank lines between subsections.
+
+Structure the narrative in exactly this order:
+
+CONCERN
+State the nature and basis of the suspicion in a few sentences — name the specific typology described (structuring, layering, rapid fund movement, smurfing, behavioural red flags, etc.) and reference Section 41 of the AML/CTF Act 2006.
+
+CUSTOMER PROFILING
+Using only the customer-type, risk-rating, and PEP/sanctions/prior-SMR fields provided (never inventing identifying detail), describe the customer's risk picture. Use bracketed placeholders for name, date of birth, address, occupation, and ID details.
+
+SUSPICIOUS ACTIVITY
+Describe the specific transactions/pattern and red flags provided, as concretely as the input allows — amounts, approximate dates, and the behaviour observed. Do not invent transaction details beyond what's given.
+
+REPORTING DEADLINE
+State the exact deadline that applies: within 24 hours of forming the suspicion if it relates to a suspected terrorism financing matter, otherwise within 3 business days — based on which the user indicated.
+
+Close with a section titled DISCLAIMER containing 2-3 sentences stating plainly that this is an AI-generated first-pass draft based only on the information provided, is a starting point for the user's own SMR narrative, is not legal advice, and must be reviewed and completed (including all real identifying details) by a qualified AML/CTF professional before filing with AUSTRAC.`
+
+const SMR_TYPOLOGY_LABELS = {
+  structuring: 'Structuring / smurfing (transactions kept below reporting thresholds)',
+  layering: 'Layering (moving funds through multiple accounts/entities to obscure origin)',
+  rapidmovement: 'Rapid, unexplained movement of funds',
+  sourceoffunds: 'Unexplained or inconsistent source of funds',
+  behavioural: 'Behavioural red flags (evasive, nervous, inconsistent story)',
+  other: 'Other',
+}
+
+function buildSmrProfileText(intake) {
+  const {
+    typology, concernDescription, terrorismFinancing,
+    customerType, riskRating, pepOrSanctions, priorSmr,
+    transactionDetails, redFlags, additionalContext,
+  } = intake || {}
+  return `Suspicious Matter Details
+- Typology: ${SMR_TYPOLOGY_LABELS[typology] || typology || 'Not provided'}
+- What triggered the suspicion: ${concernDescription || 'Not provided'}
+- Suspected terrorism financing: ${terrorismFinancing ? 'Yes' : 'No'}
+
+Customer Profile (metadata only — no real name/DOB/address/ID provided; use bracketed placeholders for these in the draft)
+- Customer type: ${customerType || 'Not provided'}
+- Risk rating: ${riskRating || 'Not provided'}
+- PEP or sanctions relevant: ${pepOrSanctions || 'Not provided'}
+- Prior SMR filed on this customer: ${priorSmr || 'Not provided'}
+
+Suspicious Activity
+- Transaction pattern/amounts: ${transactionDetails || 'Not provided'}
+- Red flags observed: ${Array.isArray(redFlags) && redFlags.length ? redFlags.join(', ') : 'Not provided'}
+- Additional context: ${additionalContext || 'None provided'}
+
+Draft a first-pass SMR narrative following the mandatory CONCERN / CUSTOMER PROFILING / SUSPICIOUS ACTIVITY / REPORTING DEADLINE structure, grounding every section in these specific details and using bracketed placeholders for any identifying detail not provided above.`
+}
+
 function buildChatContextPreamble(intake) {
   const { businessName, industry, services, staffSize, clientTypes, deliveryChannels } = intake || {}
   const parts = []
@@ -892,6 +956,50 @@ app.get('/privacy-draft', asyncRoute(async (req, res) => {
   res.json({ draft })
 }))
 
+// ── SMR draft ──────────────────────────────────────────────────────────────────
+// Unlike Program/Privacy (one row per user, upserted — "your current draft"),
+// each SMR is a separate incident, so every submission is a new row in
+// document_versions rather than replacing a prior one. Listing past drafts
+// reuses the existing GET /document-versions?type=smr endpoint.
+app.post('/smr-draft', programDraftLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const intake = req.body?.intake
+  if (!intake || typeof intake !== 'object') {
+    return res.status(400).json({ error: 'Details about the matter are required' })
+  }
+
+  if (!anthropic) {
+    return res.status(503).json({ error: 'AI drafting is not available right now. Please try again later.' })
+  }
+
+  try {
+    const profileText = buildSmrProfileText(intake)
+    const response = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 4000,
+      system: SMR_DRAFT_SYSTEM_PROMPT,
+      messages: [{ role: 'user', content: profileText }],
+    })
+
+    const draftText = response.content[0]?.text || ''
+    if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
+
+    const label = `${SMR_TYPOLOGY_LABELS[intake.typology] || 'Suspicious matter'} — ${intake.riskRating || 'risk not set'}`
+    const id = crypto.randomUUID()
+    await createDocumentVersion({ id, userId: user.id, docType: 'smr', businessName: label, intake, draftText })
+    res.json({ draft: { id, businessName: label, intake, draftText, createdAt: new Date().toISOString() } })
+  } catch (err) {
+    console.error('Claude API error (SMR draft):', err.message)
+    if (err.status === 401) {
+      return res.status(500).json({ error: 'Invalid API key. Please check your ANTHROPIC_API_KEY in backend/.env and restart the server.' })
+    }
+    res.status(500).json({ error: 'The AI service encountered an error while drafting your SMR. Please try again in a moment.' })
+  }
+}))
+
 // ── CAMS mock exam attempts ────────────────────────────────────────────────────
 app.post('/mock-exam-attempt', mockExamLimiter, asyncRoute(async (req, res) => {
   const user = await getUserFromAuth(req)
@@ -1089,7 +1197,7 @@ app.get('/document-versions', asyncRoute(async (req, res) => {
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
 
   const docType = req.query.type
-  if (docType !== 'program' && docType !== 'privacy') return res.status(400).json({ error: 'Invalid type — expected "program" or "privacy"' })
+  if (!['program', 'privacy', 'smr'].includes(docType)) return res.status(400).json({ error: 'Invalid type — expected "program", "privacy", or "smr"' })
 
   const versions = await getDocumentVersions(user.id, docType)
   res.json({ versions })

@@ -121,7 +121,7 @@ const FAQ = [
   },
 ]
 
-export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard }) {
+export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -420,11 +420,11 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         <div className="bg-slate-900 dark:bg-slate-800 rounded-3xl p-8 text-center">
           <p className="text-lg font-bold text-white mb-2">What's next</p>
           <p className="text-slate-400 text-sm mb-6">
-            Our AI Assistant can draft a first-pass SMR/SAR narrative in the Concern / Customer Profiling / Suspicious Activity format above — or review the rest of your ongoing obligations and get your AML/CTF Program drafted if you haven't already.
+            Our SMR Draft tool can generate a first-pass narrative in the Concern / Customer Profiling / Suspicious Activity format above from a few details about the matter — or review the rest of your ongoing obligations and get your AML/CTF Program drafted if you haven't already.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <button onClick={onOpenChat} className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors">
-              Draft an SMR with the AI Assistant →
+            <button onClick={onOpenSmrDraft} className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors">
+              Draft an SMR →
             </button>
             <button onClick={onOpenProgramBuilder} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft your AML/CTF Program →

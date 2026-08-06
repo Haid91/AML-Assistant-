@@ -28,6 +28,7 @@ import PrivacyPack from './components/PrivacyPack'
 import ComplianceCalendar from './components/ComplianceCalendar'
 import ClientRiskRegister from './components/ClientRiskRegister'
 import ComplianceDashboard from './components/ComplianceDashboard'
+import SmrDraft from './components/SmrDraft'
 import TermsOfService from './components/TermsOfService'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SectorGuide from './components/SectorGuide'
@@ -71,6 +72,7 @@ const ROUTED_VIEWS = {
   training: '/training',
   chat: '/assistant',
   settings: '/settings',
+  smrDraft: '/smr-draft',
 }
 const PATH_TO_VIEW = Object.fromEntries(Object.entries(ROUTED_VIEWS).map(([v, p]) => [p, v]))
 
@@ -285,6 +287,7 @@ function App() {
     onOpenClientRiskRegister: () => setView('clientRiskRegister'),
     onOpenReportableTransactionCheck: () => setView('reportableTransactionCheck'),
     onOpenComplianceDashboard: () => setView('dashboard'),
+    onOpenSmrDraft: () => setView('smrDraft'),
     onOpenTermsOfService: () => setView('termsOfService'),
     onOpenPrivacyPolicy: () => setView('privacyPolicy'),
   }
@@ -500,6 +503,16 @@ function App() {
   if (view === 'dashboard') {
     return (
       <ComplianceDashboard
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'smrDraft') {
+    return (
+      <SmrDraft
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
