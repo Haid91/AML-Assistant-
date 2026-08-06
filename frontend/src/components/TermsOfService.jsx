@@ -1,6 +1,6 @@
 import Navbar from './Navbar'
 
-const LAST_UPDATED = '3 August 2026'
+const LAST_UPDATED = '7 August 2026'
 
 export default function TermsOfService({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenPrivacyPolicy }) {
   return (
@@ -48,9 +48,9 @@ export default function TermsOfService({ user, onGoHome, onNavigateSection, onSt
           <section>
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">1. Who these terms apply to</h2>
             <p>
-              These terms govern your use of AmlIntel (the "Service"), operated as an Australian business. By
-              creating an account or using the Service, you agree to these terms. If you don't agree, don't use
-              the Service.
+              These terms govern your use of AmlIntel (the "Service"), operated by <strong>Haider Shahid (ABN 78 745 780 870)</strong>,
+              trading as AmlIntel ("we", "us", "our"). By creating an account or using the Service, you agree to
+              these terms. If you don't agree, don't use the Service.
             </p>
           </section>
 
