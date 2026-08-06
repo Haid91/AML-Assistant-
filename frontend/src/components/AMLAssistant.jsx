@@ -94,6 +94,11 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
   const currentSession = sessions.find((s) => s.id === currentId) || sessions[0]
   const messages = currentSession?.messages || []
   const syncedRef = useRef(false)
+  // Set whenever the user sends a message or starts a new chat before the
+  // mount-sync effect below resolves — guards against that effect's
+  // setSessions(remote) discarding a just-sent message (and orphaning its
+  // in-flight AI reply) by unconditionally overwriting local state.
+  const localActivityRef = useRef(false)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -115,9 +120,18 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
       .then((res) => res.json())
       .then(async (data) => {
         const remote = data.sessions || []
-        if (remote.length > 0) {
+        if (remote.length > 0 && !localActivityRef.current) {
           setSessions(remote)
           setCurrentId(remote[0].id)
+        } else if (remote.length > 0) {
+          // The user already sent a message or started a new chat before
+          // this resolved — merge instead of overwriting, so that activity
+          // (and the currently-active session) survives.
+          setSessions((prev) => {
+            const remoteIds = new Set(remote.map((r) => r.id))
+            const localOnly = prev.filter((s) => !remoteIds.has(s.id))
+            return [...localOnly, ...remote]
+          })
         } else {
           for (const s of sessions) {
             if (s.messages.length === 0) continue
@@ -157,6 +171,7 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
   }
 
   const updateSession = (id, msgs) => {
+    localActivityRef.current = true
     const session = sessions.find((s) => s.id === id)
     const newTitle = session ? sessionTitle({ ...session, messages: msgs }) : 'New Chat'
     setSessions((prev) =>
@@ -204,6 +219,7 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
   }
 
   const handleNewChat = () => {
+    localActivityRef.current = true
     const s = newSession()
     setSessions((prev) => [s, ...prev])
     setCurrentId(s.id)

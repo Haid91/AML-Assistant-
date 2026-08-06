@@ -2,14 +2,23 @@ import { useState, useEffect } from 'react'
 import { API_URL } from '../config'
 import Navbar from './Navbar'
 
+// `new Date('YYYY-MM-DD')` parses the string as UTC midnight, then every
+// getter/setter below reads/writes it in local time — off by a day for any
+// user west of UTC. Parsing the components directly builds a local-midnight
+// Date instead, matching what the date input actually shows.
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
 function addYears(dateStr, years) {
-  const d = new Date(dateStr)
+  const d = parseLocalDate(dateStr)
   d.setFullYear(d.getFullYear() + years)
   return d
 }
 
 function addMonths(dateStr, months) {
-  const d = new Date(dateStr)
+  const d = parseLocalDate(dateStr)
   d.setMonth(d.getMonth() + months)
   return d
 }

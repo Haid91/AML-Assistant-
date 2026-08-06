@@ -24,14 +24,23 @@ function todayIso() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
+// `new Date('YYYY-MM-DD')` parses the string as UTC midnight, then local
+// getters (used below and by toLocaleDateString) read it back in local
+// time — off by a day for any user west of UTC. Parsing the components
+// directly builds a local-midnight Date instead.
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
 function daysUntil(dateStr) {
   const now = new Date()
-  const target = new Date(dateStr)
+  const target = parseLocalDate(dateStr)
   return Math.floor((target - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000)
 }
 
 function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })
+  return parseLocalDate(dateStr).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 function reviewBadge(nextReviewDate) {

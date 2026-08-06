@@ -2,14 +2,23 @@ import { useState, useEffect } from 'react'
 import { API_URL } from '../config'
 import Navbar from './Navbar'
 
+// `new Date('YYYY-MM-DD')` parses the string as UTC midnight, then every
+// getter/setter below reads/writes it in local time — off by a day for any
+// user west of UTC. Parsing the components directly builds a local-midnight
+// Date instead, matching what the date input actually shows.
+function parseLocalDate(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
 function addYears(dateStr, years) {
-  const d = new Date(dateStr)
+  const d = parseLocalDate(dateStr)
   d.setFullYear(d.getFullYear() + years)
   return d
 }
 
 function addMonths(dateStr, months) {
-  const d = new Date(dateStr)
+  const d = parseLocalDate(dateStr)
   d.setMonth(d.getMonth() + months)
   return d
 }
@@ -159,7 +168,7 @@ export default function ComplianceDashboard({ user, onGoHome, onNavigateSection,
     return { title: item.title, dueDate, days, dueSoonDays: item.dueSoonDays, started: !!value }
   })
 
-  const overdueClients = clientEntries.filter((e) => e.status !== 'offboarded' && e.nextReviewDate && daysUntil(new Date(e.nextReviewDate)) < 0)
+  const overdueClients = clientEntries.filter((e) => e.status !== 'offboarded' && e.nextReviewDate && daysUntil(parseLocalDate(e.nextReviewDate)) < 0)
   const activeClients = clientEntries.filter((e) => e.status !== 'offboarded')
 
   const latestExam = examAttempts[0] || null
@@ -179,7 +188,7 @@ export default function ComplianceDashboard({ user, onGoHome, onNavigateSection,
   calendarRows.sort((a, b) => a.days - b.days)
 
   const clientRows = overdueClients
-    .map((c) => ({ name: `CDD review — ${c.referenceLabel}`, sub: 'Client Risk Register', days: daysUntil(new Date(c.nextReviewDate)) }))
+    .map((c) => ({ name: `CDD review — ${c.referenceLabel}`, sub: 'Client Risk Register', days: daysUntil(parseLocalDate(c.nextReviewDate)) }))
     .sort((a, b) => a.days - b.days)
 
   const deadlineRows = [...calendarRows, ...clientRows].sort((a, b) => a.days - b.days)

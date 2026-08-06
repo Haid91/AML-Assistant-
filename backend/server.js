@@ -385,7 +385,7 @@ app.post('/billing/create-portal-session', billingLimiter, asyncRoute(async (req
   res.json({ url: session.url })
 }))
 
-app.post('/auth/update-profile', asyncRoute(async (req, res) => {
+app.post('/auth/update-profile', authLimiter, asyncRoute(async (req, res) => {
   const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   const { name } = req.body
@@ -395,7 +395,7 @@ app.post('/auth/update-profile', asyncRoute(async (req, res) => {
   res.json({ user: { id: user.id, name: trimmedName, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
 }))
 
-app.post('/auth/change-password', asyncRoute(async (req, res) => {
+app.post('/auth/change-password', authLimiter, asyncRoute(async (req, res) => {
   const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   const { currentPassword, newPassword } = req.body
@@ -932,25 +932,28 @@ app.post('/compliance-checklist', complianceLimiter, asyncRoute(async (req, res)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
 
-  const { programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate, acrLodgedYear } = req.body || {}
-  for (const [name, value] of Object.entries({ programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate })) {
-    if (value != null && !ISO_DATE_RE.test(value)) {
+  const body = req.body || {}
+  // Only fields actually present in the request are touched — `key in body`
+  // (not just `body[key] != null`) so that explicitly sending `null` clears
+  // a field instead of being indistinguishable from "not sent" and silently
+  // ignored (a field omitted entirely from the body must leave the existing
+  // value alone).
+  const fields = {}
+  for (const name of ['programReviewDate', 'independentEvalDate', 'staffTrainingDate', 'privacyReviewDate']) {
+    if (!(name in body)) continue
+    if (body[name] != null && !ISO_DATE_RE.test(body[name])) {
       return res.status(400).json({ error: `Invalid date for ${name}` })
     }
+    fields[name] = body[name] ?? null
   }
-  if (acrLodgedYear != null && !Number.isInteger(acrLodgedYear)) {
-    return res.status(400).json({ error: 'Invalid acrLodgedYear' })
+  if ('acrLodgedYear' in body) {
+    if (body.acrLodgedYear != null && !Number.isInteger(body.acrLodgedYear)) {
+      return res.status(400).json({ error: 'Invalid acrLodgedYear' })
+    }
+    fields.acrLodgedYear = body.acrLodgedYear ?? null
   }
 
-  await saveComplianceChecklist({
-    id: crypto.randomUUID(),
-    userId: user.id,
-    programReviewDate: programReviewDate ?? null,
-    independentEvalDate: independentEvalDate ?? null,
-    staffTrainingDate: staffTrainingDate ?? null,
-    privacyReviewDate: privacyReviewDate ?? null,
-    acrLodgedYear: acrLodgedYear ?? null,
-  })
+  await saveComplianceChecklist({ id: crypto.randomUUID(), userId: user.id, ...fields })
   const checklist = await getComplianceChecklist(user.id)
   res.json({ checklist })
 }))
@@ -1010,13 +1013,15 @@ app.put('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (req
   const err = validateClientRiskFields(req.body, { requireCore: false })
   if (err) return res.status(400).json({ error: err })
 
-  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, notes } = req.body || {}
-  const entry = await updateClientRiskEntry({
-    id: req.params.id, userId: user.id,
-    referenceLabel: referenceLabel?.trim() ?? null, riskRating: riskRating ?? null, cddType: cddType ?? null,
-    onboardedDate: onboardedDate ?? null, lastReviewDate: lastReviewDate ?? null, nextReviewDate: nextReviewDate ?? null,
-    status: status ?? null, notes: notes ?? null,
-  })
+  const body = req.body || {}
+  // Only fields actually present in the request are touched — see the same
+  // note in the /compliance-checklist handler above.
+  const fields = {}
+  for (const name of ['referenceLabel', 'riskRating', 'cddType', 'onboardedDate', 'lastReviewDate', 'nextReviewDate', 'status', 'notes']) {
+    if (!(name in body)) continue
+    fields[name] = name === 'referenceLabel' ? (body[name]?.trim() ?? null) : (body[name] ?? null)
+  }
+  const entry = await updateClientRiskEntry({ id: req.params.id, userId: user.id, ...fields })
   if (!entry) return res.status(404).json({ error: 'Entry not found' })
   res.json({ entry })
 }))

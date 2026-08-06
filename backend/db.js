@@ -106,18 +106,37 @@ export async function getComplianceChecklist(userId) {
   return rows[0] || null
 }
 
-export async function saveComplianceChecklist({ id, userId, programReviewDate, independentEvalDate, staffTrainingDate, privacyReviewDate, acrLodgedYear }) {
+const COMPLIANCE_CHECKLIST_COLUMNS = {
+  programReviewDate: 'program_review_date',
+  independentEvalDate: 'independent_eval_date',
+  staffTrainingDate: 'staff_training_date',
+  privacyReviewDate: 'privacy_review_date',
+  acrLodgedYear: 'acr_lodged_year',
+}
+
+// Only columns whose key is actually present on `fields` are written — a
+// key with value `null` clears that column, while an omitted key leaves the
+// existing value untouched. Building the SET clause dynamically (rather
+// than COALESCE-ing every column against every call) is what makes "clear
+// this field" and "don't touch this field" distinguishable at the SQL level.
+export async function saveComplianceChecklist({ id, userId, ...fields }) {
+  const presentKeys = Object.keys(fields).filter((k) => k in COMPLIANCE_CHECKLIST_COLUMNS)
+  const params = [id, userId]
+  const insertCols = ['id', 'user_id']
+  const setClauses = []
+  for (const key of presentKeys) {
+    params.push(fields[key])
+    const col = COMPLIANCE_CHECKLIST_COLUMNS[key]
+    insertCols.push(col)
+    setClauses.push(`${col} = $${params.length}`)
+  }
+  const placeholders = params.map((_, i) => `$${i + 1}`).join(', ')
+  const setSql = setClauses.length ? `${setClauses.join(', ')}, updated_at = now()` : 'updated_at = now()'
   await pool.query(
-    `INSERT INTO compliance_checklist (id, user_id, program_review_date, independent_eval_date, staff_training_date, privacy_review_date, acr_lodged_year, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, now())
-     ON CONFLICT (user_id) DO UPDATE SET
-       program_review_date = COALESCE($3, compliance_checklist.program_review_date),
-       independent_eval_date = COALESCE($4, compliance_checklist.independent_eval_date),
-       staff_training_date = COALESCE($5, compliance_checklist.staff_training_date),
-       privacy_review_date = COALESCE($6, compliance_checklist.privacy_review_date),
-       acr_lodged_year = COALESCE($7, compliance_checklist.acr_lodged_year),
-       updated_at = now()`,
-    [id, userId, programReviewDate ?? null, independentEvalDate ?? null, staffTrainingDate ?? null, privacyReviewDate ?? null, acrLodgedYear ?? null]
+    `INSERT INTO compliance_checklist (${insertCols.join(', ')}, updated_at)
+     VALUES (${placeholders}, now())
+     ON CONFLICT (user_id) DO UPDATE SET ${setSql}`,
+    params
   )
 }
 
@@ -141,21 +160,34 @@ export async function createClientRiskEntry({ id, userId, referenceLabel, riskRa
   return rows[0]
 }
 
-export async function updateClientRiskEntry({ id, userId, referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, notes }) {
+const CLIENT_RISK_ENTRY_SETTABLE_COLUMNS = {
+  referenceLabel: 'reference_label',
+  riskRating: 'risk_rating',
+  cddType: 'cdd_type',
+  onboardedDate: 'onboarded_date',
+  lastReviewDate: 'last_review_date',
+  nextReviewDate: 'next_review_date',
+  status: 'status',
+  notes: 'notes',
+}
+
+// Same dynamic-SET approach as saveComplianceChecklist above — only keys
+// present on `fields` are written, so a field can be explicitly cleared
+// (value: null) without also silently reverting every omitted field.
+export async function updateClientRiskEntry({ id, userId, ...fields }) {
+  const presentKeys = Object.keys(fields).filter((k) => k in CLIENT_RISK_ENTRY_SETTABLE_COLUMNS)
+  const params = [id, userId]
+  const setClauses = []
+  for (const key of presentKeys) {
+    params.push(fields[key])
+    setClauses.push(`${CLIENT_RISK_ENTRY_SETTABLE_COLUMNS[key]} = $${params.length}`)
+  }
+  const setSql = setClauses.length ? `${setClauses.join(', ')}, updated_at = now()` : 'updated_at = now()'
   const { rows } = await pool.query(
-    `UPDATE client_risk_entries SET
-       reference_label = COALESCE($3, reference_label),
-       risk_rating = COALESCE($4, risk_rating),
-       cdd_type = COALESCE($5, cdd_type),
-       onboarded_date = COALESCE($6, onboarded_date),
-       last_review_date = COALESCE($7, last_review_date),
-       next_review_date = COALESCE($8, next_review_date),
-       status = COALESCE($9, status),
-       notes = COALESCE($10, notes),
-       updated_at = now()
+    `UPDATE client_risk_entries SET ${setSql}
      WHERE id = $1 AND user_id = $2
      RETURNING ${CLIENT_RISK_ENTRY_COLUMNS}`,
-    [id, userId, referenceLabel ?? null, riskRating ?? null, cddType ?? null, onboardedDate ?? null, lastReviewDate ?? null, nextReviewDate ?? null, status ?? null, notes ?? null]
+    params
   )
   return rows[0] || null
 }
