@@ -92,7 +92,6 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
         <div className="hidden lg:flex items-center justify-center gap-4">
           <button onClick={() => onNavigateSection?.('features')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">What you get</button>
           <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
-          <button onClick={onOpenAbout} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Real-world experience</button>
 
           {/* Topics dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -427,13 +426,6 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             >
               Pricing
             </button>
-            <button
-              onClick={() => { setMobileOpen(false); onOpenAbout?.() }}
-              className="text-left text-sm text-slate-300 hover:text-white px-3 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
-            >
-              Real-world experience
-            </button>
-
             {/* Topics accordion */}
             <button
               onClick={() => setMobileTopicsOpen((v) => !v)}
