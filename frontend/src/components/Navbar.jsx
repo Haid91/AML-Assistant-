@@ -45,9 +45,11 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileTopicsOpen, setMobileTopicsOpen] = useState(false)
   const [mobileTranche2Open, setMobileTranche2Open] = useState(false)
+  const [mobileQuickTranche2Open, setMobileQuickTranche2Open] = useState(false)
   const dropdownRef = useRef(null)
   const moreInfoRef = useRef(null)
   const tranche2Ref = useRef(null)
+  const mobileQuickTranche2Ref = useRef(null)
 
   // Below `lg`, the center link cluster doesn't fit and there's no wrap
   // behavior, so it silently overflows the viewport instead of collapsing —
@@ -70,6 +72,9 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
       }
       if (tranche2Ref.current && !tranche2Ref.current.contains(e.target)) {
         setTranche2Open(false)
+      }
+      if (mobileQuickTranche2Ref.current && !mobileQuickTranche2Ref.current.contains(e.target)) {
+        setMobileQuickTranche2Open(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -392,10 +397,66 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
           )}
         </div>
 
+        {/* Quick-access group — mobile only. Everything else lives in the
+            hamburger menu, but these stay directly reachable since they're
+            the two most-used links plus the theme toggle. */}
+        <div className="lg:hidden ml-auto flex items-center gap-0.5">
+          <button
+            onClick={onOpenTraining}
+            className="text-[11px] font-medium text-slate-300 hover:text-white px-1.5 py-1 rounded-lg hover:bg-slate-800 transition-colors whitespace-nowrap"
+          >
+            Training
+          </button>
+
+          <div className="relative" ref={mobileQuickTranche2Ref}>
+            <button
+              onClick={() => setMobileQuickTranche2Open((v) => !v)}
+              className={`flex items-center gap-0.5 px-1.5 py-1 rounded-lg text-[11px] font-medium transition-colors whitespace-nowrap ${
+                mobileQuickTranche2Open ? 'bg-slate-800 text-white' : 'text-slate-300 hover:text-white hover:bg-slate-800'
+              }`}
+            >
+              Tranche 2
+              <svg className={`w-3 h-3 shrink-0 transition-transform duration-200 ${mobileQuickTranche2Open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {mobileQuickTranche2Open && (
+              <div className="absolute top-full right-0 mt-3 w-56 max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 max-h-[70vh] overflow-y-auto" style={{ zIndex: 9999 }}>
+                {[
+                  ['Eligibility Check', onOpenEligibility],
+                  ['Reportable Transaction Check', onOpenReportableTransactionCheck],
+                  ['Privacy Act Check', onOpenPrivacyCheck],
+                  ['AUSTRAC Enrolment', onOpenAustracEnrolment],
+                  ['File an SMR', onOpenSmrGuide],
+                  ['Suspicious Activity Indicators', onOpenSuspiciousIndicators],
+                  ['Compliance Officer', onOpenComplianceOfficer],
+                  ['Risk Assessment', onOpenRiskAssessment],
+                  ['Setup Guide', onOpenSetupGuide],
+                  ['AML Program Draft', onOpenProgramBuilder],
+                  ['Compliance Calendar', onOpenComplianceCalendar],
+                  ['Client Risk Register', onOpenClientRiskRegister],
+                  ['Cost', onOpenCost],
+                ].map(([label, handler]) => (
+                  <button
+                    key={label}
+                    onClick={() => { setMobileQuickTranche2Open(false); handler?.() }}
+                    className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <ThemeToggle />
+        </div>
+
         {/* Hamburger — mobile only */}
         <button
           onClick={() => setMobileOpen((v) => !v)}
-          className="lg:hidden ml-auto p-2 text-slate-300 hover:text-white transition-colors"
+          className="lg:hidden p-2 text-slate-300 hover:text-white transition-colors"
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
         >
           {mobileOpen ? (
@@ -530,8 +591,7 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
               Contact
             </button>
 
-            <div className="border-t border-slate-800 mt-3 pt-4 flex items-center justify-between">
-              <ThemeToggle />
+            <div className="border-t border-slate-800 mt-3 pt-4 flex items-center justify-end">
               {user ? (
                 <div className="flex items-center gap-3">
                   <button
