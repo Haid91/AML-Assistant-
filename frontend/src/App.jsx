@@ -39,8 +39,14 @@ function isPremium(u) {
   return u?.premium || OWNER_EMAILS.has(u?.email?.toLowerCase())
 }
 
+// A handful of views are directly linkable via a real URL path — everything
+// else in the app is pure client-side view state with no routing, so this
+// stays intentionally small rather than converting the whole app to a router.
+const ROUTED_VIEWS = { termsOfService: '/terms', privacyPolicy: '/privacy', signin: '/signin', signup: '/signup' }
+const PATH_TO_VIEW = Object.fromEntries(Object.entries(ROUTED_VIEWS).map(([v, p]) => [p, v]))
+
 function App() {
-  const [view, setView] = useState('landing')
+  const [view, setView] = useState(() => PATH_TO_VIEW[window.location.pathname] || 'landing')
   const [previousView, setPreviousView] = useState('landing')
   const [settingsTab, setSettingsTab] = useState('profile')
   const [user, setUser] = useState(null)
@@ -69,6 +75,25 @@ function App() {
     if (checkout === 'success') {
       refreshUserAfterCheckout()
     }
+  }, [])
+
+  // Keep the URL in sync with the routed views — pushState (a real,
+  // back-button-able history entry) when entering one, replaceState (no new
+  // entry) when leaving one for a normal in-app view, since the rest of the
+  // app doesn't use per-view routing and shouldn't spam browser history.
+  useEffect(() => {
+    const path = ROUTED_VIEWS[view]
+    if (path) {
+      if (window.location.pathname !== path) window.history.pushState(null, '', path)
+    } else if (PATH_TO_VIEW[window.location.pathname]) {
+      window.history.replaceState(null, '', '/')
+    }
+  }, [view])
+
+  useEffect(() => {
+    const onPopState = () => setView(PATH_TO_VIEW[window.location.pathname] || 'landing')
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
   }, [])
 
   // Stripe's webhook may land a moment after the redirect back, so retry a
