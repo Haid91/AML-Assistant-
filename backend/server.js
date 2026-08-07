@@ -1258,8 +1258,11 @@ app.post('/email-estimate', estimateLimiter, asyncRoute(async (req, res) => {
     return res.status(400).json({ error: 'Invalid team size' })
   }
 
-  const annualTotal = COST_PREMIUM_MONTHLY * 12 * peopleCount
-  const monthlyEquivalent = annualTotal / 12
+  // Flat regardless of team size, matching CostCalculator.jsx on the
+  // frontend — one Premium subscription covers the firm, so peopleCount
+  // (kept for the email's "X people" context line) never multiplies price.
+  const annualTotal = COST_PREMIUM_MONTHLY * 12
+  const monthlyEquivalent = COST_PREMIUM_MONTHLY
 
   try {
     await sendEstimateEmail(email.trim(), { industryLabel, people: peopleCount, annualTotal, monthlyEquivalent })

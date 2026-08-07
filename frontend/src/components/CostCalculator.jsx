@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { API_URL } from '../config'
 import Navbar from './Navbar'
 
@@ -25,7 +25,7 @@ const FEATURES = [
 const FAQS = [
   {
     q: 'How much does AmlIntel cost?',
-    a: `Premium is $${PREMIUM_MONTHLY}/month per person, with a 7-day free trial. It includes the AI compliance assistant for CDD, EDD, and SMR guidance, plus AI-drafted AML/CTF Program generation.`,
+    a: `Premium is a flat $${PREMIUM_MONTHLY}/month, with a 7-day free trial — one subscription covers your firm's AML/CTF compliance work, regardless of how many people are on your team. It includes the AI compliance assistant for CDD, EDD, and SMR guidance, plus AI-drafted AML/CTF Program generation.`,
   },
   {
     q: 'What do I get for free?',
@@ -33,7 +33,7 @@ const FAQS = [
   },
   {
     q: 'Is this cheaper than a compliance consultant?',
-    a: `For most small teams, yes. A private AML/CTF consultant commonly runs $${CONSULTANT_LOW.toLocaleString()}–$${CONSULTANT_HIGH.toLocaleString()} per year. This is an illustrative comparison, not a quote — larger teams should compare against per-seat Premium pricing directly.`,
+    a: `For most Tranche 2 firms, yes — a private AML/CTF consultant commonly runs $${CONSULTANT_LOW.toLocaleString()}–$${CONSULTANT_HIGH.toLocaleString()} per year, while AmlIntel Premium is a flat $${(PREMIUM_MONTHLY * 12).toFixed(2)}/year no matter your team size. This is an illustrative comparison, not a quote.`,
   },
 ]
 
@@ -45,10 +45,15 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
   const [sendState, setSendState] = useState('idle') // idle | loading | sent | error
   const [sendError, setSendError] = useState('')
 
-  const { annualTotal, monthlyEquivalent } = useMemo(() => {
-    const total = PREMIUM_MONTHLY * 12 * people
-    return { annualTotal: total, monthlyEquivalent: total / 12 }
-  }, [people])
+  // Flat regardless of team size — one Premium subscription (one login, run
+  // by the Compliance Officer) covers the firm's AML/CTF compliance work,
+  // the same way a single engaged consultant would. `people` and
+  // `activeClients` are both context-only inputs that personalize the copy
+  // without scaling the price — multiplying per head would make the
+  // estimate balloon past typical consultant fees for any team bigger than
+  // 2-3 people, which defeats the entire "cheaper than a consultant" pitch.
+  const annualTotal = PREMIUM_MONTHLY * 12
+  const monthlyEquivalent = PREMIUM_MONTHLY
 
   const industryLabel = INDUSTRIES.find((i) => i.id === industry)?.label || 'Lawyers & Conveyancers'
   const savings = CONSULTANT_LOW - annualTotal
@@ -159,7 +164,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
               <span>1</span>
               <span>20+</span>
             </div>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">Used to estimate per-seat Premium cost.</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">For context only — one AmlIntel subscription covers your whole firm, regardless of team size.</p>
           </div>
 
           <div>
@@ -206,7 +211,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
             <p className="text-sm font-semibold mb-3">Cost breakdown</p>
             <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-2">
-              <span>Annual subscription × {people}</span>
+              <span>Annual subscription (flat, whole firm)</span>
               <span>${annualTotal.toFixed(2)}</span>
             </div>
             <div className="border-t border-slate-100 dark:border-slate-700 mt-2 pt-2 flex justify-between text-sm font-bold">
