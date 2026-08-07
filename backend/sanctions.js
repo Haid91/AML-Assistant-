@@ -282,11 +282,19 @@ export async function getWatchlistCount(userId) {
   return result.rows[0].count
 }
 
+// The cap is enforced inside this single statement (not as a separate
+// pre-check query) so two concurrent requests can't both pass a check and
+// land the user over MAX_WATCHLIST_PER_USER — the count subquery and the
+// insert commit together, closing the race a check-then-insert would have.
 export async function addToWatchlist({ id, userId, name, notes }) {
-  await pool.query(
-    'INSERT INTO sanctions_watchlist (id, user_id, name, notes) VALUES ($1, $2, $3, $4)',
+  const result = await pool.query(
+    `INSERT INTO sanctions_watchlist (id, user_id, name, notes)
+     SELECT $1, $2, $3, $4
+     WHERE (SELECT count(*) FROM sanctions_watchlist WHERE user_id = $2) < ${MAX_WATCHLIST_PER_USER}
+     RETURNING id`,
     [id, userId, name, notes || null],
   )
+  return result.rowCount > 0
 }
 
 export async function getWatchlist(userId) {

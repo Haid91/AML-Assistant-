@@ -139,7 +139,7 @@ function ItemCard({ item, value, onChange, onMarkToday, onSave, saving }) {
   )
 }
 
-export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade }) {
+export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade }) {
   const [phase, setPhase] = useState('checking') // checking | dashboard
   const [checklist, setChecklist] = useState({})
   const [savingKey, setSavingKey] = useState(null)
@@ -190,6 +190,8 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenProgramBuilder={onOpenProgramBuilder} onOpenAustracEnrolment={onOpenAustracEnrolment}
           onOpenComplianceOfficer={onOpenComplianceOfficer} onOpenRiskAssessment={onOpenRiskAssessment}
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
+          onOpenSmrGuide={onOpenSmrGuide} onOpenClientRiskRegister={onOpenClientRiskRegister}
+          onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
           onOpenSanctionsScreening={onOpenSanctionsScreening}
@@ -209,6 +211,8 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenProgramBuilder={onOpenProgramBuilder} onOpenAustracEnrolment={onOpenAustracEnrolment}
           onOpenComplianceOfficer={onOpenComplianceOfficer} onOpenRiskAssessment={onOpenRiskAssessment}
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
+          onOpenSmrGuide={onOpenSmrGuide} onOpenClientRiskRegister={onOpenClientRiskRegister}
+          onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
           onOpenSanctionsScreening={onOpenSanctionsScreening}
@@ -237,6 +241,8 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenProgramBuilder={onOpenProgramBuilder} onOpenAustracEnrolment={onOpenAustracEnrolment}
           onOpenComplianceOfficer={onOpenComplianceOfficer} onOpenRiskAssessment={onOpenRiskAssessment}
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
+          onOpenSmrGuide={onOpenSmrGuide} onOpenClientRiskRegister={onOpenClientRiskRegister}
+          onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
           onOpenSanctionsScreening={onOpenSanctionsScreening}
@@ -284,6 +290,8 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
         onOpenProgramBuilder={onOpenProgramBuilder} onOpenAustracEnrolment={onOpenAustracEnrolment}
         onOpenComplianceOfficer={onOpenComplianceOfficer} onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
+        onOpenSmrGuide={onOpenSmrGuide} onOpenClientRiskRegister={onOpenClientRiskRegister}
+        onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
         onOpenSanctionsScreening={onOpenSanctionsScreening}

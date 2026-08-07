@@ -101,7 +101,7 @@ const DOCUMENTS = [
   },
 ]
 
-export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenPrivacyPack, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenSmrDraft, onOpenSanctionsScreening }) {
+export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenPrivacyPack, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [reportingEntity, setReportingEntity] = useState(null)
@@ -150,6 +150,10 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
+        onOpenComplianceCalendar={onOpenComplianceCalendar}
+        onOpenClientRiskRegister={onOpenClientRiskRegister}
+        onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
+        onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
         onOpenSanctionsScreening={onOpenSanctionsScreening}
       />

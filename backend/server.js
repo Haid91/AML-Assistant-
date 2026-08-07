@@ -189,6 +189,17 @@ function recordAiUsage(userId, route, response) {
 // stay signed in across server restarts. Reset tokens stay in-memory — they're
 // short-lived, and losing one on restart just means requesting a new reset link.
 const resetTokens = new Map() // token → { email, expiresAt }
+const RESET_TOKEN_SWEEP_INTERVAL_MS = 60 * 60 * 1000
+
+// A token is only otherwise removed when redeemed or superseded by a newer
+// request for the same email — a link that's requested but never clicked
+// would sit here forever without this sweep.
+function sweepExpiredResetTokens() {
+  const now = Date.now()
+  for (const [tok, entry] of resetTokens) {
+    if (entry.expiresAt < now) resetTokens.delete(tok)
+  }
+}
 
 // ── Email (Resend) ─────────────────────────────────────────────────────────────
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
@@ -212,7 +223,7 @@ async function sendResetEmail(toEmail, name, resetUrl) {
           <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
         </div>
         <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">Reset your password</h2>
-        <p style="margin:0 0 24px;color:#475569;font-size:15px">Hi ${name}, we received a request to reset your AmlIntel password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
+        <p style="margin:0 0 24px;color:#475569;font-size:15px">Hi ${escapeHtml(name)}, we received a request to reset your AmlIntel password. Click the button below — the link expires in <strong>1 hour</strong>.</p>
         <a href="${resetUrl}" style="display:inline-block;padding:13px 28px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:10px;font-weight:600;font-size:15px">Reset Password</a>
         <p style="margin:28px 0 0;color:#94a3b8;font-size:13px">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
         <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
@@ -346,7 +357,7 @@ function verifyPassword(password, storedHash) {
 // ── Auth routes ───────────────────────────────────────────────────────────────
 app.post('/auth/register', authLimiter, asyncRoute(async (req, res) => {
   const { name, email, password } = req.body
-  if (!name || !email || !password) {
+  if (!name || typeof name !== 'string' || !email || typeof email !== 'string' || !password || typeof password !== 'string') {
     return res.status(400).json({ error: 'Name, email, and password are required' })
   }
   if (password.length < 6) {
@@ -372,7 +383,7 @@ app.post('/auth/register', authLimiter, asyncRoute(async (req, res) => {
 
 app.post('/auth/login', authLimiter, asyncRoute(async (req, res) => {
   const { email, password } = req.body
-  if (!email || !password) {
+  if (!email || typeof email !== 'string' || !password || typeof password !== 'string') {
     return res.status(400).json({ error: 'Email and password are required' })
   }
   const user = await getUserByEmail(email.toLowerCase())
@@ -1143,16 +1154,17 @@ const ENTRY_STATUSES = new Set(['active', 'offboarded'])
 const CASE_STATUSES = new Set(['none', 'open', 'closed'])
 
 function validateClientRiskFields(body, { requireCore }) {
-  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, caseStatus } = body || {}
+  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, caseStatus, notes } = body || {}
   if (requireCore) {
-    if (!referenceLabel || typeof referenceLabel !== 'string' || !referenceLabel.trim()) return 'referenceLabel is required'
+    if (!referenceLabel || typeof referenceLabel !== 'string' || !referenceLabel.trim() || referenceLabel.trim().length > 200) return 'referenceLabel is required (max 200 characters)'
     if (!riskRating || !RISK_RATINGS.has(riskRating)) return 'Invalid riskRating'
     if (!cddType || !CDD_TYPES.has(cddType)) return 'Invalid cddType'
   } else {
     if (riskRating != null && !RISK_RATINGS.has(riskRating)) return 'Invalid riskRating'
     if (cddType != null && !CDD_TYPES.has(cddType)) return 'Invalid cddType'
-    if (referenceLabel != null && (typeof referenceLabel !== 'string' || !referenceLabel.trim())) return 'Invalid referenceLabel'
+    if (referenceLabel != null && (typeof referenceLabel !== 'string' || !referenceLabel.trim() || referenceLabel.trim().length > 200)) return 'Invalid referenceLabel (max 200 characters)'
   }
+  if (notes != null && (typeof notes !== 'string' || notes.length > 2000)) return 'Invalid notes (max 2000 characters)'
   if (status != null && !ENTRY_STATUSES.has(status)) return 'Invalid status'
   if (caseStatus != null && !CASE_STATUSES.has(caseStatus)) return 'Invalid caseStatus'
   for (const [name, value] of Object.entries({ onboardedDate, lastReviewDate, nextReviewDate })) {
@@ -1355,7 +1367,8 @@ app.post('/sanctions-watchlist', sanctionsScreenLimiter, asyncRoute(async (req, 
   }
 
   const id = crypto.randomUUID()
-  await addToWatchlist({ id, userId: user.id, name: name.trim(), notes })
+  const added = await addToWatchlist({ id, userId: user.id, name: name.trim(), notes })
+  if (!added) return res.status(400).json({ error: `You can monitor up to ${MAX_WATCHLIST_PER_USER} names at a time.` })
   res.json({ id })
 }))
 
@@ -1496,4 +1509,6 @@ app.listen(PORT, () => {
   setInterval(() => {
     runSanctionsRefreshCycle().catch((err) => console.error('[sanctions] scheduled refresh cycle failed:', err.message))
   }, SANCTIONS_REFRESH_INTERVAL_MS)
+
+  setInterval(sweepExpiredResetTokens, RESET_TOKEN_SWEEP_INTERVAL_MS)
 })
