@@ -116,35 +116,25 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
 
       {/* Header */}
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-8 text-center">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 px-3 py-1.5 rounded-full mb-5">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 3v8a1 1 0 01-1 1H10a1 1 0 01-1-1V10m6 0H9m6 0V6a1 1 0 00-1-1h-4a1 1 0 00-1 1v4" />
-          </svg>
-          Cost calculator
-        </span>
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">Estimate your AML/CTF compliance cost</h1>
+        <p className="text-xs text-blue-600 dark:text-blue-400 uppercase tracking-widest font-medium mb-3">Cost calculator</p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">What does AML/CTF compliance actually cost?</h1>
         <p className="text-slate-500 dark:text-slate-400 text-base">
-          Tell us about your firm to see your recommended plan and estimated annual cost with AmlIntel.
+          Tell us about your firm and we'll show you the Premium price against a typical consultant's.
         </p>
       </div>
 
       {/* Calculator */}
-      <div className="max-w-4xl mx-auto px-6 pb-16 grid md:grid-cols-2 gap-6 items-start">
+      <div className="max-w-4xl mx-auto px-6 pb-16 grid md:grid-cols-5 gap-6 items-start">
         {/* Left: firm details */}
-        <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <h2 className="font-semibold">Tell us about your firm</h2>
-          </div>
+        <div className="md:col-span-2 bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-6">
+          <h2 className="font-semibold mb-5">Tell us about your firm</h2>
 
           <div className="mb-6">
             <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Business type</label>
             <select
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white transition-colors"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 focus:border-blue-500 rounded-xl px-4 py-3 text-sm outline-none text-slate-900 dark:text-white transition-colors"
             >
               {INDUSTRIES.map((i) => <option key={i.id} value={i.id}>{i.label}</option>)}
             </select>
@@ -153,12 +143,12 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-slate-600 dark:text-slate-300">People in your firm</label>
-              <span className="text-sm font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 px-2.5 py-0.5 rounded-lg">{people}</span>
+              <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{people}</span>
             </div>
             <input
               type="range" min="1" max="20" value={people}
               onChange={(e) => setPeople(Number(e.target.value))}
-              className="w-full accent-orange-500"
+              className="w-full accent-blue-600"
             />
             <div className="flex justify-between text-xs text-slate-400 mt-1">
               <span>1</span>
@@ -170,12 +160,12 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-slate-600 dark:text-slate-300">Total active clients</label>
-              <span className="text-sm font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 px-2.5 py-0.5 rounded-lg">{activeClients}</span>
+              <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{activeClients}</span>
             </div>
             <input
               type="range" min="1" max="500" value={activeClients}
               onChange={(e) => setActiveClients(Number(e.target.value))}
-              className="w-full accent-orange-500"
+              className="w-full accent-blue-600"
             />
             <div className="flex justify-between text-xs text-slate-400 mt-1">
               <span>1</span>
@@ -186,63 +176,37 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
         </div>
 
         {/* Right: recommended plan */}
-        <div className="bg-orange-50 dark:bg-orange-500/5 border border-orange-200 dark:border-orange-500/20 rounded-2xl p-6">
-          <div className="flex items-start justify-between mb-1">
-            <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Recommended plan</p>
-              <span className="inline-block text-xs font-bold text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-500/20 px-3 py-1 rounded-full">Premium</span>
-            </div>
-            <svg className="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
+        <div className="md:col-span-3 bg-white dark:bg-slate-800 border-2 border-blue-600 rounded-2xl p-8">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="font-bold text-lg">Premium</p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full">Recommended</span>
           </div>
-
-          <div className="mb-1 mt-3 flex items-end gap-1.5">
-            <span className="text-4xl font-bold text-slate-900 dark:text-white">${annualTotal.toFixed(2)}</span>
-            <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/ year</span>
-          </div>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mb-1">
-            ${monthlyEquivalent.toFixed(2)} / month equivalent
-          </p>
-          <p className="text-slate-400 dark:text-slate-500 text-xs mb-5">
-            Based on {people} {people === 1 ? 'person' : 'people'} in {industryLabel} and {activeClients} active clients.
+          <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">
+            For {industryLabel.toLowerCase()} of any size
           </p>
 
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
-            <p className="text-sm font-semibold mb-3">Cost breakdown</p>
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mb-2">
-              <span>Annual subscription (flat, whole firm)</span>
-              <span>${annualTotal.toFixed(2)}</span>
-            </div>
-            <div className="border-t border-slate-100 dark:border-slate-700 mt-2 pt-2 flex justify-between text-sm font-bold">
-              <span>Estimated annual total</span>
-              <span>${annualTotal.toFixed(2)}</span>
-            </div>
+          <div className="mb-1 flex items-end gap-1.5">
+            <span className="text-5xl font-bold text-slate-900 dark:text-white">${annualTotal.toFixed(2)}</span>
+            <span className="text-slate-500 dark:text-slate-400 text-sm mb-1.5">/ year</span>
           </div>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+            ${monthlyEquivalent.toFixed(2)}/month, billed however suits you — flat, whether it's {people} {people === 1 ? 'person' : 'people'} or twenty.
+          </p>
 
-          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-4 mb-5">
-            <div className="flex items-center justify-between gap-3 mb-2">
-              <div>
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">AmlIntel Premium</p>
-                <p className="text-sm font-bold">${annualTotal.toFixed(2)} / year</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">Traditional consultant</p>
-                <p className="text-sm font-bold">${CONSULTANT_LOW.toLocaleString()}–${CONSULTANT_HIGH.toLocaleString()} / year</p>
-              </div>
-            </div>
-            {savings > 0 && (
-              <p className="text-sm font-semibold text-orange-600 dark:text-orange-400 mt-2">
-                You save at least ${savings.toFixed(2)} / year
-              </p>
-            )}
+          <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-5 mb-6">
+            <p className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
+              ${savings > 0 ? savings.toFixed(0) : '0'}+ saved
+            </p>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              per year against a traditional consultant, who typically charges ${CONSULTANT_LOW.toLocaleString()}–${CONSULTANT_HIGH.toLocaleString()} for {industryLabel.toLowerCase()} of this size.
+            </p>
             <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-2">Illustrative example only — not a quote or market guarantee.</p>
           </div>
 
           <ul className="space-y-2 mb-6">
             {FEATURES.map((f) => (
               <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
-                <svg className="w-4 h-4 text-orange-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-blue-600 dark:text-blue-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
                 {f}
@@ -253,7 +217,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           <div className="flex flex-wrap gap-3 mb-5">
             <button
               onClick={onSignUp}
-              className="flex-1 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+              className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
             >
               Start free trial →
             </button>
@@ -265,9 +229,9 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
             </button>
           </div>
 
-          <div className="border-t border-orange-200 dark:border-orange-500/20 pt-4">
+          <div className="border-t border-slate-100 dark:border-slate-700 pt-4">
             {sendState === 'sent' ? (
-              <p className="text-sm text-orange-700 dark:text-orange-300 flex items-center gap-2">
+              <p className="text-sm text-blue-600 dark:text-blue-400 flex items-center gap-2">
                 <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                 </svg>
@@ -275,19 +239,14 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
               </p>
             ) : (
               <form onSubmit={handleSendEstimate}>
-                <p className="text-sm font-semibold mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Email this estimate
-                </p>
+                <p className="text-sm font-semibold mb-2">Email this estimate</p>
                 <div className="flex gap-2">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setSendError('') }}
                     placeholder="Work email address"
-                    className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-orange-500 rounded-xl px-4 py-2.5 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 transition-colors"
+                    className="flex-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-blue-500 rounded-xl px-4 py-2.5 text-sm outline-none text-slate-900 dark:text-white placeholder-slate-400 transition-colors"
                   />
                   <button
                     type="submit"
@@ -304,7 +263,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
 
           <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center mt-4">
             Indicative estimate in AUD, not a quote. For exact plan details, see the{' '}
-            <button onClick={() => onNavigateSection?.('pricing')} className="text-orange-500 hover:text-orange-400 underline">pricing section</button>.
+            <button onClick={() => onNavigateSection?.('pricing')} className="text-blue-600 dark:text-blue-400 hover:underline">pricing section</button>.
           </p>
         </div>
       </div>
