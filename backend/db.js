@@ -254,6 +254,68 @@ export async function getDocumentVersions(userId, docType, limit = 20) {
   return rows
 }
 
+export async function logAiUsage({ id, userId, route, model, inputTokens, outputTokens }) {
+  await pool.query(
+    'INSERT INTO ai_usage_log (id, user_id, route, model, input_tokens, output_tokens) VALUES ($1, $2, $3, $4, $5, $6)',
+    [id, userId, route, model, inputTokens, outputTokens]
+  )
+}
+
+// Cost is derived here from raw token counts rather than stored per-row, so
+// updating these constants to match Anthropic's actual published rate
+// re-prices every historical row correctly instead of leaving old rows
+// stuck with whatever rate was baked in at insert time. Defaults are a
+// placeholder for Claude Haiku — replace with the confirmed current rate
+// from console.anthropic.com/settings/billing before treating the dollar
+// figures as more than a rough order of magnitude.
+const HAIKU_INPUT_COST_PER_MTOK = Number(process.env.AI_COST_INPUT_PER_MTOK || 1)
+const HAIKU_OUTPUT_COST_PER_MTOK = Number(process.env.AI_COST_OUTPUT_PER_MTOK || 5)
+
+export async function getAiUsageSummary({ since } = {}) {
+  const params = []
+  let whereClause = ''
+  if (since) {
+    params.push(since)
+    whereClause = 'WHERE created_at >= $1'
+  }
+
+  const [totalsResult, byUserResult, byRouteResult] = await Promise.all([
+    pool.query(
+      `SELECT count(*)::int AS requests, coalesce(sum(input_tokens), 0)::bigint AS "inputTokens", coalesce(sum(output_tokens), 0)::bigint AS "outputTokens"
+       FROM ai_usage_log ${whereClause}`,
+      params
+    ),
+    pool.query(
+      `SELECT u.id AS "userId", u.email, u.name, count(*)::int AS requests,
+              coalesce(sum(l.input_tokens), 0)::bigint AS "inputTokens", coalesce(sum(l.output_tokens), 0)::bigint AS "outputTokens"
+       FROM ai_usage_log l JOIN users u ON u.id = l.user_id
+       ${whereClause}
+       GROUP BY u.id, u.email, u.name
+       ORDER BY sum(l.input_tokens + l.output_tokens) DESC
+       LIMIT 100`,
+      params
+    ),
+    pool.query(
+      `SELECT route, count(*)::int AS requests, coalesce(sum(input_tokens), 0)::bigint AS "inputTokens", coalesce(sum(output_tokens), 0)::bigint AS "outputTokens"
+       FROM ai_usage_log ${whereClause}
+       GROUP BY route
+       ORDER BY sum(input_tokens + output_tokens) DESC`,
+      params
+    ),
+  ])
+
+  const estimateCost = (inputTokens, outputTokens) =>
+    (Number(inputTokens) / 1_000_000) * HAIKU_INPUT_COST_PER_MTOK + (Number(outputTokens) / 1_000_000) * HAIKU_OUTPUT_COST_PER_MTOK
+
+  const totals = totalsResult.rows[0]
+  return {
+    ratesUsed: { inputPerMTok: HAIKU_INPUT_COST_PER_MTOK, outputPerMTok: HAIKU_OUTPUT_COST_PER_MTOK },
+    totals: { ...totals, estimatedCostUsd: estimateCost(totals.inputTokens, totals.outputTokens) },
+    byUser: byUserResult.rows.map((r) => ({ ...r, estimatedCostUsd: estimateCost(r.inputTokens, r.outputTokens) })),
+    byRoute: byRouteResult.rows.map((r) => ({ ...r, estimatedCostUsd: estimateCost(r.inputTokens, r.outputTokens) })),
+  }
+}
+
 export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
   await pool.query(
     'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',

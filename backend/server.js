@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
 import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName } from './sanctions.js';
 
 const app = express();
@@ -168,6 +168,22 @@ const anthropic = process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY
   ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
   : null
 
+// Fire-and-forget — a logging failure must never break the actual AI
+// response the user is waiting on. Lets real Claude API spend per
+// subscriber be measured later instead of estimated (see getAiUsageSummary).
+function recordAiUsage(userId, route, response) {
+  const usage = response?.usage
+  if (!usage) return
+  logAiUsage({
+    id: crypto.randomUUID(),
+    userId,
+    route,
+    model: response.model || 'unknown',
+    inputTokens: usage.input_tokens || 0,
+    outputTokens: usage.output_tokens || 0,
+  }).catch((err) => console.error('[ai-usage] log failed:', err.message))
+}
+
 // ── Sessions / reset tokens ───────────────────────────────────────────────────
 // Users and sessions are persisted in Postgres (see db.js) so signed-in users
 // stay signed in across server restarts. Reset tokens stay in-memory — they're
@@ -270,6 +286,14 @@ const PREMIUM_EMAILS = new Set(['haidershahid3.16@live.com'])
 
 function isPremiumUser(user) {
   return !!(user.premium || PREMIUM_EMAILS.has(user.email))
+}
+
+// Reuses the same owner-email set as the premium override — there's only
+// one operator of this app, so "premium override" and "admin" are the same
+// person in practice. Split into a distinct check anyway so the intent at
+// each call site is clear rather than incidentally piggybacking on billing logic.
+function isAdminUser(user) {
+  return PREMIUM_EMAILS.has(user.email)
 }
 
 function hashPassword(password) {
@@ -857,6 +881,7 @@ app.post('/chat', chatLimiter, asyncRoute(async (req, res) => {
       system: systemPrompt,
       messages,
     })
+    recordAiUsage(user.id, 'chat', response)
 
     const reply = response.content[0]?.text || 'No response generated.'
     res.json({ reply })
@@ -892,6 +917,7 @@ app.post('/program-draft', programDraftLimiter, asyncRoute(async (req, res) => {
       system: PROGRAM_DRAFT_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: profileText }],
     })
+    recordAiUsage(user.id, 'program-draft', response)
 
     const draftText = response.content[0]?.text || ''
     if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
@@ -940,6 +966,7 @@ app.post('/privacy-draft', programDraftLimiter, asyncRoute(async (req, res) => {
       system: PRIVACY_PACK_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: profileText }],
     })
+    recordAiUsage(user.id, 'privacy-draft', response)
 
     const draftText = response.content[0]?.text || ''
     if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
@@ -992,6 +1019,7 @@ app.post('/smr-draft', programDraftLimiter, asyncRoute(async (req, res) => {
       system: SMR_DRAFT_SYSTEM_PROMPT,
       messages: [{ role: 'user', content: profileText }],
     })
+    recordAiUsage(user.id, 'smr-draft', response)
 
     const draftText = response.content[0]?.text || ''
     if (!draftText) return res.status(500).json({ error: 'No draft was generated. Please try again.' })
@@ -1231,6 +1259,20 @@ app.post('/sanctions-screen', sanctionsScreenLimiter, asyncRoute(async (req, res
     getSanctionsListsStatus(),
   ])
   res.json({ query: name.trim(), matches, listsStatus })
+}))
+
+// ── AI usage / cost tracking (owner-only) ────────────────────────────────────
+// Real Claude API spend per subscriber, derived from logged token counts
+// rather than estimated — see recordAiUsage() and db.js's getAiUsageSummary.
+app.get('/admin/ai-usage-summary', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isAdminUser(user)) return res.status(403).json({ error: 'Not authorized' })
+
+  const days = Number(req.query.days) || 30
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+  const summary = await getAiUsageSummary({ since })
+  res.json({ sinceDays: days, ...summary })
 }))
 
 // ── Cost estimate email ───────────────────────────────────────────────────────

@@ -143,6 +143,24 @@ create index if not exists sanctions_entries_name_trgm on sanctions_entries usin
 create index if not exists sanctions_entries_aliases_trgm on sanctions_entries using gin (aliases_text gin_trgm_ops);
 create index if not exists sanctions_entries_source_idx on sanctions_entries (source);
 
+-- Append-only — one row per Anthropic API call, so real Claude API spend per
+-- subscriber can be measured instead of estimated. Stores raw token counts
+-- rather than a precomputed dollar cost, since Anthropic's per-token pricing
+-- can change — cost is derived at query time (see getAiUsageSummary in
+-- db.js) so historical rows stay accurate if the rate constants are updated.
+create table if not exists ai_usage_log (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  route text not null, -- 'chat' | 'program-draft' | 'privacy-draft' | 'smr-draft'
+  model text not null,
+  input_tokens integer not null,
+  output_tokens integer not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists ai_usage_log_user_idx on ai_usage_log (user_id);
+create index if not exists ai_usage_log_created_idx on ai_usage_log (created_at);
+
 -- These tables are only ever accessed via the backend's direct Postgres
 -- connection (connects as the table-owning role, which bypasses RLS
 -- regardless of policies) — never via Supabase's PostgREST Data API. RLS is
@@ -156,5 +174,6 @@ alter table mock_exam_attempts enable row level security;
 alter table compliance_checklist enable row level security;
 alter table client_risk_entries enable row level security;
 alter table chat_sessions enable row level security;
+alter table ai_usage_log enable row level security;
 alter table document_versions enable row level security;
 alter table sanctions_entries enable row level security;
