@@ -681,7 +681,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
 
           <div className="text-center mt-8">
             <button onClick={onStartTrial} className="px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm">
-              Try Premium free →
+              Try free trial →
             </button>
           </div>
         </div>
