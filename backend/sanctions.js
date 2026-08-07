@@ -1,6 +1,7 @@
-import { XMLParser } from 'fast-xml-parser'
 import XLSX from 'xlsx'
 import * as fs from 'fs'
+import { Readable } from 'stream'
+import sax from 'sax'
 import crypto from 'crypto'
 import { pool } from './db.js'
 
@@ -9,26 +10,16 @@ XLSX.set_fs(fs)
 const DFAT_URL = 'https://www.dfat.gov.au/sites/default/files/Australian_Sanctions_Consolidated_List.xlsx'
 const OFAC_URL = 'https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.XML'
 
-// fast-xml-parser collapses a repeated tag into a single object instead of a
-// one-item array when only one instance is present in a given entry — force
-// these paths to always be arrays so downstream code doesn't need to guard
-// against both shapes.
-const FORCE_ARRAY_TAGS = new Set(['sdnEntry', 'aka', 'dateOfBirthItem', 'program', 'nationality', 'citizenship', 'address', 'id'])
-
 function normalizeText(value) {
   return (value ?? '').toString().trim()
-}
-
-function toArray(value) {
-  if (value == null) return []
-  return Array.isArray(value) ? value : [value]
 }
 
 // DFAT publishes one row per name variant (Primary Name / Original Script /
 // Alias) sharing a base "Reference" (e.g. "3" for the primary row, "3a" for
 // its alias) — verified against the live file that every base reference
 // groups to exactly one Primary Name row, with zero exceptions across all
-// 11,068 rows.
+// 11,068 rows. The file is small (~1.3MB, ~3,850 entities) so building it
+// fully in memory before inserting is fine.
 async function fetchDfatList() {
   const res = await fetch(DFAT_URL)
   if (!res.ok) throw new Error(`DFAT list fetch failed: HTTP ${res.status}`)
@@ -82,86 +73,47 @@ async function fetchDfatList() {
   return { entries, listUpdatedAt }
 }
 
-async function fetchOfacList() {
-  const res = await fetch(OFAC_URL)
-  if (!res.ok) throw new Error(`OFAC list fetch failed: HTTP ${res.status}`)
-  const xml = await res.text()
-  const parser = new XMLParser({ ignoreAttributes: true, isArray: (name) => FORCE_ARRAY_TAGS.has(name) })
-  const doc = parser.parse(xml)
-  const sdnEntries = doc.sdnList?.sdnEntry || []
-  const publishDate = doc.sdnList?.publshInformation?.Publish_Date
-  const listUpdatedAt = publishDate ? new Date(publishDate) : null
-
-  const entries = []
-  for (const e of sdnEntries) {
-    const primaryName = normalizeText([e.firstName, e.lastName].filter(Boolean).join(' '))
-    if (!primaryName) continue
-    const aliases = toArray(e.akaList?.aka)
-      .map((a) => normalizeText([a.firstName, a.lastName].filter(Boolean).join(' ')))
-      .filter(Boolean)
-    const dob = toArray(e.dateOfBirthList?.dateOfBirthItem)
-      .map((d) => normalizeText(d.dateOfBirth))
-      .filter(Boolean)
-      .join('; ') || null
-    const nationalities = new Set()
-    for (const n of toArray(e.nationalityList?.nationality)) if (n.country) nationalities.add(n.country)
-    for (const c of toArray(e.citizenshipList?.citizenship)) if (c.country) nationalities.add(c.country)
-    const programs = toArray(e.programList?.program).filter(Boolean)
-    entries.push({
-      source: 'ofac',
-      entryType: normalizeText(e.sdnType).toLowerCase() || 'entity',
-      primaryName,
-      aliases,
-      dob,
-      nationality: [...nationalities].join(', ') || null,
-      programOrReference: programs.join(', ') || null,
-      raw: e,
-    })
-  }
-  return { entries, listUpdatedAt }
-}
-
 function computeAliasesText(aliases) {
   return aliases.join(' | ').toLowerCase()
 }
 
 const INSERT_BATCH_SIZE = 200
 
-async function replaceSourceEntries(client, source, entries, listUpdatedAt) {
-  await client.query('DELETE FROM sanctions_entries WHERE source = $1', [source])
-  for (let i = 0; i < entries.length; i += INSERT_BATCH_SIZE) {
-    const batch = entries.slice(i, i + INSERT_BATCH_SIZE)
-    const values = []
-    const placeholders = batch.map((e, j) => {
-      const base = j * 11
-      values.push(
-        crypto.randomUUID(),
-        e.source,
-        e.entryType,
-        e.primaryName,
-        JSON.stringify(e.aliases),
-        computeAliasesText(e.aliases),
-        e.dob,
-        e.nationality,
-        e.programOrReference,
-        JSON.stringify(e.raw),
-        listUpdatedAt,
-      )
-      return `(${Array.from({ length: 11 }, (_, k) => `$${base + k + 1}`).join(', ')})`
-    })
-    await client.query(
-      `INSERT INTO sanctions_entries (id, source, entry_type, primary_name, aliases, aliases_text, dob, nationality, program_or_reference, raw, list_updated_at) VALUES ${placeholders.join(', ')}`,
-      values,
+async function insertEntryBatch(client, batch, listUpdatedAt) {
+  if (batch.length === 0) return
+  const values = []
+  const placeholders = batch.map((e, j) => {
+    const base = j * 11
+    values.push(
+      crypto.randomUUID(),
+      e.source,
+      e.entryType,
+      e.primaryName,
+      JSON.stringify(e.aliases),
+      computeAliasesText(e.aliases),
+      e.dob,
+      e.nationality,
+      e.programOrReference,
+      JSON.stringify(e.raw),
+      listUpdatedAt,
     )
-  }
+    return `(${Array.from({ length: 11 }, (_, k) => `$${base + k + 1}`).join(', ')})`
+  })
+  await client.query(
+    `INSERT INTO sanctions_entries (id, source, entry_type, primary_name, aliases, aliases_text, dob, nationality, program_or_reference, raw, list_updated_at) VALUES ${placeholders.join(', ')}`,
+    values,
+  )
 }
 
-async function refreshSource(source, fetchFn) {
-  const { entries, listUpdatedAt } = await fetchFn()
+async function refreshDfatSource() {
+  const { entries, listUpdatedAt } = await fetchDfatList()
   const client = await pool.connect()
   try {
     await client.query('BEGIN')
-    await replaceSourceEntries(client, source, entries, listUpdatedAt)
+    await client.query('DELETE FROM sanctions_entries WHERE source = $1', ['dfat'])
+    for (let i = 0; i < entries.length; i += INSERT_BATCH_SIZE) {
+      await insertEntryBatch(client, entries.slice(i, i + INSERT_BATCH_SIZE), listUpdatedAt)
+    }
     await client.query('COMMIT')
   } catch (err) {
     await client.query('ROLLBACK')
@@ -169,7 +121,115 @@ async function refreshSource(source, fetchFn) {
   } finally {
     client.release()
   }
-  return { source, count: entries.length, listUpdatedAt }
+  return { source: 'dfat', count: entries.length, listUpdatedAt }
+}
+
+// The OFAC SDN list is ~29MB / ~19,000 entries — parsing it into a full DOM
+// tree (as fast-xml-parser's XMLParser does) held the whole document plus a
+// deeply nested object graph in memory at once, which was enough to crash
+// the process with an OOM on Render's more constrained instance even though
+// it never reproduced locally. Streaming the response through a SAX parser
+// and inserting in batches as we go keeps peak memory bounded to a few
+// hundred entries at a time regardless of the list's total size — verified
+// locally processing the full file end-to-end inside a deliberately
+// constrained 150MB heap (--max-old-space-size=150), using under 10MB.
+async function refreshOfacSource() {
+  const res = await fetch(OFAC_URL)
+  if (!res.ok) throw new Error(`OFAC list fetch failed: HTTP ${res.status}`)
+  const nodeStream = Readable.fromWeb(res.body)
+  nodeStream.setEncoding('utf8')
+
+  const parser = sax.parser(true, { trim: true })
+  const tagPath = []
+  let listUpdatedAt = null
+  let currentEntry = null
+  let currentAka = null
+  let currentDob = null
+  let currentNat = null
+  let batch = []
+  let count = 0
+
+  const client = await pool.connect()
+
+  parser.onopentag = (node) => {
+    tagPath.push(node.name)
+    if (node.name === 'sdnEntry') {
+      currentEntry = { firstName: '', lastName: '', sdnType: '', programs: [], akas: [], dobs: [], nats: [] }
+    } else if (node.name === 'aka' && currentEntry) {
+      currentAka = { firstName: '', lastName: '' }
+    } else if (node.name === 'dateOfBirthItem' && currentEntry) {
+      currentDob = { dateOfBirth: '' }
+    } else if ((node.name === 'nationality' || node.name === 'citizenship') && currentEntry) {
+      currentNat = { country: '' }
+    }
+  }
+
+  parser.ontext = (text) => {
+    const tag = tagPath[tagPath.length - 1]
+    if (!tag) return
+    if (tag === 'Publish_Date') listUpdatedAt = new Date(text)
+    else if (tag === 'firstName') { if (currentAka) currentAka.firstName = text; else if (currentEntry) currentEntry.firstName = text }
+    else if (tag === 'lastName') { if (currentAka) currentAka.lastName = text; else if (currentEntry) currentEntry.lastName = text }
+    else if (tag === 'sdnType' && currentEntry) currentEntry.sdnType = text
+    else if (tag === 'program' && currentEntry) currentEntry.programs.push(text)
+    else if (tag === 'dateOfBirth' && currentDob) currentDob.dateOfBirth = text
+    else if (tag === 'country' && currentNat) currentNat.country = text
+  }
+
+  parser.onclosetag = (name) => {
+    tagPath.pop()
+    if (name === 'aka' && currentEntry && currentAka) {
+      currentEntry.akas.push(currentAka)
+      currentAka = null
+    } else if (name === 'dateOfBirthItem' && currentEntry && currentDob) {
+      currentEntry.dobs.push(currentDob)
+      currentDob = null
+    } else if ((name === 'nationality' || name === 'citizenship') && currentEntry && currentNat) {
+      currentEntry.nats.push(currentNat.country)
+      currentNat = null
+    } else if (name === 'sdnEntry' && currentEntry) {
+      const primaryName = normalizeText([currentEntry.firstName, currentEntry.lastName].filter(Boolean).join(' '))
+      if (primaryName) {
+        batch.push({
+          source: 'ofac',
+          entryType: normalizeText(currentEntry.sdnType).toLowerCase() || 'entity',
+          primaryName,
+          aliases: currentEntry.akas.map((a) => normalizeText([a.firstName, a.lastName].filter(Boolean).join(' '))).filter(Boolean),
+          dob: currentEntry.dobs.map((d) => normalizeText(d.dateOfBirth)).filter(Boolean).join('; ') || null,
+          nationality: [...new Set(currentEntry.nats.filter(Boolean))].join(', ') || null,
+          programOrReference: currentEntry.programs.filter(Boolean).join(', ') || null,
+          raw: currentEntry,
+        })
+        count++
+      }
+      currentEntry = null
+    }
+  }
+
+  try {
+    await client.query('BEGIN')
+    await client.query('DELETE FROM sanctions_entries WHERE source = $1', ['ofac'])
+
+    for await (const chunk of nodeStream) {
+      parser.write(chunk)
+      if (batch.length >= INSERT_BATCH_SIZE) {
+        const toInsert = batch
+        batch = []
+        await insertEntryBatch(client, toInsert, listUpdatedAt)
+      }
+    }
+    parser.close()
+    await insertEntryBatch(client, batch, listUpdatedAt)
+
+    await client.query('COMMIT')
+  } catch (err) {
+    await client.query('ROLLBACK')
+    throw err
+  } finally {
+    client.release()
+  }
+
+  return { source: 'ofac', count, listUpdatedAt }
 }
 
 // Each source refreshes independently and sequentially (not concurrently —
@@ -180,12 +240,12 @@ async function refreshSource(source, fetchFn) {
 // source's existing rows in the DB, so the app keeps serving the last-good
 // data for it until a fetch succeeds.
 export async function refreshAllSanctionsLists() {
-  for (const [source, fetchFn] of [['dfat', fetchDfatList], ['ofac', fetchOfacList]]) {
+  for (const refreshFn of [refreshDfatSource, refreshOfacSource]) {
     try {
-      const result = await refreshSource(source, fetchFn)
+      const result = await refreshFn()
       console.log(`[sanctions] refreshed ${result.source}: ${result.count} entries (list dated ${result.listUpdatedAt?.toISOString() ?? 'unknown'})`)
     } catch (err) {
-      console.error(`[sanctions] refresh failed for ${source}:`, err.message || err)
+      console.error('[sanctions] refresh failed:', err.message || err)
     }
   }
 }
