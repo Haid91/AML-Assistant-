@@ -38,7 +38,82 @@ const AUSTRAC_TOPICS = [
   'AUSTRAC Enforcement Actions',
 ]
 
+// The natural order a Tranche 2 business actually moves through — grouped
+// and numbered rather than one flat list, so the dropdown reads as a
+// sequence of phases instead of an undifferentiated menu.
+const TRANCHE2_GROUPS = [
+  {
+    step: 1,
+    title: 'Get started',
+    items: [
+      ['Eligibility Check', 'onOpenEligibility'],
+      ['Setup Guide', 'onOpenSetupGuide'],
+      ['Cost', 'onOpenCost'],
+      ['AUSTRAC Enrolment', 'onOpenAustracEnrolment'],
+    ],
+  },
+  {
+    step: 2,
+    title: 'Build your program',
+    items: [
+      ['Compliance Officer', 'onOpenComplianceOfficer'],
+      ['Risk Assessment', 'onOpenRiskAssessment'],
+      ['AML Program Draft', 'onOpenProgramBuilder'],
+      ['Privacy Act Check', 'onOpenPrivacyCheck'],
+    ],
+  },
+  {
+    step: 3,
+    title: 'Ongoing compliance',
+    items: [
+      ['Client Risk Register', 'onOpenClientRiskRegister'],
+      ['Compliance Calendar', 'onOpenComplianceCalendar'],
+      ['Suspicious Activity Indicators', 'onOpenSuspiciousIndicators'],
+      ['Reportable Transaction Check', 'onOpenReportableTransactionCheck'],
+      ['Sanctions Screening', 'onOpenSanctionsScreening'],
+    ],
+  },
+  {
+    step: 4,
+    title: 'Reporting',
+    items: [
+      ['File an SMR', 'onOpenSmrGuide'],
+      ['Draft an SMR', 'onOpenSmrDraft'],
+    ],
+  },
+]
+
+function Tranche2Menu({ handlers, onSelect, dense }) {
+  return (
+    <>
+      {TRANCHE2_GROUPS.map((group, gi) => (
+        <div key={group.title} className={gi > 0 ? 'mt-1 pt-1.5 border-t border-slate-800' : ''}>
+          <div className="flex items-center gap-1.5 px-3 pt-1 pb-1">
+            <span className="w-4 h-4 rounded-full bg-blue-500/15 text-blue-400 text-[10px] font-bold flex items-center justify-center shrink-0">
+              {group.step}
+            </span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{group.title}</span>
+          </div>
+          {group.items.map(([label, key]) => (
+            <button
+              key={label}
+              onClick={() => { onSelect(); handlers[key]?.() }}
+              className={`w-full text-left hover:text-white hover:bg-slate-800 rounded-lg transition-colors ${
+                dense ? 'text-sm text-slate-400 px-3 py-1.5' : 'text-sm text-slate-300 px-3 py-1.5'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ))}
+    </>
+  )
+}
+
 export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
+  const tranche2Handlers = { onOpenEligibility, onOpenSetupGuide, onOpenCost, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenProgramBuilder, onOpenPrivacyCheck, onOpenClientRiskRegister, onOpenComplianceCalendar, onOpenSuspiciousIndicators, onOpenReportableTransactionCheck, onOpenSanctionsScreening, onOpenSmrGuide, onOpenSmrDraft }
+
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
   const [tranche2Open, setTranche2Open] = useState(false)
@@ -185,144 +260,9 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             </button>
 
             {tranche2Open && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
-
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenEligibility?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Eligibility Check
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenReportableTransactionCheck?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Reportable Transaction Check
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenPrivacyCheck?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Privacy Act Check
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenAustracEnrolment?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  AUSTRAC Enrolment
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSmrGuide?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  File an SMR
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSmrDraft?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Draft an SMR
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSanctionsScreening?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Sanctions Screening
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSuspiciousIndicators?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Suspicious Activity Indicators
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenComplianceOfficer?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Compliance Officer
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenRiskAssessment?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Risk Assessment
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenSetupGuide?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Setup Guide
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenProgramBuilder?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  AML Program Draft
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenComplianceCalendar?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Compliance Calendar
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenClientRiskRegister?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Client Risk Register
-                </button>
-                <button
-                  onClick={() => {
-                    setTranche2Open(false)
-                    onOpenCost?.()
-                  }}
-                  className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                >
-                  Cost
-                </button>
+                <Tranche2Menu handlers={tranche2Handlers} onSelect={() => setTranche2Open(false)} />
               </div>
             )}
           </div>
@@ -440,32 +380,8 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             </button>
 
             {mobileQuickTranche2Open && (
-              <div className="absolute top-full right-0 mt-3 w-56 max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 max-h-[70vh] overflow-y-auto" style={{ zIndex: 9999 }}>
-                {[
-                  ['Eligibility Check', onOpenEligibility],
-                  ['Reportable Transaction Check', onOpenReportableTransactionCheck],
-                  ['Privacy Act Check', onOpenPrivacyCheck],
-                  ['AUSTRAC Enrolment', onOpenAustracEnrolment],
-                  ['File an SMR', onOpenSmrGuide],
-                  ['Draft an SMR', onOpenSmrDraft],
-                  ['Sanctions Screening', onOpenSanctionsScreening],
-                  ['Suspicious Activity Indicators', onOpenSuspiciousIndicators],
-                  ['Compliance Officer', onOpenComplianceOfficer],
-                  ['Risk Assessment', onOpenRiskAssessment],
-                  ['Setup Guide', onOpenSetupGuide],
-                  ['AML Program Draft', onOpenProgramBuilder],
-                  ['Compliance Calendar', onOpenComplianceCalendar],
-                  ['Client Risk Register', onOpenClientRiskRegister],
-                  ['Cost', onOpenCost],
-                ].map(([label, handler]) => (
-                  <button
-                    key={label}
-                    onClick={() => { setMobileQuickTranche2Open(false); handler?.() }}
-                    className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors"
-                  >
-                    {label}
-                  </button>
-                ))}
+              <div className="absolute top-full right-0 mt-3 w-64 max-w-[calc(100vw-2rem)] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 max-h-[80vh] overflow-y-auto" style={{ zIndex: 9999 }}>
+                <Tranche2Menu handlers={tranche2Handlers} onSelect={() => setMobileQuickTranche2Open(false)} />
               </div>
             )}
           </div>
@@ -558,31 +474,7 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             </button>
             {mobileTranche2Open && (
               <div className="pl-3 pb-2 flex flex-col">
-                {[
-                  ['Eligibility Check', onOpenEligibility],
-                  ['Reportable Transaction Check', onOpenReportableTransactionCheck],
-                  ['Privacy Act Check', onOpenPrivacyCheck],
-                  ['AUSTRAC Enrolment', onOpenAustracEnrolment],
-                  ['File an SMR', onOpenSmrGuide],
-                  ['Draft an SMR', onOpenSmrDraft],
-                  ['Sanctions Screening', onOpenSanctionsScreening],
-                  ['Suspicious Activity Indicators', onOpenSuspiciousIndicators],
-                  ['Compliance Officer', onOpenComplianceOfficer],
-                  ['Risk Assessment', onOpenRiskAssessment],
-                  ['Setup Guide', onOpenSetupGuide],
-                  ['AML Program Draft', onOpenProgramBuilder],
-                  ['Compliance Calendar', onOpenComplianceCalendar],
-                  ['Client Risk Register', onOpenClientRiskRegister],
-                  ['Cost', onOpenCost],
-                ].map(([label, handler]) => (
-                  <button
-                    key={label}
-                    onClick={() => { setMobileOpen(false); handler?.() }}
-                    className="w-full text-left text-sm text-slate-400 hover:text-white hover:bg-slate-800 px-3 py-1.5 rounded-lg transition-colors"
-                  >
-                    {label}
-                  </button>
-                ))}
+                <Tranche2Menu handlers={tranche2Handlers} onSelect={() => setMobileOpen(false)} dense />
               </div>
             )}
 
