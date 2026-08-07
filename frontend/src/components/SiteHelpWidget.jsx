@@ -243,7 +243,7 @@ export default function SiteHelpWidget() {
           onClick={() => { setShowNudge(false); setIsOpen(true) }}
           className="mb-3 flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-br-sm shadow-xl px-4 py-3 text-left animate-[fadeIn_0.2s_ease-out]"
         >
-          <p className="text-sm font-medium text-slate-700 dark:text-slate-200 whitespace-nowrap">
+          <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 whitespace-nowrap">
             Not sure where to start? I can help.
           </p>
           <span
