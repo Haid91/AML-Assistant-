@@ -746,6 +746,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                   'AI compliance assistant trained on FATF, AUSTRAC & global regulations — aware of your business profile',
                   'AI-drafted AML/CTF Program (Part A & B)',
                   'AI-drafted Privacy Act documents (Privacy Policy, Collection Notice, Data Breach Plan, Retention Schedule)',
+                  'AI-drafted first-pass Suspicious Matter Report (SMR) narratives',
                   'Full CAMS exam prep — 258 questions plus timed, scored mock exams',
                   'Compliance Calendar — track your recurring AUSTRAC & Privacy Act deadlines',
                   'Client Risk Register — ongoing CDD review tracking',
