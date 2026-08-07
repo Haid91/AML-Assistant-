@@ -85,6 +85,146 @@ const isRoutedPath = (path) => !!PATH_TO_VIEW[path] || path.startsWith(SECTOR_GU
 const resolveViewFromPath = (path) => (path.startsWith(SECTOR_GUIDE_PREFIX) ? 'sectorguide' : (PATH_TO_VIEW[path] || 'landing'))
 const resolveSectorFromPath = (path) => (path.startsWith(SECTOR_GUIDE_PREFIX) ? path.slice(SECTOR_GUIDE_PREFIX.length) : null)
 
+// Per-route <title>/description — this is a client-rendered SPA with one
+// static index.html, so without this every routed page (the free tools
+// this site's SEO strategy actually depends on) would show the exact same
+// generic homepage title/description in the browser tab, search results,
+// and browser history. Google's crawler executes JS and reads the DOM at
+// crawl time, so this does help indexing — social-preview bots (LinkedIn,
+// Slack, Facebook) don't execute JS and won't see it, that gap needs
+// server-side rendering to fully close and is out of scope here.
+const DEFAULT_META = {
+  title: 'AmlIntel — AI-Assisted AML/CTF Compliance for Tranche 2 Businesses',
+  description: 'AML/CTF compliance guidance, AI-drafted Program and Privacy Act documents, CAMS exam prep, and free Tranche 2 eligibility tools — built around FATF, AUSTRAC, and Privacy Act requirements.',
+}
+
+const SEO_META = {
+  eligibility: {
+    title: 'Free AML/CTF Eligibility Check — Do You Need to Comply? | AmlIntel',
+    description: "Answer 3 quick questions to find out if AUSTRAC's Tranche 2 AML/CTF rules apply to your business. Free, no signup required.",
+  },
+  reportableTransactionCheck: {
+    title: 'Is This Transaction Reportable? Free TTR / IFTI / SMR Check | AmlIntel',
+    description: 'Check whether a transaction triggers a Threshold Transaction Report, IFTI, or Suspicious Matter Report under AUSTRAC rules. Free, no signup.',
+  },
+  cost: {
+    title: 'AML/CTF Compliance Cost Calculator for Australia | AmlIntel',
+    description: 'See what AML/CTF compliance actually costs your firm, compared against a traditional consultant. Free calculator for Tranche 2 businesses.',
+  },
+  setupguide: {
+    title: 'AML/CTF Setup Guide for Tranche 2 Businesses | AmlIntel',
+    description: 'Step-by-step guide to AUSTRAC enrolment, your AML/CTF Program, risk assessment, and ongoing compliance obligations.',
+  },
+  austracEnrolment: {
+    title: 'How to Enrol with AUSTRAC | AmlIntel',
+    description: 'Not enrolled with AUSTRAC yet? A step-by-step guide to AUSTRAC enrolment for Australian AML/CTF reporting entities.',
+  },
+  smrGuide: {
+    title: 'How to File a Suspicious Matter Report (SMR) | AmlIntel',
+    description: 'A practical guide to filing an SMR with AUSTRAC — deadlines, what to include, and the tipping-off prohibition explained.',
+  },
+  complianceOfficer: {
+    title: 'Appointing an AML/CTF Compliance Officer | AmlIntel',
+    description: 'Who can be your AML/CTF Compliance Officer, what the role requires, and how to notify AUSTRAC of your appointment.',
+  },
+  riskAssessment: {
+    title: 'Free AML/CTF Risk Assessment Tool | AmlIntel',
+    description: "Run a quick enterprise-wide ML/TF risk assessment for your business, aligned with AUSTRAC's EWRA expectations.",
+  },
+  suspiciousIndicators: {
+    title: 'Suspicious Activity Indicators Checklist | AmlIntel',
+    description: 'Common money laundering and terrorism financing red flags Australian Tranche 2 businesses should watch for.',
+  },
+  privacyCheck: {
+    title: 'Privacy Act Readiness Check for Tranche 2 Businesses | AmlIntel',
+    description: 'Find out if you need a Privacy Policy, Collection Notice, Data Breach Plan, and Retention Schedule under the 2026 Privacy Act changes.',
+  },
+  about: {
+    title: 'About AmlIntel',
+    description: 'AmlIntel helps Australian Tranche 2 businesses meet their AML/CTF obligations with AI-assisted guidance and drafting tools.',
+  },
+  contact: {
+    title: 'Contact AmlIntel',
+    description: 'Get in touch with AmlIntel for questions about AML/CTF compliance tools and Premium subscriptions.',
+  },
+  termsOfService: { title: 'Terms of Service | AmlIntel', description: 'AmlIntel’s terms of service.' },
+  privacyPolicy: { title: 'Privacy Policy | AmlIntel', description: 'AmlIntel’s privacy policy — what personal information we collect and how it’s handled.' },
+  programbuilder: {
+    title: 'AI-Drafted AML/CTF Program (Part A & B) | AmlIntel',
+    description: 'Generate a first-pass AML/CTF Program tailored to your business in minutes. AI-drafted, Premium feature.',
+  },
+  privacyPack: {
+    title: 'AI-Drafted Privacy Act Documents | AmlIntel',
+    description: 'Generate a Privacy Policy, Collection Notice, Data Breach Plan, and Retention Schedule for your Tranche 2 business.',
+  },
+  complianceCalendar: {
+    title: 'AML/CTF Compliance Calendar | AmlIntel',
+    description: 'Track your recurring AUSTRAC and Privacy Act deadlines — program review, staff training, independent evaluation, and more.',
+  },
+  clientRiskRegister: {
+    title: 'Client Risk Register for AML/CTF | AmlIntel',
+    description: 'Track risk ratings and CDD review dates across your client base with an ongoing, privacy-conscious risk register.',
+  },
+  smrDraft: {
+    title: 'AI-Drafted SMR Narratives | AmlIntel',
+    description: 'Get an AI-drafted first-pass Suspicious Matter Report narrative in the format AUSTRAC expects, without entering real client data.',
+  },
+  sanctionsScreening: {
+    title: 'Sanctions Screening — DFAT & OFAC Lists | AmlIntel',
+    description: "Screen customer names against Australia's DFAT Consolidated List and the US OFAC SDN List, fuzzy-matched against aliases.",
+  },
+}
+
+const SECTOR_SEO_META = {
+  lawyer: {
+    title: 'AML/CTF Compliance for Lawyers & Conveyancers | AmlIntel',
+    description: 'Conveyancing, trust accounts, and company/trust formation AML/CTF obligations for Australian legal professionals under Tranche 2.',
+  },
+  accountant: {
+    title: 'AML/CTF Compliance for Accountants & Bookkeepers | AmlIntel',
+    description: 'Which services trigger Tranche 2 obligations, and how to apply CDD for accounting and bookkeeping clients.',
+  },
+  realestate: {
+    title: 'AML/CTF Compliance for Real Estate Agents | AmlIntel',
+    description: 'Property sale AML/CTF obligations and buyer/seller identification requirements for Australian real estate agents.',
+  },
+  tcsp: {
+    title: 'AML/CTF Compliance for Trust & Company Service Providers | AmlIntel',
+    description: 'Tranche 2 obligations for TCSPs forming and managing companies and trusts in Australia.',
+  },
+  bullion: {
+    title: 'AML/CTF Compliance for Dealers in Precious Metals & Stones | AmlIntel',
+    description: 'Tranche 2 AML/CTF obligations for Australian dealers in precious metals, stones, and high-value jewellery.',
+  },
+}
+
+function updatePageMeta(view, sector) {
+  const meta = view === 'sectorguide'
+    ? (SECTOR_SEO_META[sector] || DEFAULT_META)
+    : (SEO_META[view] || DEFAULT_META)
+
+  document.title = meta.title
+
+  const setMeta = (selector, attr, value) => {
+    const el = document.head.querySelector(selector)
+    if (el) el.setAttribute(attr, value)
+  }
+  setMeta('meta[name="description"]', 'content', meta.description)
+  setMeta('meta[property="og:title"]', 'content', meta.title)
+  setMeta('meta[property="og:description"]', 'content', meta.description)
+  setMeta('meta[name="twitter:title"]', 'content', meta.title)
+  setMeta('meta[name="twitter:description"]', 'content', meta.description)
+
+  const canonicalPath = view === 'sectorguide' && sector ? `${SECTOR_GUIDE_PREFIX}${sector}` : (ROUTED_VIEWS[view] || '/')
+  let canonical = document.head.querySelector('link[rel="canonical"]')
+  if (!canonical) {
+    canonical = document.createElement('link')
+    canonical.setAttribute('rel', 'canonical')
+    document.head.appendChild(canonical)
+  }
+  canonical.setAttribute('href', `https://amlintel.com.au${canonicalPath === '/' ? '' : canonicalPath}`)
+}
+
 function App() {
   const [view, setView] = useState(() => resolveViewFromPath(window.location.pathname))
   const [previousView, setPreviousView] = useState('landing')
@@ -141,6 +281,10 @@ function App() {
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
   }, [])
+
+  useEffect(() => {
+    updatePageMeta(view, selectedSectorGuide)
+  }, [view, selectedSectorGuide])
 
   // Stripe's webhook may land a moment after the redirect back, so retry a
   // few times until premium actually shows true (or we give up and just

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /signin
+Disallow: /signup
+Disallow: /forgot-password
+Disallow: /settings
+Disallow: /assistant
+Disallow: /dashboard
+Disallow: /training
+
+Sitemap: https://amlintel.com.au/sitemap.xml
