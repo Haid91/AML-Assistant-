@@ -490,7 +490,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
           </div>
 
           <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-7">
-            <div className="w-11 h-11 rounded-xl bg-orange-50 dark:bg-orange-900/30 border border-orange-100 dark:border-orange-800 flex items-center justify-center text-orange-600 dark:text-orange-400 mb-5">
+            <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-5">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
               </svg>
@@ -499,7 +499,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-5">
               Lawyers, accountants, real estate agents, and more now need an AML/CTF program. Find out if this applies to you.
             </p>
-            <button onClick={onOpenEligibility} className="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:text-orange-500 dark:hover:text-orange-300 transition-colors">
+            <button onClick={onOpenEligibility} className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 dark:hover:text-emerald-300 transition-colors">
               Check if this applies to you →
             </button>
           </div>
