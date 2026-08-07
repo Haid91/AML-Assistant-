@@ -196,8 +196,8 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             and there's no wrap behavior, so it silently overflows the
             viewport instead of collapsing (the bug this mobile menu fixes) */}
         <div className="hidden lg:flex items-center justify-center gap-4">
-          <button onClick={() => onNavigateSection?.('features')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">What you get</button>
-          <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
+          <button onClick={() => onNavigateSection?.('features')} className="text-[13px] font-medium text-slate-300 hover:text-white transition-colors whitespace-nowrap">What you get</button>
+          <button onClick={() => onNavigateSection?.('pricing')} className="text-[13px] font-medium text-slate-300 hover:text-white transition-colors whitespace-nowrap">Pricing</button>
 
           {/* Topics dropdown */}
           <div className="relative" ref={dropdownRef}>
@@ -294,10 +294,10 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
           </div>
 
           {user?.premium && (
-            <button onClick={onOpenComplianceDashboard} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Dashboard</button>
+            <button onClick={onOpenComplianceDashboard} className="text-[13px] font-medium text-slate-300 hover:text-white transition-colors whitespace-nowrap">Dashboard</button>
           )}
 
-          <button onClick={onOpenTraining} className="text-[13px] text-slate-300 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
+          <button onClick={onOpenTraining} className="text-[13px] font-medium text-slate-300 hover:text-white transition-colors whitespace-nowrap">Go to Training</button>
 
           {/* More info dropdown */}
           <div className="relative" ref={moreInfoRef}>
