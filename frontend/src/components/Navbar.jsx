@@ -83,7 +83,33 @@ const TRANCHE2_GROUPS = [
   },
 ]
 
-function Tranche2Menu({ handlers, onSelect, dense }) {
+function Tranche2Menu({ handlers, onSelect, dense, columns }) {
+  if (columns) {
+    return (
+      <div className="grid grid-cols-4 gap-2">
+        {TRANCHE2_GROUPS.map((group) => (
+          <div key={group.title}>
+            <div className="flex items-center gap-1.5 px-2 pb-2 mb-1 border-b border-slate-800">
+              <span className="w-4 h-4 rounded-full bg-blue-500/15 text-blue-400 text-[10px] font-bold flex items-center justify-center shrink-0">
+                {group.step}
+              </span>
+              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{group.title}</span>
+            </div>
+            {group.items.map(([label, key]) => (
+              <button
+                key={label}
+                onClick={() => { onSelect(); handlers[key]?.() }}
+                className="w-full text-left text-sm text-slate-300 hover:text-white hover:bg-slate-800 px-2 py-1.5 rounded-lg transition-colors"
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <>
       {TRANCHE2_GROUPS.map((group, gi) => (
@@ -260,9 +286,9 @@ export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onS
             </button>
 
             {tranche2Open && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2" style={{ zIndex: 9999 }}>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[720px] max-w-[calc(100vw-2rem)] max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-4" style={{ zIndex: 9999 }}>
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-slate-900 border-l border-t border-slate-700 rotate-45" />
-                <Tranche2Menu handlers={tranche2Handlers} onSelect={() => setTranche2Open(false)} />
+                <Tranche2Menu handlers={tranche2Handlers} onSelect={() => setTranche2Open(false)} columns />
               </div>
             )}
           </div>
