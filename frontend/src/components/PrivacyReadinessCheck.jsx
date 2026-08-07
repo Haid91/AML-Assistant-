@@ -101,7 +101,7 @@ const DOCUMENTS = [
   },
 ]
 
-export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenPrivacyPack, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenSmrDraft }) {
+export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenPrivacyPack, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenSmrDraft, onOpenSanctionsScreening }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [reportingEntity, setReportingEntity] = useState(null)
@@ -151,6 +151,7 @@ export default function PrivacyReadinessCheck({ user, onGoHome, onNavigateSectio
         onOpenRiskAssessment={onOpenRiskAssessment}
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators}
         onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

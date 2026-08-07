@@ -4232,7 +4232,7 @@ export function seededShuffle(arr, seed) {
   return out
 }
 
-export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onUpgrade }) {
+export default function Training({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade }) {
   const isPremium = user?.premium || false
   const [activeRole, setActiveRole] = useState(user?.role || 'analyst')
   const [activeIndustry, setActiveIndustry] = useState(user?.industry || 'banking')
@@ -4489,6 +4489,7 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
         onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       <div className="max-w-6xl mx-auto px-6 py-8">

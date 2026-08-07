@@ -37,7 +37,7 @@ const FAQS = [
   },
 ]
 
-export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft }) {
+export default function CostCalculator({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
   const [industry, setIndustry] = useState('lawyers')
   const [people, setPeople] = useState(3)
   const [activeClients, setActiveClients] = useState(40)
@@ -106,6 +106,7 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
         onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       {/* Header */}

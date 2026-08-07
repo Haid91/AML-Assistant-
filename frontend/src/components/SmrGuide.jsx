@@ -121,7 +121,7 @@ const FAQ = [
   },
 ]
 
-export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft }) {
+export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
@@ -169,6 +169,8 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
         onOpenClientRiskRegister={onOpenClientRiskRegister}
         onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
+        onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       <div className="max-w-3xl mx-auto px-6 pt-14 pb-20">

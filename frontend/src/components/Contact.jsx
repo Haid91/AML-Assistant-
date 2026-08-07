@@ -5,7 +5,7 @@ import Navbar from './Navbar'
 
 const CONTACT_EMAIL = 'support@amlintel.com.au'
 
-export default function Contact({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft }) {
+export default function Contact({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sendState, setSendState] = useState('idle') // idle | loading | sent | error
   const [error, setError] = useState('')
@@ -71,6 +71,7 @@ export default function Contact({ user, onGoHome, onNavigateSection, onStart, on
         onOpenReportableTransactionCheck={onOpenReportableTransactionCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       <div className="max-w-5xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-12 items-start">

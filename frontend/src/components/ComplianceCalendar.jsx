@@ -139,7 +139,7 @@ function ItemCard({ item, value, onChange, onMarkToday, onSave, saving }) {
   )
 }
 
-export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceDashboard, onOpenSmrDraft, onUpgrade }) {
+export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade }) {
   const [phase, setPhase] = useState('checking') // checking | dashboard
   const [checklist, setChecklist] = useState({})
   const [savingKey, setSavingKey] = useState(null)
@@ -192,6 +192,7 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
+          onOpenSanctionsScreening={onOpenSanctionsScreening}
         />
       </div>
     )
@@ -210,6 +211,7 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
+          onOpenSanctionsScreening={onOpenSanctionsScreening}
         />
         <div className="max-w-md mx-auto px-6 pt-24 text-center">
           <h1 className="text-2xl font-bold mb-3">Sign up for the Compliance Calendar</h1>
@@ -237,6 +239,7 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
           onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
           onOpenComplianceDashboard={onOpenComplianceDashboard}
           onOpenSmrDraft={onOpenSmrDraft}
+          onOpenSanctionsScreening={onOpenSanctionsScreening}
         />
         <div className="max-w-md mx-auto px-8 pt-20 text-center">
           <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center mx-auto mb-6">
@@ -283,6 +286,7 @@ export default function ComplianceCalendar({ user, onGoHome, onNavigateSection, 
         onOpenSuspiciousIndicators={onOpenSuspiciousIndicators} onOpenPrivacyCheck={onOpenPrivacyCheck}
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
+        onOpenSanctionsScreening={onOpenSanctionsScreening}
       />
 
       <div className="max-w-4xl mx-auto px-6 pt-14 pb-20">

@@ -116,6 +116,33 @@ create table if not exists document_versions (
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
 
+-- Periodically refreshed local copies of public government sanctions lists
+-- (DFAT Consolidated List, OFAC SDN List) for the Sanctions Screening tool.
+-- Not one-row-per-user — a shared reference dataset the backend repopulates
+-- on a schedule (see backend/sanctions.js). Each refresh fully replaces the
+-- rows for its source in one transaction so a failed fetch never leaves a
+-- half-updated list in place.
+create extension if not exists pg_trgm;
+
+create table if not exists sanctions_entries (
+  id uuid primary key,
+  source text not null, -- 'dfat' | 'ofac'
+  entry_type text not null, -- 'individual' | 'entity' | 'vessel'
+  primary_name text not null,
+  aliases jsonb not null default '[]',
+  aliases_text text not null default '', -- flattened aliases for trigram search
+  dob text,
+  nationality text,
+  program_or_reference text,
+  raw jsonb not null,
+  list_updated_at timestamptz,
+  fetched_at timestamptz not null default now()
+);
+
+create index if not exists sanctions_entries_name_trgm on sanctions_entries using gin (primary_name gin_trgm_ops);
+create index if not exists sanctions_entries_aliases_trgm on sanctions_entries using gin (aliases_text gin_trgm_ops);
+create index if not exists sanctions_entries_source_idx on sanctions_entries (source);
+
 -- These tables are only ever accessed via the backend's direct Postgres
 -- connection (connects as the table-owning role, which bypasses RLS
 -- regardless of policies) — never via Supabase's PostgREST Data API. RLS is
@@ -130,3 +157,4 @@ alter table compliance_checklist enable row level security;
 alter table client_risk_entries enable row level security;
 alter table chat_sessions enable row level security;
 alter table document_versions enable row level security;
+alter table sanctions_entries enable row level security;

@@ -9,6 +9,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
 import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId } from './db.js';
+import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName } from './sanctions.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -130,6 +131,14 @@ const clientRegisterLimiter = rateLimit({
 const chatSessionLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   limit: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down and try again shortly.' },
+})
+
+const sanctionsScreenLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  limit: 30,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down and try again shortly.' },
@@ -1203,6 +1212,27 @@ app.get('/document-versions', asyncRoute(async (req, res) => {
   res.json({ versions })
 }))
 
+// ── Sanctions screening ───────────────────────────────────────────────────────
+// Matches against periodically-refreshed local copies of the DFAT and OFAC
+// public sanctions lists (see sanctions.js) rather than a live regulator
+// query — getSanctionsListsStatus() lets the frontend show data currency.
+app.post('/sanctions-screen', sanctionsScreenLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const name = req.body?.name
+  if (!name || typeof name !== 'string' || !name.trim()) {
+    return res.status(400).json({ error: 'A name to screen is required' })
+  }
+
+  const [matches, listsStatus] = await Promise.all([
+    screenName({ name: name.trim() }),
+    getSanctionsListsStatus(),
+  ])
+  res.json({ query: name.trim(), matches, listsStatus })
+}))
+
 // ── Cost estimate email ───────────────────────────────────────────────────────
 const COST_INDUSTRIES = {
   lawyers: 'Lawyers & Conveyancers',
@@ -1269,6 +1299,8 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'AML Compliance Assistant API', aiEnabled: !!anthropic })
 })
 
+const SANCTIONS_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000
+
 app.listen(PORT, () => {
   console.log(`AmlIntel API running on http://localhost:${PORT}`)
   if (anthropic) {
@@ -1276,4 +1308,12 @@ app.listen(PORT, () => {
   } else {
     console.log('⚠️  AI assistant: DISABLED — add ANTHROPIC_API_KEY to .env and restart')
   }
+
+  // Fire-and-forget — the server starts serving immediately rather than
+  // blocking on a ~20s network fetch; sanctions-screen results are simply
+  // sparse/empty until the first refresh completes.
+  refreshAllSanctionsLists().catch((err) => console.error('[sanctions] initial refresh failed:', err.message))
+  setInterval(() => {
+    refreshAllSanctionsLists().catch((err) => console.error('[sanctions] scheduled refresh failed:', err.message))
+  }, SANCTIONS_REFRESH_INTERVAL_MS)
 })

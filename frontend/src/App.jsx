@@ -29,6 +29,7 @@ import ComplianceCalendar from './components/ComplianceCalendar'
 import ClientRiskRegister from './components/ClientRiskRegister'
 import ComplianceDashboard from './components/ComplianceDashboard'
 import SmrDraft from './components/SmrDraft'
+import SanctionsScreening from './components/SanctionsScreening'
 import TermsOfService from './components/TermsOfService'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SectorGuide from './components/SectorGuide'
@@ -73,6 +74,7 @@ const ROUTED_VIEWS = {
   chat: '/assistant',
   settings: '/settings',
   smrDraft: '/smr-draft',
+  sanctionsScreening: '/sanctions-screening',
 }
 const PATH_TO_VIEW = Object.fromEntries(Object.entries(ROUTED_VIEWS).map(([v, p]) => [p, v]))
 
@@ -288,6 +290,7 @@ function App() {
     onOpenReportableTransactionCheck: () => setView('reportableTransactionCheck'),
     onOpenComplianceDashboard: () => setView('dashboard'),
     onOpenSmrDraft: () => setView('smrDraft'),
+    onOpenSanctionsScreening: () => setView('sanctionsScreening'),
     onOpenTermsOfService: () => setView('termsOfService'),
     onOpenPrivacyPolicy: () => setView('privacyPolicy'),
   }
@@ -513,6 +516,16 @@ function App() {
   if (view === 'smrDraft') {
     return (
       <SmrDraft
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'sanctionsScreening') {
+    return (
+      <SanctionsScreening
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
