@@ -1283,8 +1283,8 @@ app.post('/sanctions-screen', sanctionsScreenLimiter, asyncRoute(async (req, res
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
 
   const name = req.body?.name
-  if (!name || typeof name !== 'string' || !name.trim()) {
-    return res.status(400).json({ error: 'A name to screen is required' })
+  if (!name || typeof name !== 'string' || !name.trim() || name.trim().length > 200) {
+    return res.status(400).json({ error: 'A name to screen is required (max 200 characters)' })
   }
 
   const [matches, listsStatus] = await Promise.all([
@@ -1308,8 +1308,8 @@ app.post('/sanctions-watchlist', sanctionsScreenLimiter, asyncRoute(async (req, 
   if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
 
   const name = req.body?.name
-  if (!name || typeof name !== 'string' || !name.trim()) {
-    return res.status(400).json({ error: 'A name to monitor is required' })
+  if (!name || typeof name !== 'string' || !name.trim() || name.trim().length > 200) {
+    return res.status(400).json({ error: 'A name to monitor is required (max 200 characters)' })
   }
   const notes = typeof req.body?.notes === 'string' ? req.body.notes.trim().slice(0, 500) : null
 

@@ -16,6 +16,13 @@ if (!process.env.DATABASE_URL) {
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
+  // Above pg's default of 10 — the sanctions list refresh (startup + every
+  // 24h) holds one connection for the full ~15-20s OFAC insert transaction,
+  // by design (that transaction's atomicity — full replace or full
+  // rollback — is the whole point, so shortening the hold time isn't worth
+  // trading away). Extra headroom here means that one long-held connection
+  // doesn't meaningfully reduce what's available for concurrent requests.
+  max: 15,
 })
 
 export async function getUserByEmail(email) {
