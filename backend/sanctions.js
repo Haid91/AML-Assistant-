@@ -274,3 +274,61 @@ export async function screenName({ name }) {
   )
   return result.rows.filter((r) => r.score >= MIN_SIMILARITY)
 }
+
+const MAX_WATCHLIST_PER_USER = 50
+
+export async function getWatchlistCount(userId) {
+  const result = await pool.query('SELECT count(*)::int AS count FROM sanctions_watchlist WHERE user_id = $1', [userId])
+  return result.rows[0].count
+}
+
+export async function addToWatchlist({ id, userId, name, notes }) {
+  await pool.query(
+    'INSERT INTO sanctions_watchlist (id, user_id, name, notes) VALUES ($1, $2, $3, $4)',
+    [id, userId, name, notes || null],
+  )
+}
+
+export async function getWatchlist(userId) {
+  const result = await pool.query(
+    `SELECT id, name, notes, last_match_count AS "lastMatchCount", last_checked_at AS "lastCheckedAt", created_at AS "createdAt"
+     FROM sanctions_watchlist WHERE user_id = $1 ORDER BY created_at DESC`,
+    [userId],
+  )
+  return result.rows
+}
+
+export async function removeFromWatchlist({ id, userId }) {
+  const result = await pool.query('DELETE FROM sanctions_watchlist WHERE id = $1 AND user_id = $2', [id, userId])
+  return result.rowCount > 0
+}
+
+// Re-screens every monitored name against the (just-refreshed) sanctions
+// data. Returns only the NEW hits — entries whose match count went up since
+// last check — so the caller (server.js) can email just those, not
+// re-alert on a match that was already known and presumably already
+// investigated.
+export async function refreshWatchlistChecks() {
+  const { rows } = await pool.query(
+    `SELECT w.id, w.user_id AS "userId", w.name, w.last_match_count AS "lastMatchCount", u.email
+     FROM sanctions_watchlist w JOIN users u ON u.id = w.user_id`,
+  )
+  const newHits = []
+  for (const entry of rows) {
+    let matches = []
+    try {
+      matches = await screenName({ name: entry.name })
+    } catch (err) {
+      console.error(`[sanctions] watchlist check failed for ${entry.id}:`, err.message)
+      continue
+    }
+    await pool.query(
+      'UPDATE sanctions_watchlist SET last_match_count = $1, last_checked_at = now() WHERE id = $2',
+      [matches.length, entry.id],
+    )
+    if (matches.length > entry.lastMatchCount) {
+      newHits.push({ userId: entry.userId, email: entry.email, name: entry.name, matches })
+    }
+  }
+  return newHits
+}

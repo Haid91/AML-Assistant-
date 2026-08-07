@@ -9,7 +9,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
 import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
-import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName } from './sanctions.js';
+import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName, getWatchlistCount, addToWatchlist, getWatchlist, removeFromWatchlist, refreshWatchlistChecks } from './sanctions.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -254,6 +254,39 @@ async function sendEstimateEmail(toEmail, { industryLabel, people, annualTotal, 
 
 function escapeHtml(str) {
   return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+}
+
+async function sendSanctionsAlertEmail(toEmail, { name, matches }) {
+  const summary = `${matches.length} new match${matches.length === 1 ? '' : 'es'} for "${name}"`
+  if (!resend) {
+    console.log(`\n📧 Sanctions watchlist alert (configure RESEND_API_KEY in .env to send real emails):\n   To: ${toEmail}\n   ${summary}\n`)
+    return
+  }
+  const matchRows = matches.slice(0, 5).map((m) => `
+        <div style="padding:10px 0;border-top:1px solid #e2e8f0">
+          <p style="margin:0;color:#0f172a;font-size:14px;font-weight:600">${escapeHtml(m.primary_name)}</p>
+          <p style="margin:2px 0 0;color:#64748b;font-size:12px">${escapeHtml(m.source === 'ofac' ? 'OFAC SDN List' : 'DFAT Consolidated List')}${m.program_or_reference ? ' · ' + escapeHtml(m.program_or_reference) : ''}</p>
+        </div>`).join('')
+  await resend.emails.send({
+    from: RESEND_FROM,
+    to: toEmail,
+    subject: `New sanctions match for "${name}"`,
+    html: `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
+        <div style="margin-bottom:24px">
+          <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">New sanctions match found</h2>
+        <p style="margin:0 0 20px;color:#475569;font-size:15px">A name you're monitoring — <strong>${escapeHtml(name)}</strong> — now has a match it didn't have at last check:</p>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:16px 20px;margin-bottom:24px">
+          ${matchRows}
+        </div>
+        <p style="margin:0 0 24px;color:#94a3b8;font-size:13px">This is a screening aid against a periodically-refreshed copy of public sanctions lists, not a live regulator query. Verify directly against the official DFAT and OFAC lists before acting on it.</p>
+        <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
+        <p style="margin:0;color:#94a3b8;font-size:12px">AmlIntel Sanctions Screening</p>
+      </div>
+    `,
+  })
 }
 
 async function sendContactEmail({ name, email, subject, message }) {
@@ -1261,6 +1294,52 @@ app.post('/sanctions-screen', sanctionsScreenLimiter, asyncRoute(async (req, res
   res.json({ query: name.trim(), matches, listsStatus })
 }))
 
+// ── Sanctions watchlist (ongoing re-screening) ────────────────────────────────
+// Explicit opt-in extension of the one-off screen above — unlike
+// client_risk_entries, this deliberately does store a real name, because
+// the user already had to enter one to run a one-off check and is now
+// choosing to keep checking it. Re-screened on the same cycle as the
+// sanctions list refresh (see app.listen below); new hits are emailed.
+const MAX_WATCHLIST_PER_USER = 50
+
+app.post('/sanctions-watchlist', sanctionsScreenLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const name = req.body?.name
+  if (!name || typeof name !== 'string' || !name.trim()) {
+    return res.status(400).json({ error: 'A name to monitor is required' })
+  }
+  const notes = typeof req.body?.notes === 'string' ? req.body.notes.trim().slice(0, 500) : null
+
+  const count = await getWatchlistCount(user.id)
+  if (count >= MAX_WATCHLIST_PER_USER) {
+    return res.status(400).json({ error: `You can monitor up to ${MAX_WATCHLIST_PER_USER} names at a time.` })
+  }
+
+  const id = crypto.randomUUID()
+  await addToWatchlist({ id, userId: user.id, name: name.trim(), notes })
+  res.json({ id })
+}))
+
+app.get('/sanctions-watchlist', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const watchlist = await getWatchlist(user.id)
+  res.json({ watchlist })
+}))
+
+app.delete('/sanctions-watchlist/:id', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const removed = await removeFromWatchlist({ id: req.params.id, userId: user.id })
+  if (!removed) return res.status(404).json({ error: 'Not found' })
+  res.json({ success: true })
+}))
+
 // ── AI usage / cost tracking (owner-only) ────────────────────────────────────
 // Real Claude API spend per subscriber, derived from logged token counts
 // rather than estimated — see recordAiUsage() and db.js's getAiUsageSummary.
@@ -1346,6 +1425,26 @@ app.get('/health', (_req, res) => {
 
 const SANCTIONS_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000
 
+// Watchlist re-screening must run AFTER the sanctions lists finish
+// refreshing, not in parallel — it needs that day's fresh data, not
+// whatever was there before. New hits get emailed individually.
+async function runSanctionsRefreshCycle() {
+  await refreshAllSanctionsLists()
+  try {
+    const newHits = await refreshWatchlistChecks()
+    for (const hit of newHits) {
+      try {
+        await sendSanctionsAlertEmail(hit.email, { name: hit.name, matches: hit.matches })
+      } catch (err) {
+        console.error('[sanctions] failed to send watchlist alert email:', err.message)
+      }
+    }
+    if (newHits.length > 0) console.log(`[sanctions] sent ${newHits.length} watchlist alert email(s)`)
+  } catch (err) {
+    console.error('[sanctions] watchlist refresh failed:', err.message)
+  }
+}
+
 app.listen(PORT, () => {
   console.log(`AmlIntel API running on http://localhost:${PORT}`)
   if (anthropic) {
@@ -1357,8 +1456,8 @@ app.listen(PORT, () => {
   // Fire-and-forget — the server starts serving immediately rather than
   // blocking on a ~20s network fetch; sanctions-screen results are simply
   // sparse/empty until the first refresh completes.
-  refreshAllSanctionsLists().catch((err) => console.error('[sanctions] initial refresh failed:', err.message))
+  runSanctionsRefreshCycle().catch((err) => console.error('[sanctions] initial refresh cycle failed:', err.message))
   setInterval(() => {
-    refreshAllSanctionsLists().catch((err) => console.error('[sanctions] scheduled refresh failed:', err.message))
+    runSanctionsRefreshCycle().catch((err) => console.error('[sanctions] scheduled refresh cycle failed:', err.message))
   }, SANCTIONS_REFRESH_INTERVAL_MS)
 })

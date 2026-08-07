@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { API_URL } from '../config'
 import Navbar from './Navbar'
 
@@ -29,11 +29,30 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
   const [error, setError] = useState(null)
   const [result, setResult] = useState(null) // { query, matches, listsStatus }
 
+  const [watchlist, setWatchlist] = useState(null) // null = not loaded yet
+  const [monitorState, setMonitorState] = useState('idle') // idle | loading | done | error
+
+  const loadWatchlist = async () => {
+    const token = localStorage.getItem('aml_token')
+    try {
+      const res = await fetch(`${API_URL}/sanctions-watchlist`, { headers: { Authorization: `Bearer ${token}` } })
+      const data = await res.json()
+      setWatchlist(res.ok ? data.watchlist : [])
+    } catch {
+      setWatchlist([])
+    }
+  }
+
+  useEffect(() => {
+    if (user?.premium) loadWatchlist()
+  }, [user?.premium])
+
   const handleScreen = async (e) => {
     e.preventDefault()
     if (!name.trim()) return
     setLoading(true)
     setError(null)
+    setMonitorState('idle')
     try {
       const token = localStorage.getItem('aml_token')
       const res = await fetch(`${API_URL}/sanctions-screen`, {
@@ -53,6 +72,39 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
       setResult(null)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleMonitor = async () => {
+    if (!result) return
+    setMonitorState('loading')
+    try {
+      const token = localStorage.getItem('aml_token')
+      const res = await fetch(`${API_URL}/sanctions-watchlist`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name: result.query }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setMonitorState('error')
+        setError(data.error || 'Could not add to your monitored names.')
+        return
+      }
+      setMonitorState('done')
+      loadWatchlist()
+    } catch {
+      setMonitorState('error')
+    }
+  }
+
+  const handleRemoveWatch = async (id) => {
+    const token = localStorage.getItem('aml_token')
+    setWatchlist((prev) => prev.filter((w) => w.id !== id))
+    try {
+      await fetch(`${API_URL}/sanctions-watchlist/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+    } catch {
+      loadWatchlist()
     }
   }
 
@@ -92,7 +144,7 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
               'Matches against both primary names and known aliases',
               'Lists refreshed automatically, with the exact source date always shown',
               'Ranked by match confidence, not just a yes/no result',
-              'Unlimited checks — no daily cap',
+              'Optional ongoing monitoring — get emailed if a name you\'re watching gets a new match',
             ].map((f) => (
               <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                 <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,12 +205,28 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
 
         {result && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
               <p className="text-sm font-semibold">
                 {result.matches.length === 0
                   ? `No matches for "${result.query}"`
                   : `${result.matches.length} match${result.matches.length === 1 ? '' : 'es'} for "${result.query}"`}
               </p>
+              {monitorState === 'done' ? (
+                <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Monitoring this name
+                </span>
+              ) : (
+                <button
+                  onClick={handleMonitor}
+                  disabled={monitorState === 'loading'}
+                  className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 disabled:opacity-50"
+                >
+                  {monitorState === 'loading' ? 'Adding…' : 'Monitor this name going forward →'}
+                </button>
+              )}
             </div>
 
             {result.matches.length === 0 ? (
@@ -193,7 +261,7 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
             )}
 
             {result.listsStatus?.length > 0 && (
-              <p className="text-xs text-slate-400 dark:text-slate-500 text-center">
+              <p className="text-xs text-slate-400 dark:text-slate-500 text-center mb-10">
                 {result.listsStatus.map((s) => (
                   <span key={s.source} className="inline-block mr-4">
                     {SOURCE_LABELS[s.source] || s.source} dated {s.list_updated_at ? new Date(s.list_updated_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }) : 'unknown'}
@@ -201,6 +269,37 @@ export default function SanctionsScreening({ user, onGoHome, onNavigateSection, 
                 ))}
               </p>
             )}
+          </div>
+        )}
+
+        {watchlist?.length > 0 && (
+          <div className="border-t border-slate-100 dark:border-slate-800 pt-8">
+            <p className="text-sm font-semibold mb-1">Your monitored names ({watchlist.length})</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
+              Unlike the Client Risk Register, this does store the actual name you enter — only add someone here if you want AmlIntel to keep checking them against updated sanctions lists. Re-checked daily; you'll get an email if a new match appears.
+            </p>
+            <div className="space-y-2">
+              {watchlist.map((w) => (
+                <div key={w.id} className="flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">{w.name}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
+                      {w.lastCheckedAt ? `Last checked ${new Date(w.lastCheckedAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}` : 'Not yet checked'}
+                      {' · '}
+                      {w.lastMatchCount > 0 ? (
+                        <span className="text-red-600 dark:text-red-400 font-semibold">{w.lastMatchCount} match{w.lastMatchCount === 1 ? '' : 'es'}</span>
+                      ) : 'Clear'}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveWatch(w.id)}
+                    className="shrink-0 text-xs font-semibold text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

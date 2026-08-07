@@ -161,6 +161,25 @@ create table if not exists ai_usage_log (
 create index if not exists ai_usage_log_user_idx on ai_usage_log (user_id);
 create index if not exists ai_usage_log_created_idx on ai_usage_log (created_at);
 
+-- Explicit opt-in extension of Sanctions Screening — unlike
+-- client_risk_entries (deliberately metadata-only, no real names), this
+-- table DOES store a real name, because the user explicitly chose "keep
+-- monitoring this" after a one-off screen already required entering it.
+-- Re-checked against refreshed sanctions data on the same cycle as
+-- sanctions_entries; last_match_count lets the refresh job detect a NEW
+-- hit (count increased) rather than re-alerting on an already-known match.
+create table if not exists sanctions_watchlist (
+  id uuid primary key,
+  user_id uuid not null references users(id),
+  name text not null,
+  notes text,
+  last_match_count integer not null default 0,
+  last_checked_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists sanctions_watchlist_user_idx on sanctions_watchlist (user_id);
+
 -- These tables are only ever accessed via the backend's direct Postgres
 -- connection (connects as the table-owning role, which bypasses RLS
 -- regardless of policies) — never via Supabase's PostgREST Data API. RLS is
@@ -175,5 +194,6 @@ alter table compliance_checklist enable row level security;
 alter table client_risk_entries enable row level security;
 alter table chat_sessions enable row level security;
 alter table ai_usage_log enable row level security;
+alter table sanctions_watchlist enable row level security;
 alter table document_versions enable row level security;
 alter table sanctions_entries enable row level security;
