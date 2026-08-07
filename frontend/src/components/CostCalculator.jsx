@@ -215,12 +215,14 @@ export default function CostCalculator({ user, onGoHome, onNavigateSection, onSt
           </ul>
 
           <div className="flex flex-wrap gap-3 mb-5">
-            <button
-              onClick={onSignUp}
-              className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
-            >
-              Start free trial →
-            </button>
+            {!user && (
+              <button
+                onClick={onSignUp}
+                className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+              >
+                Start free trial →
+              </button>
+            )}
             <button
               onClick={onOpenEligibility}
               className="flex-1 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"

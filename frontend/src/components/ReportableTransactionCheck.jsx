@@ -218,9 +218,11 @@ export default function ReportableTransactionCheck({ user, onGoHome, onNavigateS
               <button onClick={onOpenSuspiciousIndicators} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
                 Suspicious activity indicators
               </button>
-              <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
-                Sign up free
-              </button>
+              {!user && (
+                <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
+                  Sign up free
+                </button>
+              )}
             </div>
             <button onClick={restart} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Check another transaction →</button>
           </div>

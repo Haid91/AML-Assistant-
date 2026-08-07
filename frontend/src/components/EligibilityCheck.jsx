@@ -224,9 +224,11 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
               <button onClick={onOpenSetupGuide} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
                 See the setup guide
               </button>
-              <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
-                Sign up free
-              </button>
+              {!user && (
+                <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
+                  Sign up free
+                </button>
+              )}
             </div>
             <button onClick={restart} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Check another business →</button>
           </div>
@@ -241,7 +243,11 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
               </p>
             </div>
             <div className="flex flex-wrap gap-3 mb-4">
-              <button onClick={onSignUp} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">Sign up free →</button>
+              {user ? (
+                <button onClick={onOpenChat} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">Ask the AI assistant →</button>
+              ) : (
+                <button onClick={onSignUp} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">Sign up free →</button>
+              )}
             </div>
             <button onClick={restart} className="text-sm text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">Check another business →</button>
           </div>
@@ -259,7 +265,7 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
               <button onClick={onOpenSetupGuide} className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
                 See the setup guide →
               </button>
-              <button onClick={onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
+              <button onClick={user ? onOpenChat : onSignUp} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors">
                 Ask the AI assistant
               </button>
             </div>
