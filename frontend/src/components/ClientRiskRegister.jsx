@@ -19,6 +19,25 @@ const RISK_BADGE_CLS = {
   high: 'bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400',
 }
 
+const CASE_STATUS_LABELS = { none: 'No case', open: 'Investigation open', closed: 'Investigation closed' }
+const CASE_STATUS_CLS = {
+  none: 'bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400',
+  open: 'bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+  closed: 'bg-slate-200 text-slate-600 dark:bg-slate-600 dark:text-slate-300',
+}
+// What the action button does/shows for the entry's current case_status —
+// none -> open -> closed -> open (reopen), never back to "no case" from the
+// UI, since "no case" just means one was never started.
+const CASE_STATUS_ACTION = {
+  none: { next: 'open', label: 'Open a case' },
+  open: { next: 'closed', label: 'Close case' },
+  closed: { next: 'open', label: 'Reopen' },
+}
+
+function formatDateTime(isoStr) {
+  return new Date(isoStr).toLocaleString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+}
+
 function todayIso() {
   const d = new Date()
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -58,11 +77,17 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
   const [entries, setEntries] = useState([])
   const [statusFilter, setStatusFilter] = useState('active')
   const [riskFilter, setRiskFilter] = useState('all')
+  const [caseFilter, setCaseFilter] = useState('all')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
   const [error, setError] = useState(null)
   const [busyId, setBusyId] = useState(null)
+  const [expandedEntryId, setExpandedEntryId] = useState(null)
+  const [caseNotesByEntry, setCaseNotesByEntry] = useState({})
+  const [noteDraftByEntry, setNoteDraftByEntry] = useState({})
+  const [noteBusyId, setNoteBusyId] = useState(null)
+  const [noteError, setNoteError] = useState(null)
 
   const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }
 
@@ -142,15 +167,58 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
     }
   }
 
+  const toggleCaseNotes = (entryId) => {
+    if (expandedEntryId === entryId) { setExpandedEntryId(null); return }
+    setExpandedEntryId(entryId)
+    setNoteError(null)
+    if (caseNotesByEntry[entryId]) return
+    fetch(`${API_URL}/client-risk-entries/${entryId}/case-notes`, { headers: authHeaders() })
+      .then((res) => res.json())
+      .then((data) => setCaseNotesByEntry((prev) => ({ ...prev, [entryId]: data.notes || [] })))
+      .catch(() => {})
+  }
+
+  const submitNote = async (entryId) => {
+    const text = (noteDraftByEntry[entryId] || '').trim()
+    if (!text) return
+    setNoteBusyId(entryId)
+    setNoteError(null)
+    try {
+      const res = await fetch(`${API_URL}/client-risk-entries/${entryId}/case-notes`, {
+        method: 'POST', headers: authHeaders(), body: JSON.stringify({ note: text }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setNoteError(data.error || 'Something went wrong.'); return }
+      setCaseNotesByEntry((prev) => ({ ...prev, [entryId]: [...(prev[entryId] || []), data.note] }))
+      setNoteDraftByEntry((prev) => ({ ...prev, [entryId]: '' }))
+    } catch {
+      setNoteError('Network error. Please check your connection and try again.')
+    } finally {
+      setNoteBusyId(null)
+    }
+  }
+
+  const removeNote = async (entryId, noteId) => {
+    setNoteBusyId(noteId)
+    try {
+      const res = await fetch(`${API_URL}/client-risk-entries/${entryId}/case-notes/${noteId}`, { method: 'DELETE', headers: authHeaders() })
+      if (res.ok) setCaseNotesByEntry((prev) => ({ ...prev, [entryId]: (prev[entryId] || []).filter((n) => n.id !== noteId) }))
+    } finally {
+      setNoteBusyId(null)
+    }
+  }
+
   const filtered = entries.filter((e) => {
     if (statusFilter !== 'all' && e.status !== statusFilter) return false
     if (riskFilter !== 'all' && e.riskRating !== riskFilter) return false
+    if (caseFilter !== 'all' && (e.caseStatus || 'none') !== caseFilter) return false
     return true
   })
 
   const activeCount = entries.filter((e) => e.status === 'active').length
   const overdueCount = entries.filter((e) => e.status === 'active' && e.nextReviewDate && daysUntil(e.nextReviewDate) < 0).length
   const highRiskCount = entries.filter((e) => e.status === 'active' && e.riskRating === 'high').length
+  const openCaseCount = entries.filter((e) => e.caseStatus === 'open').length
 
   if (phase === 'checking') {
     return (
@@ -231,7 +299,7 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
             <p className="text-2xl font-bold">{activeCount}</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">Active clients</p>
@@ -243,6 +311,10 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
           <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
             <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{highRiskCount}</p>
             <p className="text-xs text-slate-500 dark:text-slate-400">High risk</p>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{openCaseCount}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Open investigations</p>
           </div>
         </div>
 
@@ -313,6 +385,13 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
               </button>
             ))}
           </div>
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+            {['all', 'none', 'open', 'closed'].map((c) => (
+              <button key={c} onClick={() => setCaseFilter(c)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-colors ${caseFilter === c ? 'bg-white dark:bg-slate-700 shadow-sm' : 'text-slate-500 dark:text-slate-400'}`}>
+                {c === 'all' ? 'All cases' : c === 'none' ? 'No case' : c}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-3 mb-10">
@@ -333,6 +412,9 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
                     {entry.status === 'offboarded' && (
                       <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-600 text-slate-600 dark:text-slate-300">Offboarded</span>
                     )}
+                    {entry.caseStatus && entry.caseStatus !== 'none' && (
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${CASE_STATUS_CLS[entry.caseStatus]}`}>{CASE_STATUS_LABELS[entry.caseStatus]}</span>
+                    )}
                   </div>
                   <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full shrink-0 ${badge.cls}`}>{badge.label}</span>
                 </div>
@@ -349,6 +431,12 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
                   <button disabled={busyId === entry.id} onClick={() => patchEntry(entry.id, { status: entry.status === 'active' ? 'offboarded' : 'active' })} className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors">
                     {entry.status === 'active' ? 'Mark offboarded' : 'Reactivate'}
                   </button>
+                  <button disabled={busyId === entry.id} onClick={() => patchEntry(entry.id, { caseStatus: CASE_STATUS_ACTION[entry.caseStatus || 'none'].next })} className="px-3 py-1.5 border border-blue-200 dark:border-blue-500/30 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-semibold hover:bg-blue-50 dark:hover:bg-blue-500/10 disabled:opacity-50 transition-colors">
+                    {CASE_STATUS_ACTION[entry.caseStatus || 'none'].label}
+                  </button>
+                  <button onClick={() => toggleCaseNotes(entry.id)} className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                    Case notes {caseNotesByEntry[entry.id] ? `(${caseNotesByEntry[entry.id].length})` : ''} {expandedEntryId === entry.id ? '▲' : '▼'}
+                  </button>
                   <button onClick={() => startEdit(entry)} className="px-3 py-1.5 border border-slate-200 dark:border-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                     Edit
                   </button>
@@ -356,6 +444,46 @@ export default function ClientRiskRegister({ user, onGoHome, onNavigateSection, 
                     Delete
                   </button>
                 </div>
+
+                {expandedEntryId === entry.id && (
+                  <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mb-3">
+                      Unlike the register's own Notes field, these entries can't be edited once saved — only removed. Don't enter client names, dates of birth, or identity document numbers here either.
+                    </p>
+                    {noteError && <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-xl px-4 py-2.5 mb-3 text-sm text-red-700 dark:text-red-300">{noteError}</div>}
+                    {caseNotesByEntry[entry.id] === undefined && (
+                      <p className="text-xs text-slate-400 dark:text-slate-500">Loading…</p>
+                    )}
+                    {caseNotesByEntry[entry.id]?.length === 0 && (
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mb-3">No case notes yet.</p>
+                    )}
+                    <div className="space-y-2 mb-3">
+                      {(caseNotesByEntry[entry.id] || []).map((n) => (
+                        <div key={n.id} className="flex items-start justify-between gap-3 bg-slate-50 dark:bg-slate-900/40 rounded-xl px-3 py-2">
+                          <div>
+                            <p className="text-[11px] text-slate-400 dark:text-slate-500 mb-0.5">{formatDateTime(n.createdAt)}</p>
+                            <p className="text-sm text-slate-600 dark:text-slate-300 whitespace-pre-wrap">{n.note}</p>
+                          </div>
+                          <button disabled={noteBusyId === n.id} onClick={() => removeNote(entry.id, n.id)} className="text-slate-400 hover:text-red-500 disabled:opacity-50 shrink-0 text-sm leading-none px-1">
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <textarea
+                        value={noteDraftByEntry[entry.id] || ''}
+                        onChange={(e) => setNoteDraftByEntry((prev) => ({ ...prev, [entry.id]: e.target.value }))}
+                        rows={2}
+                        placeholder="What did you do, and when?"
+                        className="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm"
+                      />
+                      <button disabled={noteBusyId === entry.id || !(noteDraftByEntry[entry.id] || '').trim()} onClick={() => submitNote(entry.id)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold disabled:opacity-50 transition-colors shrink-0">
+                        Add note
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )
           })}

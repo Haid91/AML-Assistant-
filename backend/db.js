@@ -147,7 +147,7 @@ export async function saveComplianceChecklist({ id, userId, ...fields }) {
   )
 }
 
-const CLIENT_RISK_ENTRY_COLUMNS = `id, reference_label AS "referenceLabel", risk_rating AS "riskRating", cdd_type AS "cddType", onboarded_date AS "onboardedDate", last_review_date AS "lastReviewDate", next_review_date AS "nextReviewDate", status, notes, created_at AS "createdAt", updated_at AS "updatedAt"`
+const CLIENT_RISK_ENTRY_COLUMNS = `id, reference_label AS "referenceLabel", risk_rating AS "riskRating", cdd_type AS "cddType", onboarded_date AS "onboardedDate", last_review_date AS "lastReviewDate", next_review_date AS "nextReviewDate", status, notes, case_status AS "caseStatus", created_at AS "createdAt", updated_at AS "updatedAt"`
 
 export async function getClientRiskEntries(userId) {
   const { rows } = await pool.query(
@@ -176,6 +176,7 @@ const CLIENT_RISK_ENTRY_SETTABLE_COLUMNS = {
   nextReviewDate: 'next_review_date',
   status: 'status',
   notes: 'notes',
+  caseStatus: 'case_status',
 }
 
 // Same dynamic-SET approach as saveComplianceChecklist above — only keys
@@ -202,6 +203,38 @@ export async function updateClientRiskEntry({ id, userId, ...fields }) {
 export async function deleteClientRiskEntry(id, userId) {
   const { rowCount } = await pool.query(
     'DELETE FROM client_risk_entries WHERE id = $1 AND user_id = $2',
+    [id, userId]
+  )
+  return rowCount > 0
+}
+
+const CASE_NOTE_COLUMNS = `id, entry_id AS "entryId", note, created_at AS "createdAt"`
+
+export async function getCaseNotes(entryId, userId) {
+  const { rows } = await pool.query(
+    `SELECT ${CASE_NOTE_COLUMNS} FROM client_risk_case_notes WHERE entry_id = $1 AND user_id = $2 ORDER BY created_at ASC`,
+    [entryId, userId]
+  )
+  return rows
+}
+
+// Guards against attaching a note to an entry_id the caller doesn't own —
+// the WHERE EXISTS makes the insert a no-op (rowCount 0) rather than
+// trusting entry_id on its own, since it arrives as a route param.
+export async function addCaseNote({ id, entryId, userId, note }) {
+  const { rows } = await pool.query(
+    `INSERT INTO client_risk_case_notes (id, entry_id, user_id, note)
+     SELECT $1, $2, $3, $4
+     WHERE EXISTS (SELECT 1 FROM client_risk_entries WHERE id = $2 AND user_id = $3)
+     RETURNING ${CASE_NOTE_COLUMNS}`,
+    [id, entryId, userId, note]
+  )
+  return rows[0] || null
+}
+
+export async function deleteCaseNote(id, userId) {
+  const { rowCount } = await pool.query(
+    'DELETE FROM client_risk_case_notes WHERE id = $1 AND user_id = $2',
     [id, userId]
   )
   return rowCount > 0

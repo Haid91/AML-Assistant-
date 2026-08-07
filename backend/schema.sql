@@ -86,6 +86,27 @@ create table if not exists client_risk_entries (
   updated_at timestamptz not null default now()
 );
 
+-- Added after client_risk_entries already existed in production — the
+-- create-table-if-not-exists above won't backfill new columns onto an
+-- existing table, so this needs its own explicit alter (same pattern as
+-- the stripe_customer_id/stripe_subscription_id columns above).
+alter table client_risk_entries add column if not exists case_status text not null default 'none';
+
+-- Append-only investigation log per client_risk_entries row — distinct from
+-- that table's own free-text `notes` (a mutable one-line summary). Each row
+-- here is a timestamped, deletable-but-not-editable entry, so a firm can
+-- show "here's what we did and when" rather than an overwritable note.
+-- user_id is denormalized from the parent entry (same pattern as
+-- sanctions_watchlist below) so ownership checks stay a single-table filter.
+create table if not exists client_risk_case_notes (
+  id uuid primary key,
+  entry_id uuid not null references client_risk_entries(id) on delete cascade,
+  user_id uuid not null references users(id),
+  note text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists client_risk_case_notes_entry_idx on client_risk_case_notes (entry_id);
+
 -- Multiple rows per user — synced AI Assistant chat sessions, replacing
 -- localStorage-only history so it survives clearing browser data or
 -- switching devices.
@@ -192,6 +213,7 @@ alter table privacy_drafts enable row level security;
 alter table mock_exam_attempts enable row level security;
 alter table compliance_checklist enable row level security;
 alter table client_risk_entries enable row level security;
+alter table client_risk_case_notes enable row level security;
 alter table chat_sessions enable row level security;
 alter table ai_usage_log enable row level security;
 alter table sanctions_watchlist enable row level security;

@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getCaseNotes, addCaseNote, deleteCaseNote, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
 import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName, getWatchlistCount, addToWatchlist, getWatchlist, removeFromWatchlist, refreshWatchlistChecks } from './sanctions.js';
 
 const app = express();
@@ -1140,9 +1140,10 @@ app.post('/compliance-checklist', complianceLimiter, asyncRoute(async (req, res)
 const RISK_RATINGS = new Set(['low', 'medium', 'high'])
 const CDD_TYPES = new Set(['standard', 'edd'])
 const ENTRY_STATUSES = new Set(['active', 'offboarded'])
+const CASE_STATUSES = new Set(['none', 'open', 'closed'])
 
 function validateClientRiskFields(body, { requireCore }) {
-  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status } = body || {}
+  const { referenceLabel, riskRating, cddType, onboardedDate, lastReviewDate, nextReviewDate, status, caseStatus } = body || {}
   if (requireCore) {
     if (!referenceLabel || typeof referenceLabel !== 'string' || !referenceLabel.trim()) return 'referenceLabel is required'
     if (!riskRating || !RISK_RATINGS.has(riskRating)) return 'Invalid riskRating'
@@ -1153,6 +1154,7 @@ function validateClientRiskFields(body, { requireCore }) {
     if (referenceLabel != null && (typeof referenceLabel !== 'string' || !referenceLabel.trim())) return 'Invalid referenceLabel'
   }
   if (status != null && !ENTRY_STATUSES.has(status)) return 'Invalid status'
+  if (caseStatus != null && !CASE_STATUSES.has(caseStatus)) return 'Invalid caseStatus'
   for (const [name, value] of Object.entries({ onboardedDate, lastReviewDate, nextReviewDate })) {
     if (value != null && !ISO_DATE_RE.test(value)) return `Invalid date for ${name}`
   }
@@ -1195,7 +1197,7 @@ app.put('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (req
   // Only fields actually present in the request are touched — see the same
   // note in the /compliance-checklist handler above.
   const fields = {}
-  for (const name of ['referenceLabel', 'riskRating', 'cddType', 'onboardedDate', 'lastReviewDate', 'nextReviewDate', 'status', 'notes']) {
+  for (const name of ['referenceLabel', 'riskRating', 'cddType', 'onboardedDate', 'lastReviewDate', 'nextReviewDate', 'status', 'notes', 'caseStatus']) {
     if (!(name in body)) continue
     fields[name] = name === 'referenceLabel' ? (body[name]?.trim() ?? null) : (body[name] ?? null)
   }
@@ -1211,6 +1213,40 @@ app.delete('/client-risk-entries/:id', clientRegisterLimiter, asyncRoute(async (
 
   const deleted = await deleteClientRiskEntry(req.params.id, user.id)
   if (!deleted) return res.status(404).json({ error: 'Entry not found' })
+  res.json({ ok: true })
+}))
+
+// ── Client risk register: case notes (append-only investigation log) ───────
+app.get('/client-risk-entries/:id/case-notes', asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+  const notes = await getCaseNotes(req.params.id, user.id)
+  res.json({ notes })
+}))
+
+app.post('/client-risk-entries/:id/case-notes', clientRegisterLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const { note } = req.body
+  if (!note || typeof note !== 'string' || !note.trim() || note.trim().length > 2000) {
+    return res.status(400).json({ error: 'Invalid note' })
+  }
+
+  const created = await addCaseNote({ id: crypto.randomUUID(), entryId: req.params.id, userId: user.id, note: note.trim() })
+  if (!created) return res.status(404).json({ error: 'Entry not found' })
+  res.json({ note: created })
+}))
+
+app.delete('/client-risk-entries/:id/case-notes/:noteId', clientRegisterLimiter, asyncRoute(async (req, res) => {
+  const user = await getUserFromAuth(req)
+  if (!user) return res.status(401).json({ error: 'Not authenticated' })
+  if (!isPremiumUser(user)) return res.status(403).json({ error: 'This feature requires a Premium subscription.' })
+
+  const deleted = await deleteCaseNote(req.params.noteId, user.id)
+  if (!deleted) return res.status(404).json({ error: 'Note not found' })
   res.json({ ok: true })
 }))
 
