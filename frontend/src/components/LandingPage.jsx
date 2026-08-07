@@ -510,7 +510,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs text-orange-600 dark:text-orange-400 uppercase tracking-widest font-medium mb-3">The cost of getting it wrong</p>
+            <p className="text-xs text-red-600 dark:text-red-400 uppercase tracking-widest font-medium mb-3">The cost of getting it wrong</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Non-compliance is expensive</h2>
             <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
               AUSTRAC has a track record of major enforcement action against businesses with inadequate AML/CTF programs.
@@ -519,19 +519,19 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
             {ENFORCEMENT_CASES.map((c) => (
               <div key={c.entity} className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
-                <p className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-1">{c.amount}</p>
+                <p className="text-3xl font-bold text-red-600 dark:text-red-400 mb-1">{c.amount}</p>
                 <p className="font-semibold text-sm mb-1">{c.entity} · {c.year}</p>
                 <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">{c.desc}</p>
               </div>
             ))}
           </div>
-          <div className="bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
-            <p className="text-sm text-orange-700 dark:text-orange-300 leading-relaxed">
+          <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-5">
+            <p className="text-sm text-red-700 dark:text-red-300 leading-relaxed">
               Maximum civil penalties are now up to <strong>$36.4 million per contravention</strong> for companies and <strong>$7.28 million</strong> for individuals (100,000 / 20,000 penalty units at $364/unit, effective 1 July 2026).
             </p>
             <button
               onClick={onOpenEligibility}
-              className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+              className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
             >
               Check if this applies to you →
             </button>
