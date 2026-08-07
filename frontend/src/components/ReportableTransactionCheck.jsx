@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Navbar from './Navbar'
 
-export default function ReportableTransactionCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister }) {
+export default function ReportableTransactionCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenSmrDraft }) {
   const [step, setStep] = useState(0)
   const [cash, setCash] = useState(null)
   const [international, setInternational] = useState(null)
@@ -71,6 +71,7 @@ export default function ReportableTransactionCheck({ user, onGoHome, onNavigateS
         onOpenPrivacyCheck={onOpenPrivacyCheck}
         onOpenComplianceCalendar={onOpenComplianceCalendar}
         onOpenClientRiskRegister={onOpenClientRiskRegister}
+        onOpenSmrDraft={onOpenSmrDraft}
       />
 
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">

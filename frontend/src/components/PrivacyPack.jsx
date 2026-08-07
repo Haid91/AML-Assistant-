@@ -32,8 +32,8 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenPrivacyCheck, onOpenComplianceDashboard, onUpgrade, prefill }) {
-  const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenComplianceDashboard }
+export default function PrivacyPack({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenPrivacyCheck, onOpenComplianceDashboard, onOpenSmrDraft, onUpgrade, prefill }) {
+  const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenComplianceDashboard, onOpenSmrDraft }
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
   const [businessName, setBusinessName] = useState('')
