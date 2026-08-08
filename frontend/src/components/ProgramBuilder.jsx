@@ -233,9 +233,37 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
       <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-sans">
         <Nav {...navProps} />
         <div className="max-w-3xl mx-auto px-6 pt-12 pb-20">
-          <div className="print:hidden mb-8">
-            <h1 className="text-2xl font-bold mb-1">{draft.businessName || 'Your'} AML/CTF Program Draft</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">First-pass draft — review with a qualified professional before use.</p>
+          <div className="print:hidden mb-8 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">{draft.businessName || 'Your'} AML/CTF Program Draft</h1>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">First-pass draft — review with a qualified professional before use.</p>
+            </div>
+            <div className="flex flex-wrap gap-3 ml-auto">
+              <button
+                onClick={() => navigator.clipboard?.writeText((viewingVersion || draft).draftText)}
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
+              >
+                Copy to clipboard
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
+              >
+                Print / Save as PDF
+              </button>
+              <button
+                onClick={handleRegenerate}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors"
+              >
+                Regenerate
+              </button>
+              <button
+                onClick={openHistory}
+                className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
+              >
+                Version history
+              </button>
+            </div>
           </div>
 
           <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-2xl p-5 mb-6">
@@ -257,33 +285,6 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
 
           <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 md:p-8 mb-6">
             <pre className="whitespace-pre-wrap font-sans text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{(viewingVersion || draft).draftText}</pre>
-          </div>
-
-          <div className="print:hidden flex flex-wrap gap-3 mb-8">
-            <button
-              onClick={() => navigator.clipboard?.writeText((viewingVersion || draft).draftText)}
-              className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
-            >
-              Copy to clipboard
-            </button>
-            <button
-              onClick={() => window.print()}
-              className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
-            >
-              Print / Save as PDF
-            </button>
-            <button
-              onClick={handleRegenerate}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors"
-            >
-              Regenerate
-            </button>
-            <button
-              onClick={openHistory}
-              className="px-5 py-2.5 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors"
-            >
-              Version history
-            </button>
           </div>
 
           {showHistory && (
