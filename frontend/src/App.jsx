@@ -227,6 +227,7 @@ function App() {
   const [user, setUser] = useState(null)
   const [selectedSectorGuide, setSelectedSectorGuide] = useState(() => resolveSectorFromPath(window.location.pathname))
   const [privacyPackPrefill, setPrivacyPackPrefill] = useState(null)
+  const [programBuilderPrefill, setProgramBuilderPrefill] = useState(null)
   const [resetToken, setResetToken] = useState(null)
   const [scrollTarget, setScrollTarget] = useState(null)
   const [checkoutPlan, setCheckoutPlan] = useState('premium')
@@ -401,7 +402,7 @@ function App() {
     onOpenCost: () => setView('cost'),
     onOpenSetupGuide: () => setView('setupguide'),
     onOpenEligibility: () => setView('eligibility'),
-    onOpenProgramBuilder: () => setView('programbuilder'),
+    onOpenProgramBuilder: (payload) => { setProgramBuilderPrefill(payload || null); setView('programbuilder') },
     onOpenPrivacyCheck: () => setView('privacyCheck'),
     onOpenPrivacyPack: (payload) => { setPrivacyPackPrefill(payload || null); setView('privacyPack') },
     onOpenComplianceCalendar: () => setView('complianceCalendar'),
@@ -578,6 +579,7 @@ function App() {
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}
+        prefill={programBuilderPrefill}
       />
     )
   }

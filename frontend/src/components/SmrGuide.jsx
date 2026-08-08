@@ -428,7 +428,7 @@ export default function SmrGuide({ user, onGoHome, onNavigateSection, onStart, o
             <button onClick={onOpenSmrDraft} className="px-6 py-3 bg-orange-600 hover:bg-orange-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft an SMR →
             </button>
-            <button onClick={onOpenProgramBuilder} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
+            <button onClick={() => onOpenProgramBuilder()} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft your AML/CTF Program →
             </button>
             <button onClick={onOpenSetupGuide} className="px-6 py-3 border border-slate-600 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm transition-colors">

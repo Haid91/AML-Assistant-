@@ -16,6 +16,7 @@ const SERVICES = [
   { id: 'formation', label: 'Company/trust formation', desc: 'Establishing, operating, or managing companies, trusts, or other legal structures' },
   { id: 'assets', label: 'Managing financial assets', desc: "Managing client bank accounts, securities, or other financial assets" },
   { id: 'transactions', label: 'Arranging transactions', desc: 'Organising contributions for the creation, operation, or management of a company' },
+  { id: 'other', label: 'Other', desc: 'Describe the service(s) your business provides' },
 ]
 
 const OBLIGATIONS = [
@@ -33,6 +34,7 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [services, setServices] = useState([])
+  const [additionalDetails, setAdditionalDetails] = useState('')
   const [australia, setAustralia] = useState(null)
   const [result, setResult] = useState(null)
 
@@ -41,14 +43,18 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
   }
 
   const restart = () => {
-    setStep(0); setIndustry(null); setServices([]); setAustralia(null); setResult(null)
+    setStep(0); setIndustry(null); setServices([]); setAdditionalDetails(''); setAustralia(null); setResult(null)
   }
 
   const checkEligibility = (australiaAnswer) => {
     setAustralia(australiaAnswer)
+    // 'other' alone (even with a description) doesn't let the quiz claim
+    // certainty it hasn't actually determined — only a real listed service
+    // resolves automatically to "in-scope".
+    const listedServices = services.filter((s) => s !== 'other')
     if (australiaAnswer === 'no') {
       setResult('not-au')
-    } else if (industry === 'other' && services.length === 0) {
+    } else if (industry === 'other' && listedServices.length === 0) {
       setResult('unsure')
     } else {
       setResult('in-scope')
@@ -158,6 +164,20 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
                     </button>
                   ))}
                 </div>
+                {services.includes('other') && (
+                  <div className="mb-6">
+                    <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
+                      Describe the service(s) you provide, and any specific questions you'd like addressed
+                    </label>
+                    <textarea
+                      value={additionalDetails}
+                      onChange={(e) => setAdditionalDetails(e.target.value)}
+                      rows={3}
+                      placeholder="e.g. We broker equipment finance for small businesses. Do we need to screen the finance company as well as the borrower?"
+                      className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+                    />
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
                   <button onClick={() => setStep(0)} className="px-5 py-3 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">← Back</button>
                   <button onClick={() => setStep(2)} className="flex-1 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-semibold transition-colors">Continue →</button>
@@ -218,7 +238,10 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
             </div>
 
             <div className="flex flex-wrap gap-3 mb-4">
-              <button onClick={onOpenProgramBuilder} className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">
+              <button
+                onClick={() => onOpenProgramBuilder({ industry, services: services.filter((s) => s !== 'other'), additionalDetails })}
+                className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors whitespace-nowrap"
+              >
                 Draft my AML/CTF Program →
               </button>
               <button onClick={onOpenSetupGuide} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl font-semibold text-sm transition-colors whitespace-nowrap">

@@ -48,7 +48,7 @@ function toggle(list, id) {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }
 
-export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade }) {
+export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onUpgrade, prefill }) {
   const navProps = { user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }
   const [phase, setPhase] = useState('checking') // checking | form | loading | result
   const [step, setStep] = useState(0)
@@ -60,6 +60,7 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
   const [deliveryChannels, setDeliveryChannels] = useState([])
   const [hasComplianceOfficer, setHasComplianceOfficer] = useState(null)
   const [hasRiskAssessment, setHasRiskAssessment] = useState(null)
+  const [additionalDetails, setAdditionalDetails] = useState('')
   const [draft, setDraft] = useState(null)
   const [error, setError] = useState(null)
   const [showHistory, setShowHistory] = useState(false)
@@ -76,8 +77,19 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
       .catch(() => setVersions([]))
   }
 
+  // Applies an Eligibility Check handoff (industry/services/additionalDetails)
+  // — only relevant when landing on an empty form, not when an existing
+  // saved draft is about to be shown instead.
+  const applyPrefill = () => {
+    if (!prefill) return
+    if (prefill.industry) setIndustry(prefill.industry)
+    if (prefill.services?.length) setServices(prefill.services)
+    if (prefill.additionalDetails) setAdditionalDetails(prefill.additionalDetails)
+  }
+
   useEffect(() => {
     if (!user?.premium) {
+      applyPrefill()
       setPhase('form')
       return
     }
@@ -89,10 +101,11 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
           setDraft(data.draft)
           setPhase('result')
         } else {
+          applyPrefill()
           setPhase('form')
         }
       })
-      .catch(() => setPhase('form'))
+      .catch(() => { applyPrefill(); setPhase('form') })
   }, [user?.premium])
 
   const prefillFromDraft = (d) => {
@@ -105,6 +118,7 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
     setDeliveryChannels(i.deliveryChannels || [])
     setHasComplianceOfficer(!!i.hasComplianceOfficer)
     setHasRiskAssessment(!!i.hasRiskAssessment)
+    setAdditionalDetails(i.additionalDetails || '')
   }
 
   const handleRegenerate = () => {
@@ -119,7 +133,7 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
     setError(null)
     try {
       const token = localStorage.getItem('aml_token')
-      const intake = { businessName, industry, services, staffSize, clientTypes, deliveryChannels, hasComplianceOfficer, hasRiskAssessment }
+      const intake = { businessName, industry, services, staffSize, clientTypes, deliveryChannels, hasComplianceOfficer, hasRiskAssessment, additionalDetails }
       const res = await fetch(`${API_URL}/program-draft`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -507,6 +521,14 @@ export default function ProgramBuilder({ user, onGoHome, onNavigateSection, onSt
                 No
               </button>
             </div>
+            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mt-6 mb-2">Anything else the AI should know? (optional)</label>
+            <textarea
+              value={additionalDetails}
+              onChange={(e) => setAdditionalDetails(e.target.value)}
+              rows={3}
+              placeholder="Services that don't fit the categories above, unusual client arrangements, or specific questions you'd like the draft to address"
+              className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm"
+            />
           </div>
         )}
 

@@ -227,7 +227,7 @@ export default function SectorGuide({ sector, user, onGoHome, onNavigateSection,
             <button onClick={onOpenEligibility} className="px-6 py-3 border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-700 rounded-xl font-semibold text-sm transition-colors">
               Free eligibility check
             </button>
-            <button onClick={onOpenProgramBuilder} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
+            <button onClick={() => onOpenProgramBuilder()} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft your AML/CTF Program →
             </button>
           </div>

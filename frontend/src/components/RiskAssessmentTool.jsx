@@ -220,7 +220,7 @@ export default function RiskAssessmentTool({ user, onGoHome, onNavigateSection, 
           <p className="text-lg font-bold text-white mb-2">What's next</p>
           <p className="text-slate-400 text-sm mb-6">Your Program Draft's risk assessment section can build on what you selected here.</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <button onClick={onOpenProgramBuilder} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
+            <button onClick={() => onOpenProgramBuilder()} className="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-colors">
               Draft your AML/CTF Program →
             </button>
             <button onClick={onOpenSetupGuide} className="px-6 py-3 border border-slate-600 hover:bg-slate-800 text-white rounded-xl font-semibold text-sm transition-colors">

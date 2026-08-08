@@ -739,6 +739,7 @@ function buildBusinessProfileText(intake) {
   const {
     businessName, industry, services, staffSize,
     clientTypes, deliveryChannels, hasComplianceOfficer, hasRiskAssessment,
+    additionalDetails,
   } = intake || {}
   return `Business Profile
 - Business name: ${businessName || 'Not provided'}
@@ -749,7 +750,7 @@ function buildBusinessProfileText(intake) {
 - Delivery channels: ${Array.isArray(deliveryChannels) && deliveryChannels.length ? deliveryChannels.join(', ') : 'Not provided'}
 - AML/CTF Compliance Officer already appointed: ${hasComplianceOfficer ? 'Yes' : 'No'}
 - Risk assessment already completed: ${hasRiskAssessment ? 'Yes' : 'No'}
-
+${additionalDetails ? `\nAdditional details and questions from the business owner — treat this as important context, and directly address any specific questions raised here in the draft or in a closing note:\n${additionalDetails}\n` : ''}
 Draft a first-pass AML/CTF Program (Part A and Part B) for this business, following the mandatory structure and grounding every section in these specific details.`
 }
 

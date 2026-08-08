@@ -269,7 +269,7 @@ export default function ComplianceDashboard({ user, onGoHome, onNavigateSection,
             title="AML/CTF Program"
             meta={programDraft ? `Drafted for ${programDraft.businessName || 'your business'}. Version history available.` : 'AI-drafted Part A & B program document.'}
             linkLabel={programDraft ? 'Review draft' : 'Start drafting'}
-            onClick={onOpenProgramBuilder}
+            onClick={() => onOpenProgramBuilder()}
           />
           <StatusCard
             icon={ICONS.privacy}
