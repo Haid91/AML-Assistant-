@@ -537,7 +537,7 @@ app.get('/auth/me', asyncRoute(async (req, res) => {
 // Both plans grant the same `premium` boolean (Professional is a superset of
 // Premium's software features — the consultancy/advisor parts are delivered
 // by the business directly, not gated in-app) — only the Stripe price differs.
-const PLAN_PRICE_ENV = { premium: 'STRIPE_PRICE_ID', professional: 'STRIPE_PRICE_ID_PROFESSIONAL' }
+const PLAN_PRICE_ENV = { premium: 'STRIPE_PRICE_ID', premium_annual: 'STRIPE_PRICE_ID_PREMIUM_ANNUAL', professional: 'STRIPE_PRICE_ID_PROFESSIONAL' }
 
 app.post('/billing/create-checkout-session', billingLimiter, asyncRoute(async (req, res) => {
   const plan = PLAN_PRICE_ENV[req.body?.plan] ? req.body.plan : 'premium'
