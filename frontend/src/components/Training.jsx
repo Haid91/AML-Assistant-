@@ -1238,12 +1238,505 @@ const ACCOUNTANT_MLRO_CASES = [
   },
 ]
 
+const REALESTATE_ANALYST_CASES = [
+  {
+    id: 'ra1', number: 'Part 1',
+    title: 'Real Estate: Cash-Funded Auction Deposit',
+    tags: ['Escalation'], sector: 'Real Estate', premium: false,
+    shortDesc: 'A buyer wants to pay a $95,000 auction deposit in cash with no bank trail. Work through the CDD and source-of-funds requirements for a Tranche 2 real estate designated service.',
+    fullScenario: `NEW BUYER — For CDD Review
+
+Buyer: Mr. Daniel Kovač (DOB: 2 May 1985, Australian resident, self-employed "import/export consultant")
+Property: 27 Ferndale Crescent — sold at auction for $950,000
+Deposit required: $95,000 (10%), due immediately after the hammer falls
+
+Details so far:
+• Mr. Kovač wants to pay the deposit in physical cash, saying "I don't trust banks with large transfers"
+• He has attended two prior auctions run by the agency but never bid before today
+• When asked about his business, he says it is "mostly cash-based, overseas suppliers"
+• No ABN, invoices, or business bank statements have been offered
+
+Your task: work through what the agency must do before accepting this deposit and proceeding with the sale.`,
+    steps: [
+      {
+        id: 1, title: 'Accepting the Cash Deposit',
+        question: 'Can the agency accept the $95,000 deposit in physical cash?',
+        options: [
+          { text: 'Not without first completing CDD and assessing the source of funds — a large cash deposit from a buyer with an undocumented, self-described "cash-based" business is a recognised high-risk indicator for real estate designated services, and the agency must resolve it before accepting funds, not after', correct: true, feedback: 'Correct. Real estate agents providing a designated service (arranging the sale of real property) are Tranche 2 reporting entities. A large, undocumented cash payment is one of the clearest red flags in the sector — cash is much harder to trace than a bank transfer, and property is a well-known laundering vehicle for exactly that reason.' },
+          { text: 'Yes — cash is legal tender and the agency has no basis to refuse it', correct: false, feedback: "Incorrect. Being legal tender doesn't exempt a transaction from AML/CTF obligations. The agency's CDD duty to understand the source of funds applies regardless of the payment method, and cash of this size with no supporting documentation is precisely what that duty exists to catch." },
+          { text: "Yes, since the buyer has attended the agency's auctions before and is a known face", correct: false, feedback: "Incorrect. Familiarity is not verification. Having attended previous auctions without bidding tells the agency nothing about this buyer's source of funds for a $950,000 purchase." },
+          { text: 'No — real estate agents can never accept cash under any circumstances', correct: false, feedback: "Incorrect overcorrection. Cash isn't automatically prohibited, but it raises the risk profile and triggers a heightened CDD obligation — the agency's job is to properly assess and document it, not to reflexively refuse all cash." },
+        ],
+      },
+      {
+        id: 2, title: 'Source of Funds',
+        question: 'Mr. Kovač says the cash is savings accumulated from his import/export business over several years. What should the agency obtain?',
+        options: [
+          { text: 'Documentary evidence consistent with the claimed source — e.g. business records, ABN details, tax returns, or bank statements showing cash being generated and accumulated by the business over time — before treating the explanation as verified', correct: true, feedback: '"Savings from a cash-based business" is a vague, hard-to-disprove explanation frequently used to launder proceeds of crime. The agency needs documentary evidence that actually supports the claim, not just an oral explanation, before it can be relied on.' },
+          { text: "A signed declaration from Mr. Kovač confirming the funds are legitimate", correct: false, feedback: 'Incorrect. A self-declaration has no evidentiary value — a buyer laundering funds would sign exactly the same declaration. The obligation is to verify, not simply to ask and record the answer.' },
+          { text: "Nothing further — self-employed buyers aren't required to prove their income the way employees are", correct: false, feedback: 'Incorrect. Self-employed and cash-intensive businesses are exactly why source-of-funds verification matters more, not less — their income is inherently harder to independently confirm without supporting documentation.' },
+          { text: "Confirmation from the buyer's bank that he holds an account there", correct: false, feedback: "Incorrect. Confirming an account exists says nothing about where the cash being deposited actually came from — the question is the origin of the funds, not whether the buyer has a bank account at all." },
+        ],
+      },
+      {
+        id: 3, title: 'Settlement Approaching',
+        question: 'Two weeks later, Mr. Kovač still has not provided any of the requested documentation but is pressuring the agency to proceed to settlement on schedule. What do you do?',
+        options: [
+          { text: 'Escalate to the agency\'s AML/CTF Compliance Officer — settlement should not proceed on the strength of an unverified explanation, and the compliance officer needs to assess whether the pattern (large undocumented cash, vague business explanation, non-cooperation, pressure to proceed) meets the threshold for a suspicious matter report', correct: true, feedback: "Correct. Commercial pressure to keep a transaction moving is never a reason to skip an unresolved CDD gap — if anything, non-cooperation over two weeks strengthens rather than weakens the case for escalation. This is squarely a decision for the compliance officer, not the agent handling the sale." },
+          { text: 'Proceed to settlement since the auction contract is legally binding regardless of AML concerns', correct: false, feedback: "Incorrect. A binding sale contract doesn't override the agency's separate AML/CTF obligations — those obligations exist precisely because a transaction can be legally valid and still involve criminal proceeds." },
+          { text: "Give Mr. Kovač an extension and proceed once he promises the documents are 'on the way'", correct: false, feedback: "Incorrect. A promise is not documentation. Extending the deadline without resolving the underlying gap just delays the same unresolved risk rather than addressing it." },
+          { text: "Quietly cancel the sale without informing the compliance officer, to avoid the paperwork", correct: false, feedback: "Incorrect. Unilaterally cancelling without escalating bypasses the firm's own process — the compliance officer needs visibility of the pattern to decide whether a suspicious matter report is required, independent of what happens to the sale itself." },
+        ],
+      },
+      {
+        id: 4, title: 'Final Assessment',
+        question: 'The compliance officer confirms no documentation has been received and Mr. Kovač has become evasive when pressed further. What is the appropriate outcome?',
+        options: [
+          { text: 'The agency should not proceed with accepting the cash deposit, and the compliance officer should assess whether a suspicious matter report to AUSTRAC is required — an unverifiable source of funds combined with evasiveness under pressure meets the pattern for reasonable grounds to suspect', correct: true, feedback: "Correct. Once a source-of-funds explanation cannot be substantiated and the buyer becomes evasive rather than cooperative, the agency has both grounds to decline the transaction and grounds for the compliance officer to consider an SMR — these are two separate but related obligations, both triggered here." },
+          { text: 'Accept the deposit anyway since refusing a legitimate auction sale could expose the agency to legal risk from the vendor', correct: false, feedback: "Incorrect. The agency's AML/CTF obligations sit alongside its contractual obligations, and an unresolved, high-risk CDD gap is a legitimate basis to decline — this doesn't expose the agency to the risk described, and accepting funds it reasonably suspects may be tainted is the far greater exposure." },
+          { text: 'Accept a bank cheque instead of cash and treat the source-of-funds question as resolved', correct: false, feedback: "Incorrect. Changing the payment method doesn't verify where the money came from — the underlying source-of-funds question is unresolved regardless of whether the buyer pays in cash or by cheque." },
+          { text: 'Take no action, since real estate agents are only responsible for the transaction, not the buyer\'s finances', correct: false, feedback: "Incorrect. As a Tranche 2 reporting entity providing a designated service, the agency has direct AML/CTF obligations regarding the buyer's CDD and source of funds — this isn't outside its remit." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ra2', number: 'Part 2',
+    title: 'Real Estate: Rapid Resale With Unexplained Value Uplift',
+    tags: ['Escalation'], sector: 'Real Estate', premium: false,
+    shortDesc: 'A property bought for $650,000 cash six weeks ago is being resold for $900,000 with no renovation evidence. Investigate the pattern before listing the resale.',
+    fullScenario: `NEW LISTING INSTRUCTION — For Review
+
+Property: 8 Larkspur Court
+Vendor: Halcyon Property Holdings Pty Ltd (single-purpose company, incorporated 3 months ago)
+Purchase history: Company bought the property 6 weeks ago for $650,000, settled in cash via bank cheque drawn from an account opened the week before settlement
+Instruction: List the property for sale at $900,000
+
+Details so far:
+• No building permits, renovation invoices, or contractor records exist for the property
+• A drive-by inspection shows no visible changes to the property
+• The sole director of Halcyon Property Holdings is a recently appointed individual with no prior property industry history
+• The company's registered address is a virtual office
+
+Your task: assess whether this listing instruction can proceed as-is.`,
+    steps: [
+      {
+        id: 1, title: 'Reading the Pattern',
+        question: 'What does this pattern most likely indicate?',
+        options: [
+          { text: 'A potential rapid-resale ("flipping") layering typology — a property bought with funds of unclear origin is quickly resold at a large, unexplained markup with no value-adding work done, which can be used to make illicit funds appear as a legitimate capital gain', correct: true, feedback: "Correct. Real estate is a well-documented layering and integration vehicle precisely because of this pattern: buy quickly, hold briefly, sell at an inflated price with no genuine value added, and the profit on paper looks like an ordinary capital gain rather than what it actually is." },
+          { text: "Normal property investment — a $250,000 uplift in 6 weeks is unremarkable in a rising market", correct: false, feedback: "Incorrect. A genuine market movement of that scale in six weeks with zero improvement work, held by a newly incorporated single-purpose company with a virtual office, is exactly the combination of factors that should be investigated rather than assumed benign." },
+          { text: "Irrelevant to the agency, since the agency wasn't involved in the original purchase", correct: false, feedback: "Incorrect. The agency's obligations attach to the service it is now being asked to provide — listing and arranging this resale — regardless of who handled the original purchase." },
+          { text: "Not a concern, because the vendor is a registered company rather than an individual", correct: false, feedback: "Incorrect. Corporate vendors are not lower risk by default — a newly incorporated single-purpose entity with an unverified director and virtual office address is, if anything, a common structure used specifically to add a layer of separation from the individuals actually controlling the transaction." },
+        ],
+      },
+      {
+        id: 2, title: 'What to Establish First',
+        question: 'What should the agency establish before agreeing to list the property?',
+        options: [
+          { text: "The beneficial owner(s) behind Halcyon Property Holdings, and a credible explanation — supported by evidence — for the source of the original $650,000 purchase funds and the basis for the $900,000 asking price", correct: true, feedback: "Correct. The agency needs to look through the corporate vendor to the natural person(s) controlling it, and needs an evidenced explanation for both the original purchase and the proposed resale price — not just a company name and a number to list at." },
+          { text: "Nothing further — the agency's job is to list and sell the property, not investigate the vendor's history", correct: false, feedback: "Incorrect. As a Tranche 2 reporting entity, the agency has CDD obligations toward the vendor for the designated service of arranging this sale — the pattern here is a clear trigger for further inquiry before proceeding." },
+          { text: "Confirmation that the company is validly registered with ASIC", correct: false, feedback: "Incorrect as a complete answer. Confirming the company legally exists says nothing about who actually controls it or where the money in this transaction is really coming from — valid registration and money laundering risk are two separate questions." },
+          { text: "A market appraisal to confirm $900,000 is a reasonable asking price for the area", correct: false, feedback: "Incorrect as a complete answer. Even if $900,000 is broadly in line with the local market, that doesn't explain the unexplained jump from a $650,000 purchase six weeks earlier with no improvement work — the valuation question and the source-of-funds question are separate." },
+        ],
+      },
+      {
+        id: 3, title: 'Director Won\'t Engage',
+        question: "The company's director declines to explain the fund source for the original purchase, saying it's 'a company matter, not a personal one.' How should the agency respond?",
+        options: [
+          { text: "Treat this as a material CDD failure — a corporate vendor cannot use its corporate form to avoid disclosing the beneficial owner and source of funds behind a transaction the agency is being asked to facilitate, and the listing should not proceed until this is resolved", correct: true, feedback: "Correct. \"It's a company matter\" doesn't relieve the agency of its obligation to look through the company to the individuals actually controlling it and understand where the money came from — refusal to engage on this point is itself a significant red flag." },
+          { text: "Accept the response, since directors are entitled to keep company financial matters confidential from third parties like real estate agents", correct: false, feedback: "Incorrect. Confidentiality between the company and unrelated third parties doesn't extend to the agency's own statutory CDD obligations toward a party it is being asked to provide a designated service for." },
+          { text: "List the property anyway and revisit the question only if a buyer's solicitor raises it at settlement", correct: false, feedback: "Incorrect. Deferring the question to someone else's process at a later stage doesn't discharge the agency's own obligation to resolve it now, before agreeing to act." },
+          { text: "Ask the director to sign a waiver releasing the agency from responsibility instead", correct: false, feedback: "Incorrect. A waiver has no effect on the agency's statutory AML/CTF obligations — those can't be contracted around by an agreement between the agency and the vendor." },
+        ],
+      },
+      {
+        id: 4, title: 'Final Decision',
+        question: 'The director remains unresponsive after a further two weeks. What should the agency do?',
+        options: [
+          { text: "Decline to accept the listing instruction and escalate internally to assess whether a suspicious matter report is warranted — an unresolved beneficial ownership gap combined with an unexplained rapid value uplift and a non-cooperative vendor meets reasonable grounds to suspect", correct: true, feedback: "Correct. This combination — corporate opacity, an unexplained rapid resale markup, and refusal to engage on basic CDD questions — is exactly the pattern that should trigger both a decision not to act and a formal assessment of the reporting obligation." },
+          { text: "Proceed with the listing but charge a higher commission to compensate for the added risk", correct: false, feedback: "Incorrect. Pricing risk into the commission doesn't address the underlying CDD failure — the agency would still be facilitating a transaction it cannot properly assess, regardless of what it's paid." },
+          { text: "Proceed with the listing, since the agency's exposure ends once the sale settles and title transfers", correct: false, feedback: "Incorrect. The agency's AML/CTF obligations attach to providing the designated service itself, not to what happens after settlement — facilitating the sale while red flags remain unresolved is the exposure, regardless of what happens afterward." },
+          { text: "Quietly decline without documenting the reasons, to avoid any dispute with the vendor", correct: false, feedback: "Incorrect. Declining without proper documentation leaves the agency unable to demonstrate it met its obligations, and doesn't address whether the pattern itself warrants a suspicious matter report." },
+        ],
+      },
+    ],
+  },
+]
+
+const REALESTATE_MLRO_CASES = [
+  {
+    id: 'rm1', number: '1.',
+    title: 'MLRO: Related Buyers Acquiring Adjoining Properties',
+    tags: ['Regulatory'], sector: 'Real Estate', premium: false,
+    shortDesc: 'Five "unrelated" individual buyers purchase five adjoining properties through the same agency within two months. Assess the common-control risk and determine the reporting obligation.',
+    fullScenario: `ANALYST ESCALATION — For MLRO Review
+
+Agency: 6-agent residential sales office
+Pattern flagged by an agent: over 8 weeks, 5 separate individual buyers have each purchased one of 5 adjoining properties on the same street, all through the same agency
+
+Analyst findings:
+• All 5 buyers used the same solicitor's firm for conveyancing
+• 3 of the 5 buyers provided the same contact phone number on their buyer enquiry forms
+• Purchase funds for all 5 came from bank cheques drawn on accounts opened in the same week, at the same bank branch
+• None of the 5 buyers has disclosed any connection to the others when asked directly
+• Combined purchase price across the 5 properties: $4.1 million
+
+Your task: determine the appropriate MLRO response.`,
+    steps: [
+      {
+        id: 1, title: 'Assessing Common Control',
+        question: 'What does this pattern most likely indicate?',
+        options: [
+          { text: "The 5 buyers are likely acting under common direction or control despite denying any connection — shared conveyancing solicitor, a shared contact number across several buyers, and near-identical account-opening timing are strong indicators of coordinated, undisclosed beneficial ownership rather than 5 genuinely independent purchases", correct: true, feedback: "Correct. Individually, each of these facts could have an innocent explanation. Together — shared solicitor, shared phone number for multiple buyers, synchronized new bank accounts, and a denial of any connection — they form a clear pattern consistent with a single controlling party using nominee buyers to assemble a land parcel while avoiding beneficial ownership disclosure." },
+          { text: 'Coincidence — buyers in the same suburb often end up using the same well-regarded local conveyancer', correct: false, feedback: "Incorrect. A shared conveyancer alone might be coincidental. A shared conveyancer plus a shared phone number across multiple unrelated buyers plus synchronized bank account openings is not a pattern that coincidence alone comfortably explains." },
+          { text: "Not a concern, since each purchase individually looks like an ordinary residential sale", correct: false, feedback: "Incorrect. This is precisely why the pattern must be assessed in aggregate rather than transaction-by-transaction — an ML scheme built on multiple 'ordinary-looking' individual transactions is a recognised technique for avoiding scrutiny that a single large purchase would attract." },
+          { text: "A concern only if one of the five buyers is later found to be a PEP", correct: false, feedback: "Incorrect. PEP status isn't the trigger here — undisclosed common control and coordinated nominee purchasing is a red flag in its own right, independent of whether any of the individuals involved happens to be a PEP." },
+        ],
+      },
+      {
+        id: 2, title: 'Assembling the Full Picture',
+        question: 'What should the MLRO request from the analyst before making a determination?',
+        options: [
+          { text: "A consolidated timeline and cross-reference of all 5 transactions — common contact details, shared professional advisors, banking relationships, and any other link between the buyers — to assess the full extent of apparent common control before deciding whether to report", correct: true, feedback: "Correct. Before making a determination, the MLRO needs the complete aggregated picture across all 5 files, not just the summary — this is what will actually establish (or rule out) the extent of common control and inform whether the reasonable-grounds-to-suspect threshold is met." },
+          { text: "Nothing further — the analyst's summary is sufficient to file an SMR immediately", correct: false, feedback: "Incorrect. While the summary raises a clear concern, the MLRO should ensure the full underlying detail across all 5 files has been properly consolidated and reviewed before finalising a determination, not act on a summary alone." },
+          { text: "A formal interview with each of the 5 buyers, conducted by the agency, to ask them directly whether they are connected", correct: false, feedback: "Incorrect. The buyers have already denied any connection when asked — re-asking the same question directly is unlikely to produce new information and risks tipping off if suspicion is forming, compared to consolidating the objective information the agency already holds." },
+          { text: "Confirmation from the bank that the buyers' accounts are legitimate", correct: false, feedback: "Incorrect. The bank confirming accounts exist and are open doesn't address the actual question — whether these 5 buyers are acting under common, undisclosed control." },
+        ],
+      },
+      {
+        id: 3, title: 'Identifying the Typology',
+        question: 'What typology should the MLRO consider given this pattern?',
+        options: [
+          { text: "Land assembly using nominee/straw buyers — a single controlling party uses multiple individuals to acquire adjoining properties without disclosing common ownership, often to avoid scrutiny that a single large corporate purchase would attract, or to obscure the ultimate source and use of the funds", correct: true, feedback: "Correct. Using several individual 'straw' buyers to assemble a parcel of adjoining land is a recognised typology — it fragments what is really one large transaction into several smaller ones, each of which looks unremarkable in isolation, while the true controlling party and the true source of funds stay hidden." },
+          { text: "Standard property development activity that doesn't require AML/CTF consideration", correct: false, feedback: "Incorrect. Land assembly for development is a legitimate commercial activity in principle — the issue here isn't the assembly itself, it's the undisclosed common control and coordinated nominee structure used to carry it out." },
+          { text: "Tax minimisation through the use of multiple smaller purchases instead of one large one", correct: false, feedback: "Incorrect. Nothing in the facts points to a tax-driven explanation — the pattern concerns undisclosed common control and coordinated funding, not a tax structuring arrangement." },
+          { text: "A data-matching error between the 5 separate buyer files", correct: false, feedback: "Incorrect. A data error wouldn't explain a shared phone number across multiple buyers combined with synchronized new bank accounts and a shared conveyancer — this is a substantive pattern, not an administrative artefact." },
+        ],
+      },
+      {
+        id: 4, title: 'MLRO Determination',
+        question: 'After reviewing the consolidated file, the MLRO confirms the pattern holds across all 5 purchases. What should the MLRO decide?',
+        options: [
+          { text: "File a suspicious matter report with AUSTRAC covering the pattern across all 5 transactions — the consolidated evidence of apparent common control, undisclosed by buyers who denied any connection, meets reasonable grounds to suspect, and the report should reflect the full pattern rather than being filed as 5 unrelated matters", correct: true, feedback: "Correct. Once the aggregated evidence confirms coordinated, undisclosed common control across the 5 purchases, this is reported as the single pattern it actually is — giving AUSTRAC the full picture, rather than 5 disconnected reports that individually understate what's actually going on." },
+          { text: "Take no action, since each individual purchase has already settled and cannot be undone", correct: false, feedback: "Incorrect. Completed settlement doesn't remove the reporting obligation — an SMR can and should still be filed based on reasonable grounds to suspect, regardless of whether the underlying transactions have already settled." },
+          { text: "File 5 separate, unrelated SMRs without cross-referencing them", correct: false, feedback: "Incorrect. Filing the reports as though they were unconnected would understate the pattern the agency has actually identified — the value of the report is precisely in showing AUSTRAC the coordinated nature of the 5 purchases." },
+          { text: "Contact each buyer to inform them an SMR is being considered, to give them a chance to explain first", correct: false, feedback: "Incorrect and a tipping-off risk. Informing a buyer that a suspicious matter report is being considered breaches the tipping-off prohibition and could compromise any resulting investigation." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'rm2', number: '2.',
+    title: 'MLRO: First-Year AML/CTF Program Implementation Review',
+    tags: ['Regulatory'], sector: 'Real Estate', premium: false,
+    shortDesc: 'Walk through your agency\'s first annual review of its AML/CTF Program since becoming an AUSTRAC reporting entity under the Tranche 2 reforms.',
+    fullScenario: `FIRST-YEAR AML/CTF PROGRAM REVIEW — Guided Walkthrough
+
+This simulation guides you through your real estate agency's first annual review of its AML/CTF Program since becoming a reporting entity under the Tranche 2 reforms.
+
+Agency: 6-agent residential and commercial sales office, newly enrolled with AUSTRAC this year
+Compliance Officer: [Your name] (newly appointed)
+
+Work through each section to understand what a first-year review should cover.`,
+    steps: [
+      {
+        id: 1, title: 'Section 1: Which Services Are Covered',
+        question: "The agency handles residential sales, commercial sales, and property management. Which of these are captured designated services under Tranche 2?",
+        options: [
+          { text: "Residential and commercial real estate sales, where the agency arranges the buying or selling of real property — property management (collecting rent, managing tenancies) is a separate activity and is not itself a Tranche 2 designated service", correct: true, feedback: "Correct. The Tranche 2 real estate designated service centres on arranging the sale or purchase of real property. Property management is a different business line and, on its own, doesn't attract the same designated-service obligations — getting this scope right is one of the first things a real estate AML/CTF Program needs to establish clearly." },
+          { text: "Only residential sales — commercial sales are exempt for real estate agents", correct: false, feedback: "Incorrect. Both residential and commercial real estate sales arranged by the agency fall within the designated service — there's no carve-out for commercial transactions specifically." },
+          { text: "All three activities, including property management, are equally captured", correct: false, feedback: "Incorrect. While the agency should still apply good practice across its business, property management itself sits outside the core Tranche 2 real estate designated service, which is specifically about arranging sales." },
+          { text: "None of them, until the agency's turnover exceeds a specified threshold", correct: false, feedback: "Incorrect. There is no turnover-based exemption from Tranche 2 obligations for real estate agents — obligations attach to providing the designated service, not to the size of the agency." },
+        ],
+      },
+      {
+        id: 2, title: 'Section 2: Staff Coverage',
+        question: 'The Program requires AML/CTF training for all staff who deal with buyers and vendors. Reviewing training records, the compliance officer finds 2 of 6 agents have not completed the training. Is this acceptable?',
+        options: [
+          { text: "No — every agent who deals directly with buyers and vendors is a frontline control point for spotting red flags like unusual cash payments or reluctance to provide identification, and any agent handling those interactions without training is a real gap in the Program, not a minor administrative shortfall", correct: true, feedback: "Correct. Agents are the first people in a position to notice red flags in real time — an unverified deposit, an evasive buyer, an unusual payment method. Untrained agents handling those same interactions represent a genuine detection gap, exactly the kind of thing a first-year review should catch and fix." },
+          { text: "Acceptable, provided the compliance officer personally reviews every transaction those two agents handle", correct: false, feedback: "Incorrect as a substitute for training. Retrospective file review by the compliance officer doesn't help the untrained agent recognise a red flag in the moment with a buyer or vendor in front of them — training and review serve different purposes and one doesn't replace the other." },
+          { text: "Acceptable, since 4 of 6 agents (67%) is a reasonable completion rate for a first year", correct: false, feedback: "Incorrect. There's no regulatory basis for treating a partial completion rate as sufficient — the obligation applies to all relevant staff, and each untrained agent dealing with buyers and vendors is an active gap, not a rounding error." },
+          { text: "Acceptable, since the two agents in question are the most experienced and unlikely to need training", correct: false, feedback: "Incorrect. Experience in real estate sales isn't the same as AML/CTF training — the training exists specifically to cover regulatory obligations and red-flag recognition that general sales experience doesn't automatically provide." },
+        ],
+      },
+      {
+        id: 3, title: 'Section 3: Recordkeeping for Cash Transactions',
+        question: "The review finds that cash deposit acceptances aren't being consistently logged with the reasons for accepting or escalating them. What should the Program require going forward?",
+        options: [
+          { text: "A standard internal process requiring every cash payment above a set threshold to be logged with the amount, the buyer's stated source of funds, any supporting documentation obtained, and whether the matter was escalated — creating a consistent, reviewable record rather than relying on individual agents' memory or informal notes", correct: true, feedback: "Correct. Consistent recordkeeping is what allows both the compliance officer and, if needed, AUSTRAC to reconstruct what happened and why a decision was made — without it, the agency has no reliable evidence that its CDD process was actually followed on any given file." },
+          { text: "No change is needed, since each agent already knows their own clients and can recall details if asked later", correct: false, feedback: "Incorrect. Relying on individual memory rather than a documented record is exactly the gap a compliance review should close — it isn't reliable, isn't reviewable, and doesn't survive staff turnover." },
+          { text: "Require logging only for cash transactions over $50,000, since smaller amounts aren't worth tracking", correct: false, feedback: "Incorrect. The Program's own risk-based cash-handling threshold should be set deliberately by the agency based on its risk assessment — arbitrarily raising it to $50,000 without that analysis risks missing the exact kind of sub-threshold structuring pattern this training module has covered elsewhere." },
+          { text: "Require logging only when the buyer is a company rather than an individual", correct: false, feedback: "Incorrect. Cash-handling risk isn't specific to corporate buyers — individual buyers paying large amounts in cash raise exactly the same CDD concerns and need the same consistent recordkeeping." },
+        ],
+      },
+      {
+        id: 4, title: 'Section 4: Independent Review Scheduling',
+        question: 'When should the agency schedule its first independent review of the AML/CTF Program?',
+        options: [
+          { text: "Within 3 years of the Program's approval at the latest — but given several implementation gaps have already been found in this first-year review (training coverage, recordkeeping), bringing the independent review forward rather than waiting the full 3 years is the prudent choice", correct: true, feedback: "Correct. The 3-year mark is a ceiling, not a target — where a first-year internal review has already surfaced real gaps, scheduling the independent review sooner helps confirm those gaps are actually being closed rather than waiting years to find out." },
+          { text: "Exactly 3 years from AUSTRAC enrolment, regardless of what this review found", correct: false, feedback: "Incorrect anchor point, and it ignores the findings of this review — the interval should be responsive to the agency's actual risk profile and implementation gaps, not fixed regardless of circumstances." },
+          { text: "No independent review is required for agencies with fewer than 10 staff", correct: false, feedback: "Incorrect. There's no staff-count exemption from the independent review requirement." },
+          { text: "Only if a suspicious matter report has already been filed", correct: false, feedback: "Incorrect. The independent review obligation is a standing requirement of having an AML/CTF Program — it isn't contingent on whether the agency has filed an SMR." },
+        ],
+      },
+    ],
+  },
+]
+
+const BULLION_ANALYST_CASES = [
+  {
+    id: 'ba1', number: 'Part 1',
+    title: 'Bullion Dealer: Structured Cash Purchases of Gold',
+    tags: ['Escalation'], sector: 'Bullion', premium: false,
+    shortDesc: 'A customer makes four cash purchases of gold bullion across three weeks, each just under the dealer\'s internal review threshold. Investigate the structuring pattern.',
+    fullScenario: `TRANSACTION PATTERN ALERT — For CDD Review
+
+Customer: Mr. Peter Nguyen (walk-in customer, provided a driver's licence at first purchase, no prior relationship with the dealership)
+Product: 1oz gold bars
+
+Transaction history over 3 weeks:
+• Purchase 1: $9,400 cash — 4 bars
+• Purchase 2: $9,600 cash — 4 bars (2 days later)
+• Purchase 3: $9,100 cash — 4 bars (5 days later)
+• Purchase 4: $9,800 cash — 4 bars (6 days later)
+• Total: $37,900 cash across 4 visits, all just under the dealership's internal $10,000 identification-and-reporting review threshold
+
+Each purchase was individually below the threshold that triggers additional internal review. No single staff member processed all four transactions.
+
+Your task: assess this pattern before Mr. Nguyen's next visit.`,
+    steps: [
+      {
+        id: 1, title: 'Recognising the Pattern',
+        question: 'What does this transaction pattern indicate?',
+        options: [
+          { text: "Structuring — four cash purchases, each calibrated just below the dealership's review threshold, spread across different staff members and days, is a textbook pattern for deliberately avoiding a reporting or review trigger, and should be treated as a red flag regardless of how the individual transactions look in isolation", correct: true, feedback: "Correct. The value of a designated cash-transaction threshold lies in what it triggers. A pattern of transactions consistently just under that number, spread across visits and staff to avoid any one person noticing, is precisely the kind of behaviour thresholds are designed to catch — and precisely why AML/CTF systems look at patterns over time, not just single transactions." },
+          { text: "Normal behaviour for a serious gold investor building a position gradually", correct: false, feedback: "Incorrect. A genuine investor accumulating gold has no particular reason to consistently transact in amounts just under a specific threshold, spread across different staff on different days — that specific consistency is what makes this pattern noteworthy, not the underlying interest in gold itself." },
+          { text: "Not a concern, since no single transaction exceeded the threshold that would trigger a report", correct: false, feedback: "Incorrect. Assessing transactions individually is exactly what this pattern is designed to exploit — the obligation to look at a customer's transactions in aggregate over time exists specifically to catch structuring like this." },
+          { text: "Irrelevant, since gold is a legal product and the customer provided identification", correct: false, feedback: "Incorrect. Providing ID for a purchase establishes who the customer is — it says nothing about why they are structuring their purchases just under a review threshold, which is the actual question here." },
+        ],
+      },
+      {
+        id: 2, title: 'What to Request',
+        question: 'Before selling to Mr. Nguyen again, what should the dealership request?',
+        options: [
+          { text: "An explanation and supporting evidence for the source of the cash and the purpose of the purchases — e.g. income documentation, and a clear reason why he is transacting in this specific pattern of amounts and frequency — before proceeding with any further sale", correct: true, feedback: "Correct. Given the structuring pattern already identified, the dealership needs a credible, evidenced explanation before continuing to transact with this customer — not just his say-so, and not simply continuing to sell while treating each visit as routine." },
+          { text: "Nothing — he has already shown ID once, and re-verifying identity on every visit is unnecessary", correct: false, feedback: "Incorrect. The issue here isn't identity verification — Mr. Nguyen has been identified. The issue is the unexplained structuring pattern in how he's transacting, which identity verification alone doesn't address." },
+          { text: "A request that he pay by card instead of cash on his next visit", correct: false, feedback: "Incorrect as a complete response. Changing the payment method for future purchases doesn't explain or resolve the structuring pattern already observed across the previous four cash transactions." },
+          { text: "A larger single purchase next time, to make the pattern less noticeable", correct: false, feedback: "Incorrect and inappropriate. Suggesting a way for the customer to structure future purchases differently isn't the dealership's role — the obligation is to investigate and, if warranted, escalate the existing pattern, not help avoid detection of a similar one." },
+        ],
+      },
+      {
+        id: 3, title: 'Customer Returns, No Explanation Given',
+        question: 'Mr. Nguyen returns for a fifth purchase and, when asked about the pattern, says only "I just like buying gold regularly, it\'s none of the shop\'s business how I pay." How should staff respond?',
+        options: [
+          { text: "Decline the sale pending internal review, and escalate the full pattern — including this response — to the dealership's AML/CTF Compliance Officer; refusing to explain a clear structuring pattern when directly and reasonably asked is itself a significant red flag", correct: true, feedback: "Correct. A customer's refusal to provide any explanation when reasonably asked about an already-identified structuring pattern doesn't resolve the concern — it reinforces it. This needs to go to the compliance officer with the full pattern and the customer's response, not be waved through as a privacy objection." },
+          { text: "Proceed with the sale, since customers are entitled to decline to explain how they choose to pay", correct: false, feedback: "Incorrect. A customer's general right to privacy doesn't override the dealership's own AML/CTF obligation to assess and, where warranted, escalate a pattern that already looks like deliberate structuring — declining to explain when reasonably asked is information in itself." },
+          { text: "Proceed with the sale, but make a personal note in case it comes up again", correct: false, feedback: "Incorrect. An informal personal note doesn't meet the dealership's obligation to formally escalate a confirmed pattern to its compliance function — this needs to go through the proper process, not sit as an individual staff member's private observation." },
+          { text: "Refuse to serve the customer at all going forward, without escalating internally", correct: false, feedback: "Incorrect. Refusing future business addresses the dealership's own risk going forward but doesn't discharge the separate obligation to escalate the pattern already observed for a proper compliance assessment, including whether a report is required." },
+        ],
+      },
+      {
+        id: 4, title: 'Final Assessment',
+        question: 'The compliance officer reviews the full pattern and Mr. Nguyen\'s non-explanation. What is the appropriate outcome?',
+        options: [
+          { text: "Assess whether a suspicious matter report to AUSTRAC is warranted — a confirmed structuring pattern combined with a refusal to provide any explanation when directly asked meets reasonable grounds to suspect, and the dealership should also decide whether to continue accepting cash transactions from this customer at all", correct: true, feedback: "Correct. Once structuring is identified and the customer declines to explain it, the compliance officer has what's needed to assess the SMR threshold — and separately, the dealership can make its own commercial decision about whether to keep transacting with this customer in cash going forward." },
+          { text: "Take no action, since gold purchases are not inherently suspicious and no single transaction exceeded the threshold", correct: false, feedback: "Incorrect. This ignores the entire point of the pattern analysis already completed — the concern was never any single transaction, it was the consistent, unexplained structuring across five of them." },
+          { text: "Ban the customer from the store but do not consider a report, since he will simply take his business elsewhere", correct: false, feedback: "Incorrect. Whether the customer continues shopping elsewhere has no bearing on the dealership's own reporting obligation for the pattern it has already observed and cannot explain." },
+          { text: "Wait for a sixth purchase before making any determination", correct: false, feedback: "Incorrect. The pattern across five purchases, combined with the customer's refusal to explain it, already provides a sufficient basis for the compliance officer to make a determination — there's no requirement to wait for further transactions." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ba2', number: 'Part 2',
+    title: 'Bullion Dealer: High-Value Jewellery Purchase With Third-Party Pickup',
+    tags: ['Escalation'], sector: 'Bullion', premium: false,
+    shortDesc: 'A customer pays cash for a $45,000 diamond piece and asks for it to be collected by someone else. Work through the CDD steps before releasing the item.',
+    fullScenario: `SALE PENDING COLLECTION — For CDD Review
+
+Customer: Ms. Elena Vasquez (paid in full, in cash, for a $45,000 diamond and platinum necklace)
+Payment: Completed in full at time of sale, cash
+Collection request: Ms. Vasquez says she will be travelling and asks that the item be released to "my associate, Mr. Yusuf Karimi," who will collect it in person with a note authorising the release
+
+Details so far:
+• Ms. Vasquez has never purchased from the dealership before
+• When asked about her occupation for the sale record, she says "private investor"
+• Mr. Karimi is not known to the dealership and has not been present for any part of the transaction
+• No further identification or documentation has been offered for either party
+
+Your task: work through what must happen before the item is released.`,
+    steps: [
+      {
+        id: 1, title: 'Assessing the Purchase Itself',
+        question: 'Before considering the collection request, what should the dealership have already obtained regarding the $45,000 cash payment?',
+        options: [
+          { text: "Verified identification for Ms. Vasquez and an assessment of the source of the cash funds, given the size of the transaction and the vague 'private investor' description of her occupation — a large cash purchase from a first-time customer with an unspecific occupation is a standard high-risk indicator for dealers in precious stones and metals", correct: true, feedback: "Correct. A $45,000 cash purchase from someone the dealership has never dealt with before, who gives a vague occupational description, already warrants proper identity verification and a source-of-funds assessment — this should have been addressed at the point of sale, independent of the collection question that follows." },
+          { text: "Nothing beyond the sale itself, since the transaction has already been completed and paid in full", correct: false, feedback: "Incorrect. Completing payment doesn't retroactively satisfy the CDD obligations that should have applied to the transaction — those obligations exist because of the size and cash nature of the purchase, not because payment status alone determines whether CDD is needed." },
+          { text: "Confirmation that the cash was genuine currency, using a counterfeit detection pen", correct: false, feedback: "Incorrect as a complete answer. Confirming the physical banknotes aren't counterfeit is a basic retail control, but it says nothing about the source of the funds or the customer's actual identity and risk profile." },
+          { text: "A signed receipt confirming the sale amount", correct: false, feedback: "Incorrect as a complete answer. A receipt documents the transaction occurred — it does nothing to establish who the customer really is or where $45,000 in cash came from." },
+        ],
+      },
+      {
+        id: 2, title: 'The Third-Party Collection Request',
+        question: 'What is the specific AML/CTF concern raised by releasing the item to an unverified third party?',
+        options: [
+          { text: "Releasing a high-value item to someone the dealership has not identified or verified — on the basis of an unverified note — creates a real risk that the true beneficiary of the transaction is being deliberately obscured, and undermines whatever CDD was completed on the named purchaser", correct: true, feedback: "Correct. Even if Ms. Vasquez herself is fully verified, releasing the item to an unknown, unverified third party defeats much of the purpose of that verification — the dealership loses any real visibility into who ultimately ends up with the high-value item, which is exactly the kind of gap this type of typology relies on." },
+          { text: "No real concern, since Ms. Vasquez has already paid in full and the item legally belongs to her to dispose of as she chooses", correct: false, feedback: "Incorrect. Legal ownership of the item doesn't address the dealership's own AML/CTF obligation regarding who it is physically handing a high-value item to, particularly an unverified individual with no other connection to the transaction on file." },
+          { text: "A concern only if Mr. Karimi turns out to have a criminal record", correct: false, feedback: "Incorrect. The concern exists at the point of an unverified handover itself — the dealership shouldn't need to already know something specific and adverse about Mr. Karimi before treating an unverified third-party collection of a high-value item as a red flag." },
+          { text: "No concern, provided Mr. Karimi presents the authorisation note written by Ms. Vasquez", correct: false, feedback: "Incorrect. An informal authorisation note has no real evidentiary weight and doesn't verify Mr. Karimi's identity — anyone could present a note purporting to be from the purchaser." },
+        ],
+      },
+      {
+        id: 3, title: 'Setting the Requirements',
+        question: 'What should the dealership require before releasing the item to Mr. Karimi?',
+        options: [
+          { text: "Verified photo identification for Mr. Karimi at the point of collection, matched against a clear, verifiable authorisation from Ms. Vasquez, and the dealership should independently confirm the authorisation directly with Ms. Vasquez rather than relying solely on a note presented by Mr. Karimi", correct: true, feedback: "Correct. Verifying the collector's identity, confirming the authorisation independently with the purchaser (not just accepting a document presented by the collector), and recording all of this properly closes the gap that an unverified third-party pickup otherwise creates." },
+          { text: "Nothing further, provided Mr. Karimi can describe the item accurately when he arrives", correct: false, feedback: "Incorrect. Being able to describe a purchased item proves nothing about identity — the description could easily have been provided to him by Ms. Vasquez regardless of who he actually is." },
+          { text: "A requirement that Ms. Vasquez collect the item herself, with no exceptions permitted under any circumstances", correct: false, feedback: "Incorrect as an absolute rule. Legitimate third-party collection does happen and can be accommodated with proper verification — the issue here is the lack of verification, not the concept of third-party collection itself." },
+          { text: "A requirement that Mr. Karimi pay an additional collection fee in cash", correct: false, feedback: "Incorrect and irrelevant. A collection fee has nothing to do with verifying who is actually taking possession of a $45,000 item." },
+        ],
+      },
+      {
+        id: 4, title: 'Verification Fails',
+        question: 'When the dealership calls Ms. Vasquez directly to confirm the authorisation, her phone number is disconnected, and no other contact details are on file. How should the dealership proceed?',
+        options: [
+          { text: "Do not release the item, and escalate to the AML/CTF Compliance Officer — an unverifiable purchaser combined with an unverified third-party collection request is a significant red flag pattern that should be assessed for a suspicious matter report before any further action is taken", correct: true, feedback: "Correct. At this point neither the original cash purchase nor the collection authorisation can be properly verified — that combination, on a $45,000 transaction, is exactly the kind of unresolved pattern that needs compliance assessment before the item goes anywhere." },
+          { text: "Release the item to Mr. Karimi anyway, since he is physically present with the item's description and a note", correct: false, feedback: "Incorrect. Proceeding despite being unable to verify either party involved is the outcome this whole review process exists to prevent — an unverifiable purchaser and an unverifiable collector is precisely the combination that should stop the release, not be worked around." },
+          { text: "Hold the item indefinitely without escalating, until someone eventually gets in touch", correct: false, feedback: "Incorrect. Simply holding the item without escalating the pattern to compliance doesn't address the underlying question of whether this transaction warrants a report — that assessment shouldn't wait on the customer's own initiative." },
+          { text: "Refund the original cash payment to 'undo' the transaction and consider the matter closed", correct: false, feedback: "Incorrect. Returning cash to an unverifiable purchaser doesn't resolve the AML/CTF concern already raised by the original transaction and collection request — the pattern still needs proper compliance assessment regardless of whether the sale is unwound." },
+        ],
+      },
+    ],
+  },
+]
+
+const BULLION_MLRO_CASES = [
+  {
+    id: 'bm1', number: '1.',
+    title: 'MLRO: Repeat Seller of Unprovenanced Scrap Gold',
+    tags: ['Regulatory'], sector: 'Bullion', premium: false,
+    shortDesc: 'A customer repeatedly sells high-value scrap gold and jewellery for cash with no explanation of origin. Assess the fencing/placement risk and determine the reporting obligation.',
+    fullScenario: `ANALYST ESCALATION — For MLRO Review
+
+Customer: Mr. Craig Ellison (regular seller, not buyer, to the dealership — sells scrap gold and secondhand jewellery for cash)
+Pattern flagged over 2 months:
+• 6 separate visits, each selling a mixed batch of gold jewellery, chains, and rings for cash
+• Total paid out to Mr. Ellison: approximately $28,000
+• When asked the origin of the items, his answers have varied: "family inherited pieces," "bought at markets," and most recently "just stuff I've collected"
+• Several items sold showed signs of having engraving recently removed or filed down
+• Mr. Ellison has become noticeably impatient when asked follow-up questions on his last two visits
+
+Your task: determine the appropriate MLRO response.`,
+    steps: [
+      {
+        id: 1, title: 'Assessing the Pattern',
+        question: 'What does this pattern most likely indicate?',
+        options: [
+          { text: "A potential fencing/placement typology — a repeat seller providing inconsistent explanations for the origin of the items, combined with physical signs of altered or removed engraving (often used to remove identifying marks from stolen items) and growing impatience under questioning, is a recognised pattern for converting stolen or illicit goods into cash", correct: true, feedback: "Correct. Precious metals and jewellery dealers are a known outlet for converting stolen goods into cash. Inconsistent origin stories across visits, physical evidence of tampering with identifying marks, and increasing defensiveness when questioned are all individually notable and, together, form a clear pattern the MLRO needs to assess." },
+          { text: "Normal behaviour for someone gradually clearing out an inherited jewellery collection", correct: false, feedback: "Incorrect. A genuine inherited-collection explanation doesn't usually shift between visits — \"family inherited pieces,\" then \"bought at markets,\" then \"stuff I've collected\" are inconsistent, not variations on the same underlying story." },
+          { text: "Irrelevant to AML/CTF obligations, since Mr. Ellison is selling to the dealership rather than buying from it", correct: false, feedback: "Incorrect. Dealers in precious metals and stones are a Tranche 2 designated service that covers dealing in the relevant goods generally — the direction of the transaction (buying from or selling to a customer) doesn't put it outside the dealership's AML/CTF obligations." },
+          { text: "A concern only if the items are later confirmed stolen by police", correct: false, feedback: "Incorrect. The obligation to assess and potentially report is based on reasonable grounds to suspect at the time, not on waiting for external confirmation — by the time police might confirm anything, the items and the cash proceeds could well be long gone." },
+        ],
+      },
+      {
+        id: 2, title: 'Weighing the Physical Evidence',
+        question: "What is the significance of the altered/removed engraving noted on several items?",
+        options: [
+          { text: "It is a specific, recognised red flag — engraving removal is a common method for erasing personalised identifying marks (initials, dates, inscriptions) from jewellery, often used specifically to prevent stolen items being traced back to their original owner", correct: true, feedback: "Correct. This is one of the more concrete, physical red flags in this scenario — it isn't just an inconsistent story, it's tangible evidence consistent with a deliberate attempt to make previously identifiable items untraceable before selling them for cash." },
+          { text: "Minimal significance, since jewellery is commonly resized or repaired, which can affect engraving incidentally", correct: false, feedback: "Incorrect as a dismissal. While incidental wear or repair is possible, engraving that has specifically been removed or filed down, appearing across multiple items sold by the same person, is a more deliberate pattern than incidental repair damage." },
+          { text: "No significance at all — the dealership should focus only on what Mr. Ellison says, not the physical condition of the items", correct: false, feedback: "Incorrect. Physical evidence on the items themselves is directly relevant to the compliance assessment — dismissing it in favour of the seller's verbal explanation alone would ignore some of the strongest evidence available here." },
+          { text: "Significant only if the dealership can identify whose engraving was originally on the items", correct: false, feedback: "Incorrect. The dealership doesn't need to identify the original owner to treat removed engraving as a red flag — the pattern itself, combined with everything else observed, is what matters for the compliance assessment." },
+        ],
+      },
+      {
+        id: 3, title: 'Identifying the Typology',
+        question: "What typology should the MLRO consider given this pattern?",
+        options: [
+          { text: "Fencing of stolen goods as a form of placement — converting stolen physical items into cash through a legitimate-looking dealer, often using inconsistent provenance stories and altering identifying features to reduce traceability", correct: true, feedback: "Correct. This is a well-documented typology for precious metals and jewellery dealers specifically — because the dealer provides a legitimate-looking cash-out point, and once metal is melted or items are resold, tracing the original source becomes very difficult." },
+          { text: "Standard secondhand goods trading that any dealer would expect to see regularly", correct: false, feedback: "Incorrect. Ordinary secondhand selling doesn't typically involve inconsistent, shifting explanations of origin combined with physical evidence of deliberately altered identifying marks — this pattern goes well beyond routine secondhand trade." },
+          { text: "A tax evasion scheme related to undeclared income from jewellery sales", correct: false, feedback: "Incorrect. Nothing in the facts points to a tax-driven explanation — the pattern concerns the origin and provenance of the items themselves, not how the seller might later report the income." },
+          { text: "A pricing dispute where Mr. Ellison is unhappy with valuations and becoming frustrated as a result", correct: false, feedback: "Incorrect. Frustration over pricing wouldn't explain inconsistent origin stories across separate visits or physical evidence of altered engraving — those facts point to a different concern entirely." },
+        ],
+      },
+      {
+        id: 4, title: 'MLRO Determination',
+        question: "After reviewing the full pattern, what should the MLRO decide?",
+        options: [
+          { text: "File a suspicious matter report with AUSTRAC covering the pattern across all 6 transactions, and consider whether to decline further purchases from this customer going forward — the inconsistent provenance explanations, physical evidence of altered engraving, and defensiveness under questioning together meet reasonable grounds to suspect", correct: true, feedback: "Correct. This is a case where multiple independent red flags — shifting explanations, physical tampering evidence, and behavioural defensiveness — reinforce each other, and together clearly meet the threshold for a report. The dealership can separately decide, as a commercial and risk matter, whether to keep buying from this customer at all." },
+          { text: "Take no action, since Mr. Ellison has provided some explanation each time he's been asked", correct: false, feedback: "Incorrect. The fact that an explanation was offered doesn't matter if the explanations are inconsistent with each other and contradicted by physical evidence on the items — providing *an* answer isn't the same as providing a credible, consistent one." },
+          { text: "Report the matter to local police only, and treat AUSTRAC reporting as unnecessary since this looks more like a stolen-goods issue than money laundering", correct: false, feedback: "Incorrect framing. Fencing stolen goods for cash is itself a money laundering typology (placement), and the dealership's AUSTRAC reporting obligation exists independently of, and in addition to, any separate decision about involving police." },
+          { text: "Confront Mr. Ellison directly and tell him the dealership suspects the items are stolen before deciding anything further", correct: false, feedback: "Incorrect and a tipping-off risk. Directly confronting the customer with the dealership's suspicion before a proper determination has been made — and potentially before any report is filed — risks compromising the matter and breaching the tipping-off prohibition." },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'bm2', number: '2.',
+    title: 'MLRO: First-Year AML/CTF Program Implementation Review',
+    tags: ['Regulatory'], sector: 'Bullion', premium: false,
+    shortDesc: 'Walk through your dealership\'s first annual review of its AML/CTF Program since becoming an AUSTRAC reporting entity under the Tranche 2 reforms.',
+    fullScenario: `FIRST-YEAR AML/CTF PROGRAM REVIEW — Guided Walkthrough
+
+This simulation guides you through your dealership's first annual review of its AML/CTF Program since becoming a reporting entity under the Tranche 2 reforms.
+
+Business: Independent jewellery and bullion dealership, buying and selling gold, silver, and precious stones, newly enrolled with AUSTRAC this year
+Compliance Officer: [Your name] (newly appointed)
+
+Work through each section to understand what a first-year review should cover.`,
+    steps: [
+      {
+        id: 1, title: 'Section 1: Buying and Selling Both Count',
+        question: "The Program currently only documents CDD procedures for customers buying bullion and jewellery from the dealership. Is this sufficient scope?",
+        options: [
+          { text: "No — the dealership also buys scrap gold, jewellery, and precious metals from customers, and that side of the business carries its own distinct risk (e.g. stolen goods, unclear provenance) that the Program needs to cover with its own CDD procedures, not just sales to customers", correct: true, feedback: "Correct. A precious metals and stones dealer's AML/CTF risk isn't limited to who it sells to — buying scrap gold or secondhand jewellery from the public is a distinct, well-documented risk area in its own right, and a Program that only addresses sales has a significant coverage gap." },
+          { text: "Yes — AML/CTF obligations for dealers only apply to sales, not purchases from customers", correct: false, feedback: "Incorrect. Both directions of trade fall within the dealership's designated service obligations — restricting the Program to sales only would leave out a major risk area for this type of business." },
+          { text: "Yes, provided the dealership buys less than $10,000 worth of items from the public per month", correct: false, feedback: "Incorrect. There is no such threshold exemption for the buying side of the business — the Program needs to cover CDD for purchases from customers regardless of monthly volume." },
+          { text: "It depends on whether the items purchased are melted down or resold intact", correct: false, feedback: "Incorrect. What happens to an item after purchase doesn't determine whether CDD was required at the point the dealership bought it — the obligation attaches to the transaction itself." },
+        ],
+      },
+      {
+        id: 2, title: 'Section 2: Setting a Cash Threshold Policy',
+        question: "The review finds no documented internal threshold for when cash transactions require enhanced review. What should the Program establish?",
+        options: [
+          { text: "A clearly documented, risk-based internal threshold (informed by the dealership's own risk assessment) below the amount that triggers external reporting obligations — so that staff have a consistent internal review trigger for large or unusual cash transactions, and so structuring against that threshold becomes something the Program is actually positioned to detect", correct: true, feedback: "Correct. Without a documented internal threshold, staff have no consistent basis for escalating a cash transaction for extra scrutiny, and the dealership has no real ability to detect the kind of structuring pattern (transactions calibrated just under a threshold) covered elsewhere in this training." },
+          { text: "No threshold is needed — staff should use their own judgement on a case-by-case basis", correct: false, feedback: "Incorrect. Undocumented, ad hoc judgement calls are inconsistent across staff and don't give the compliance officer a reliable basis for detecting patterns like structuring, which specifically relies on staying just under whatever threshold might otherwise apply." },
+          { text: "A single fixed threshold of exactly $10,000, copied directly from another industry's guidance without adjustment", correct: false, feedback: "Incorrect approach. The threshold should come from the dealership's own risk assessment of its actual customer base, product mix, and transaction patterns — not be borrowed wholesale from an unrelated industry's guidance without adaptation." },
+          { text: "A threshold that applies only to purchases from customers, not sales to them", correct: false, feedback: "Incorrect. Given both buying and selling carry AML/CTF risk for this type of business, the review trigger should apply to large or unusual cash transactions in both directions, not just one." },
+        ],
+      },
+      {
+        id: 3, title: 'Section 3: Staff Training Coverage',
+        question: "Reviewing training records, the compliance officer finds that casual and part-time staff who work the sales floor have not completed the same AML/CTF training as full-time staff. Is this acceptable?",
+        options: [
+          { text: "No — any staff member who interacts with customers on the sales floor, whether full-time, part-time, or casual, is a potential point of contact for exactly the kind of red flags this training module covers, and employment status doesn't reduce that responsibility", correct: true, feedback: "Correct. A red flag doesn't care whether the staff member who notices it is full-time or casual — anyone dealing directly with customers needs the training to actually recognise and escalate what they're seeing, and gaps here just create an easier path around the Program's controls." },
+          { text: "Acceptable, since casual and part-time staff generally don't handle the largest transactions", correct: false, feedback: "Incorrect assumption. Casual and part-time staff can and do serve any customer who walks in, including ones attempting exactly the kind of structuring or evasive behaviour this training covers — there's no reliable basis for assuming they're only exposed to lower-risk transactions." },
+          { text: "Acceptable, provided a full-time staff member is somewhere in the store at the same time", correct: false, feedback: "Incorrect. A full-time staff member being present elsewhere in the store doesn't mean they're actually involved in every transaction a casual staff member handles — the untrained staff member is still the one directly serving the customer." },
+          { text: "Acceptable, since casual and part-time staff are less likely to stay with the business long-term, making training a wasted investment", correct: false, feedback: "Incorrect and risky reasoning. Turnover likelihood doesn't reduce the AML/CTF exposure created by an untrained staff member actively serving customers in the interim — if anything, it's a reason to prioritise getting new staff trained quickly, not to skip it." },
+        ],
+      },
+      {
+        id: 4, title: 'Section 4: Independent Review Scheduling',
+        question: "When should the dealership schedule its first independent review of the AML/CTF Program?",
+        options: [
+          { text: "Within 3 years of the Program's approval at the latest — but given this first-year review has already found real gaps (buying-side CDD, no documented cash threshold, incomplete staff coverage), bringing the independent review forward is the prudent choice rather than waiting the full 3 years", correct: true, feedback: "Correct. As with any newly regulated business finding real implementation gaps in its first year, scheduling the independent review sooner rather than at the 3-year ceiling helps confirm those gaps are actually being closed rather than persisting unchecked." },
+          { text: "Exactly 3 years from AUSTRAC enrolment, regardless of what this review found", correct: false, feedback: "Incorrect anchor point, and it disregards the specific gaps this review has already identified — the review timing should respond to the dealership's actual risk profile and implementation status." },
+          { text: "No independent review is required for dealers below a certain annual turnover", correct: false, feedback: "Incorrect. There is no turnover-based exemption from the independent review requirement." },
+          { text: "Only if AUSTRAC specifically requests one", correct: false, feedback: "Incorrect. Scheduling periodic independent review is a proactive obligation on the reporting entity, not something that waits on a specific regulatory request." },
+        ],
+      },
+    ],
+  },
+]
+
 const CASES_BY_INDUSTRY = {
   banking: { analyst: ANALYST_CASES, mlro: MLRO_CASES },
   law:     { analyst: LAW_ANALYST_CASES,    mlro: LAW_MLRO_CASES    },
   crypto:  { analyst: CRYPTO_ANALYST_CASES, mlro: CRYPTO_MLRO_CASES },
   fintech: { analyst: FINTECH_ANALYST_CASES, mlro: FINTECH_MLRO_CASES },
   accountant: { analyst: ACCOUNTANT_ANALYST_CASES, mlro: ACCOUNTANT_MLRO_CASES },
+  realestate: { analyst: REALESTATE_ANALYST_CASES, mlro: REALESTATE_MLRO_CASES },
+  bullion: { analyst: BULLION_ANALYST_CASES, mlro: BULLION_MLRO_CASES },
 }
 
 const INDUSTRY_LABELS = {
@@ -1252,6 +1745,8 @@ const INDUSTRY_LABELS = {
   crypto:  'Crypto',
   fintech: 'Fintech',
   accountant: 'Accountant / TCSPs',
+  realestate: 'Real Estate',
+  bullion: 'Jewellers / Bullion',
 }
 
 export const INDUCTION_MODULES = [
@@ -4617,6 +5112,8 @@ export default function Training({ user, onGoHome, onNavigateSection, onStart, o
               { id: 'crypto',  label: 'Crypto' },
               { id: 'fintech', label: 'Fintech' },
               { id: 'accountant', label: 'Accountant / TCSPs' },
+              { id: 'realestate', label: 'Real Estate' },
+              { id: 'bullion', label: 'Jewellers / Bullion' },
             ].map((ind) => (
               <button
                 key={ind.id}
