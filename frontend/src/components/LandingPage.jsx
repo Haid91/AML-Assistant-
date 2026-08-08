@@ -778,11 +778,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                 <span className="text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-600 rounded-full px-2 py-0.5">Coming soon</span>
               </div>
               <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Hands-on support alongside the software</p>
-              <div className="mb-1 flex items-end gap-1">
-                <span className="text-4xl font-bold text-slate-900 dark:text-white">$69.99</span>
-                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
-              </div>
-              <p className="text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">7-day free trial · cancel anytime</p>
+              <p className="text-4xl font-bold text-slate-900 dark:text-white mb-7">Custom</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'Everything in Premium',
