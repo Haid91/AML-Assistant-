@@ -786,6 +786,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                   'Professional consultancy available',
                   'Independent reviews of Part A program',
                   '1 on 1 sessions with a dedicated advisor',
+                  'Contact us',
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
