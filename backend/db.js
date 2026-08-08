@@ -364,10 +364,11 @@ export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubs
 }
 
 export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, stripeSubscriptionId) {
-  await pool.query(
-    'UPDATE users SET premium = $1, stripe_subscription_id = $2 WHERE stripe_customer_id = $3',
+  const { rows } = await pool.query(
+    'UPDATE users SET premium = $1, stripe_subscription_id = $2 WHERE stripe_customer_id = $3 RETURNING email, name',
     [premium, stripeSubscriptionId ?? null, stripeCustomerId]
   )
+  return rows[0] || null
 }
 
 const SESSION_TTL = '30 days'

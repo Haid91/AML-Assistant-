@@ -42,7 +42,23 @@ app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (r
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object
-        if (session.customer) await setPremiumByStripeCustomerId(session.customer, true, session.subscription)
+        if (session.customer) {
+          const user = await setPremiumByStripeCustomerId(session.customer, true, session.subscription)
+          if (user && session.subscription) {
+            try {
+              const sub = await stripe.subscriptions.retrieve(session.subscription)
+              const priceId = sub.items?.data?.[0]?.price?.id
+              if (priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL) {
+                await sendProfessionalSubscriberEmail({ name: user.name, email: user.email })
+              }
+            } catch (err) {
+              // Never let a notification failure fail the webhook itself —
+              // Stripe retries non-2xx responses, and premium access is
+              // already granted above regardless of this email's outcome.
+              console.error('[billing] Professional-subscriber notification failed:', err.message)
+            }
+          }
+        }
         break
       }
       case 'customer.subscription.updated':
@@ -321,6 +337,36 @@ async function sendContactEmail({ name, email, subject, message }) {
         <p style="margin:0 0 20px;color:#475569;font-size:14px"><strong>Subject:</strong> ${escapeHtml(subject)}</p>
         <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:24px;white-space:pre-wrap;color:#0f172a;font-size:14px">${escapeHtml(message)}</div>
         <p style="margin:0;color:#94a3b8;font-size:12px">Reply directly to this email to respond to ${escapeHtml(name)}.</p>
+      </div>
+    `,
+  })
+}
+
+// Professional subscribers get the same `premium` flag as everyone else —
+// the app has no separate tier concept — so this is the one place that
+// signals "this customer is also owed the human-delivered parts (Part A
+// review, 1-on-1 advisor session)" since nothing else in the app tracks it.
+async function sendProfessionalSubscriberEmail({ name, email }) {
+  const inboxAddress = process.env.EMAIL_FROM
+  if (!resend || !inboxAddress) {
+    console.log(`\n📧 New Professional subscriber (configure RESEND_API_KEY and EMAIL_FROM in .env to send real emails):\n   ${name} <${email}>\n`)
+    return
+  }
+  await resend.emails.send({
+    from: RESEND_FROM,
+    to: inboxAddress,
+    replyTo: email,
+    subject: `New Professional subscriber: ${name}`,
+    html: `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
+        <div style="margin-bottom:24px">
+          <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">New Professional subscriber</h2>
+        <p style="margin:0 0 20px;color:#475569;font-size:15px"><strong>${escapeHtml(name)}</strong> (${escapeHtml(email)}) just subscribed to AmlIntel Professional.</p>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;color:#0f172a;font-size:14px">
+          Reach out to schedule their independent Part A review and 1-on-1 advisor session.
+        </div>
       </div>
     `,
   })
