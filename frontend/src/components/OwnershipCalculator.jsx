@@ -3,6 +3,12 @@ import Navbar from './Navbar'
 
 const UBO_THRESHOLD = 25
 
+function clampPercent(value) {
+  const n = Number(value)
+  if (!Number.isFinite(n)) return 0
+  return Math.min(100, Math.max(0, n))
+}
+
 function newOwner() {
   return { id: crypto.randomUUID(), type: 'individual', name: '', entityRef: '', percent: '', hasControl: false }
 }
@@ -26,17 +32,22 @@ function computeEffectiveOwnership(entities) {
     const nextVisited = new Set(visited)
     nextVisited.add(entity.id)
     for (const owner of entity.owners) {
-      const ownerFraction = (Number(owner.percent) || 0) / 100
+      const ownerFraction = clampPercent(owner.percent) / 100
       if (ownerFraction <= 0) continue
       const contribution = multiplier * ownerFraction
       if (owner.type === 'individual') {
         const key = owner.name.trim()
         if (!key) continue
-        const existing = totals.get(key) || { percent: 0, hasControl: false }
-        totals.set(key, {
-          percent: existing.percent + contribution,
-          hasControl: existing.hasControl || !!owner.hasControl,
-        })
+        // Individuals are matched by name — the same real person entered via
+        // multiple ownership paths correctly sums here. If two DIFFERENT
+        // people share a name, this would wrongly merge them, so every
+        // contributing entity is tracked per name and surfaced in the UI —
+        // a merge from >1 entity is visible and auditable, not silent.
+        const existing = totals.get(key) || { percent: 0, hasControl: false, sources: [] }
+        existing.percent += contribution
+        existing.hasControl = existing.hasControl || !!owner.hasControl
+        existing.sources.push({ entityName: entity.name.trim() || 'Unnamed entity', percent: contribution * 100 })
+        totals.set(key, existing)
       } else if (owner.type === 'entity' && owner.entityRef) {
         walk(entityById[owner.entityRef], contribution, nextVisited)
       }
@@ -46,10 +57,11 @@ function computeEffectiveOwnership(entities) {
   walk(target, 1, new Set())
 
   return [...totals.entries()]
-    .map(([name, { percent, hasControl }]) => ({
+    .map(([name, { percent, hasControl, sources }]) => ({
       name,
       percent: percent * 100,
       hasControl,
+      sources,
       isUbo: percent * 100 >= UBO_THRESHOLD - 1e-9 || hasControl,
     }))
     .sort((a, b) => b.percent - a.percent)
@@ -91,6 +103,9 @@ export default function OwnershipCalculator({ user, onGoHome, onNavigateSection,
       lines.push(
         `${r.name}: ${r.percent.toFixed(1)}% effective ownership${r.hasControl ? ' (also holds control)' : ''} — ${r.isUbo ? 'UBO' : 'Not a UBO'}`
       )
+      if (r.sources.length > 1) {
+        lines.push(`  combined from: ${r.sources.map((s) => `${s.entityName} (${s.percent.toFixed(1)}%)`).join(', ')}`)
+      }
     }
     lines.push('', `UBO threshold: ${UBO_THRESHOLD}% effective ownership, or control regardless of %.`)
     lines.push('Self-assessment tool — verify complex structures with a qualified professional.')
@@ -212,6 +227,11 @@ export default function OwnershipCalculator({ user, onGoHome, onNavigateSection,
                           type="number" min="0" max="100" step="0.1"
                           value={owner.percent}
                           onChange={(e) => updateOwner(entity.id, owner.id, { percent: e.target.value })}
+                          onBlur={(e) => {
+                            if (e.target.value === '') return
+                            const clamped = clampPercent(e.target.value)
+                            if (String(clamped) !== e.target.value) updateOwner(entity.id, owner.id, { percent: String(clamped) })
+                          }}
                           placeholder="%"
                           className="w-20 px-2 py-1.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-sm"
                         />
@@ -268,6 +288,11 @@ export default function OwnershipCalculator({ user, onGoHome, onNavigateSection,
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   {r.percent.toFixed(1)}% effective ownership{r.hasControl ? ' · has control' : ''}
                 </p>
+                {r.sources.length > 1 && (
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1.5 pt-1.5 border-t border-slate-200/60 dark:border-slate-600/60">
+                    Combined from {r.sources.length} paths — {r.sources.map((s) => `${s.entityName} (${s.percent.toFixed(1)}%)`).join(', ')}. If these are different people who share a name, rename one to keep them separate.
+                  </p>
+                )}
               </div>
             ))}
 

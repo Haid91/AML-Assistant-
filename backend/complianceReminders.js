@@ -91,8 +91,12 @@ const REMINDED_COLUMNS = {
 // Premium users only — reminders are a Premium feature, same as the
 // Compliance Calendar itself. A user with no compliance_checklist row yet
 // (never used the calendar) has nothing to remind about, so the join is
-// inner rather than left.
-export async function getChecklistsForReminders() {
+// inner rather than left. `premiumEmailOverrides` mirrors server.js's
+// PREMIUM_EMAILS set (passed in by the caller, since that set lives in
+// server.js) so an account granted premium via the email override — not the
+// users.premium column — is still eligible, matching isPremiumUser()
+// everywhere else in the app.
+export async function getChecklistsForReminders(premiumEmailOverrides = []) {
   const { rows } = await pool.query(
     `SELECT u.id AS "userId", u.email, u.name,
             c.program_review_date AS "programReviewDate",
@@ -107,7 +111,8 @@ export async function getChecklistsForReminders() {
             c.acr_reminded_year AS "acrRemindedYear"
      FROM compliance_checklist c
      JOIN users u ON u.id = c.user_id
-     WHERE u.premium = true`
+     WHERE u.premium = true OR u.email = ANY($1::text[])`,
+    [premiumEmailOverrides]
   )
   return rows
 }
@@ -146,7 +151,7 @@ function dueItemsFor(checklist) {
   return { due, updates }
 }
 
-async function markReminded(userId, updates) {
+export async function markReminded(userId, updates) {
   const presentKeys = Object.keys(updates).filter((k) => k in REMINDED_COLUMNS)
   if (presentKeys.length === 0) return
   const params = [userId]
@@ -162,17 +167,18 @@ async function markReminded(userId, updates) {
 }
 
 // One consolidated reminder per user per cycle (not one email per item) —
-// returns the list of {email, name, items} to send, having already recorded
-// the reminded-due state so a re-run of this same cycle (or a crashed
-// process retried) won't double up.
-export async function runComplianceReminderCycle() {
-  const checklists = await getChecklistsForReminders()
+// returns the list of {userId, email, name, items, updates} to send. Does
+// NOT mark anything as reminded itself — the caller must call
+// markReminded(userId, updates) only after the email actually sends
+// successfully, so a failed send is retried on the next cycle instead of
+// being silently marked done and lost until the item's next occurrence.
+export async function runComplianceReminderCycle(premiumEmailOverrides = []) {
+  const checklists = await getChecklistsForReminders(premiumEmailOverrides)
   const toNotify = []
   for (const checklist of checklists) {
     const { due, updates } = dueItemsFor(checklist)
     if (due.length === 0) continue
-    await markReminded(checklist.userId, updates)
-    toNotify.push({ email: checklist.email, name: checklist.name, items: due })
+    toNotify.push({ userId: checklist.userId, email: checklist.email, name: checklist.name, items: due, updates })
   }
   return toNotify
 }

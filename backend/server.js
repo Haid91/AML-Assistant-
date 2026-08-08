@@ -10,7 +10,7 @@ import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
 import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getCaseNotes, addCaseNote, deleteCaseNote, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, claimStripeCustomerId, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
 import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName, getWatchlistCount, addToWatchlist, getWatchlist, removeFromWatchlist, refreshWatchlistChecks } from './sanctions.js';
-import { runComplianceReminderCycle } from './complianceReminders.js';
+import { runComplianceReminderCycle, markReminded } from './complianceReminders.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -1616,15 +1616,21 @@ async function runSanctionsRefreshCycle() {
 const COMPLIANCE_REMINDER_INTERVAL_MS = 24 * 60 * 60 * 1000
 
 async function runComplianceReminders() {
-  const toNotify = await runComplianceReminderCycle()
-  for (const { email, name, items } of toNotify) {
+  const toNotify = await runComplianceReminderCycle([...PREMIUM_EMAILS])
+  let sent = 0
+  for (const { userId, email, name, items, updates } of toNotify) {
     try {
+      // Mark reminded only after the send succeeds — a failed send must NOT
+      // be recorded, so it's retried on the next cycle instead of being
+      // silently skipped until this item's next occurrence.
       await sendComplianceReminderEmail(email, { name, items })
+      await markReminded(userId, updates)
+      sent++
     } catch (err) {
-      console.error('[compliance-reminders] failed to send reminder email:', err.message)
+      console.error(`[compliance-reminders] failed to send/record reminder for ${email}:`, err.message)
     }
   }
-  if (toNotify.length > 0) console.log(`[compliance-reminders] sent ${toNotify.length} reminder email(s)`)
+  if (sent > 0) console.log(`[compliance-reminders] sent ${sent} reminder email(s)`)
 }
 
 app.listen(PORT, () => {
