@@ -796,12 +796,21 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                   </li>
                 ))}
               </ul>
-              <button
-                onClick={() => onStartTrial('professional')}
-                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
-              >
-                Start free trial →
-              </button>
+              {user?.premium && user?.plan === 'professional' ? (
+                <button
+                  onClick={onOpenContact}
+                  className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                >
+                  Contact us →
+                </button>
+              ) : (
+                <button
+                  onClick={() => onStartTrial('professional')}
+                  className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                >
+                  Start free trial →
+                </button>
+              )}
             </div>
 
           </div>

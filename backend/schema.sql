@@ -136,6 +136,12 @@ create table if not exists document_versions (
 -- Stripe billing — safe to re-run against an existing table.
 alter table users add column if not exists stripe_customer_id text;
 alter table users add column if not exists stripe_subscription_id text;
+-- Which priced tier the user's active Stripe subscription is on (e.g.
+-- 'premium' | 'professional') — null means never determined (pre-dates this
+-- column, or never subscribed via Stripe at all, e.g. the PREMIUM_EMAILS
+-- owner override). Only ever set from the Stripe webhook, derived from the
+-- subscription's actual price, so it can't drift from what was really paid.
+alter table users add column if not exists plan text;
 
 -- Periodically refreshed local copies of public government sanctions lists
 -- (DFAT Consolidated List, OFAC SDN List) for the Sanctions Screening tool.

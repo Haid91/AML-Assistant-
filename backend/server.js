@@ -43,14 +43,22 @@ app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (r
       case 'checkout.session.completed': {
         const session = event.data.object
         if (session.customer) {
-          const user = await setPremiumByStripeCustomerId(session.customer, true, session.subscription)
-          if (user && session.subscription) {
+          let plan = null
+          if (session.subscription) {
             try {
               const sub = await stripe.subscriptions.retrieve(session.subscription)
               const priceId = sub.items?.data?.[0]?.price?.id
-              if (priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL) {
-                await sendProfessionalSubscriberEmail({ name: user.name, email: user.email })
-              }
+              plan = priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL ? 'professional' : 'premium'
+            } catch (err) {
+              // A failed price lookup shouldn't block granting premium below
+              // — plan just stays null (unknown) for this event.
+              console.error('[billing] failed to look up subscription price:', err.message)
+            }
+          }
+          const user = await setPremiumByStripeCustomerId(session.customer, true, session.subscription, plan)
+          if (user && plan === 'professional') {
+            try {
+              await sendProfessionalSubscriberEmail({ name: user.name, email: user.email })
             } catch (err) {
               // Never let a notification failure fail the webhook itself —
               // Stripe retries non-2xx responses, and premium access is
@@ -65,7 +73,9 @@ app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (r
       case 'customer.subscription.deleted': {
         const sub = event.data.object
         const active = ['active', 'trialing'].includes(sub.status)
-        await setPremiumByStripeCustomerId(sub.customer, active, sub.id)
+        const priceId = sub.items?.data?.[0]?.price?.id
+        const plan = priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL ? 'professional' : 'premium'
+        await setPremiumByStripeCustomerId(sub.customer, active, sub.id, plan)
         break
       }
     }
@@ -424,7 +434,7 @@ app.post('/auth/register', authLimiter, asyncRoute(async (req, res) => {
   }
   const token = crypto.randomUUID()
   await createSession(token, lowerEmail)
-  res.json({ token, user: { id, name, email: lowerEmail, premium } })
+  res.json({ token, user: { id, name, email: lowerEmail, premium, plan: null } })
 }))
 
 app.post('/auth/login', authLimiter, asyncRoute(async (req, res) => {
@@ -441,7 +451,7 @@ app.post('/auth/login', authLimiter, asyncRoute(async (req, res) => {
   }
   const token = crypto.randomUUID()
   await createSession(token, user.email)
-  res.json({ token, user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+  res.json({ token, user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email), plan: user.plan } })
 }))
 
 app.post('/auth/logout', asyncRoute(async (req, res) => {
@@ -467,7 +477,7 @@ async function getUserFromAuth(req) {
 app.get('/auth/me', asyncRoute(async (req, res) => {
   const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
-  res.json({ user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+  res.json({ user: { id: user.id, name: user.name, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email), plan: user.plan } })
 }))
 
 // ── Billing (Stripe) ────────────────────────────────────────────────────────
@@ -522,7 +532,7 @@ app.post('/auth/update-profile', authLimiter, asyncRoute(async (req, res) => {
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' })
   const trimmedName = name.trim()
   await updateUserName(user.email, trimmedName)
-  res.json({ user: { id: user.id, name: trimmedName, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email) } })
+  res.json({ user: { id: user.id, name: trimmedName, email: user.email, premium: user.premium || PREMIUM_EMAILS.has(user.email), plan: user.plan } })
 }))
 
 app.post('/auth/change-password', authLimiter, asyncRoute(async (req, res) => {

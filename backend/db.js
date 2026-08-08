@@ -27,7 +27,7 @@ export const pool = new Pool({
 
 export async function getUserByEmail(email) {
   const { rows } = await pool.query(
-    'SELECT id, name, email, password_hash AS "passwordHash", premium, stripe_customer_id AS "stripeCustomerId", stripe_subscription_id AS "stripeSubscriptionId" FROM users WHERE email = $1',
+    'SELECT id, name, email, password_hash AS "passwordHash", premium, plan, stripe_customer_id AS "stripeCustomerId", stripe_subscription_id AS "stripeSubscriptionId" FROM users WHERE email = $1',
     [email]
   )
   return rows[0] || null
@@ -363,10 +363,10 @@ export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubs
   )
 }
 
-export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, stripeSubscriptionId) {
+export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, stripeSubscriptionId, plan) {
   const { rows } = await pool.query(
-    'UPDATE users SET premium = $1, stripe_subscription_id = $2 WHERE stripe_customer_id = $3 RETURNING email, name',
-    [premium, stripeSubscriptionId ?? null, stripeCustomerId]
+    'UPDATE users SET premium = $1, stripe_subscription_id = $2, plan = COALESCE($4, plan) WHERE stripe_customer_id = $3 RETURNING email, name',
+    [premium, stripeSubscriptionId ?? null, stripeCustomerId, plan ?? null]
   )
   return rows[0] || null
 }
