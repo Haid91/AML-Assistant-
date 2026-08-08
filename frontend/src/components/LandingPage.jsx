@@ -201,7 +201,6 @@ const REG_FAQS = [
 
 export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenSectorGuide, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onOpenOwnershipCalculator, onOpenTermsOfService, onOpenPrivacyPolicy, onGoHome, onNavigateSection, scrollTarget, onScrollHandled }) {
   const [camsOpen, setCamsOpen] = useState(false)
-  const [premiumInterval, setPremiumInterval] = useState('monthly')
 
   useEffect(() => {
     if (!scrollTarget) return
@@ -698,7 +697,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
             <p className="text-slate-500 dark:text-slate-400 text-sm">Start free. Upgrade when you need more.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
 
             {/* Free */}
             <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
@@ -732,41 +731,17 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
               </button>
             </div>
 
-            {/* Premium */}
+            {/* Premium — Monthly */}
             <div className="relative bg-white dark:bg-slate-700 border-2 border-blue-600 rounded-2xl p-8 flex flex-col overflow-hidden">
               <span className="absolute top-4 -right-9 rotate-45 bg-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-10 py-1">
                 Most Popular
               </span>
               <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Premium</p>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">For working compliance professionals</p>
-
-              <div className="inline-flex items-center bg-slate-100 dark:bg-slate-600 rounded-full p-1 mb-5 text-xs font-semibold">
-                <button
-                  onClick={() => setPremiumInterval('monthly')}
-                  className={`px-3.5 py-1.5 rounded-full transition-colors ${premiumInterval === 'monthly' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-300'}`}
-                >
-                  Monthly
-                </button>
-                <button
-                  onClick={() => setPremiumInterval('annual')}
-                  className={`px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 ${premiumInterval === 'annual' ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 dark:text-slate-300'}`}
-                >
-                  Annual
-                  <span className="text-[10px] font-bold uppercase tracking-wide bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400 rounded-full px-1.5 py-0.5">Save 15%</span>
-                </button>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Billed monthly</p>
+              <div className="mb-1 flex items-end gap-1">
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">$49.99</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
               </div>
-
-              {premiumInterval === 'monthly' ? (
-                <div className="mb-1 flex items-end gap-1">
-                  <span className="text-4xl font-bold text-slate-900 dark:text-white">$49.99</span>
-                  <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
-                </div>
-              ) : (
-                <div className="mb-1 flex items-end gap-1">
-                  <span className="text-4xl font-bold text-slate-900 dark:text-white">$509.90</span>
-                  <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/year</span>
-                </div>
-              )}
               <p className="text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">7-day free trial · cancel anytime</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
@@ -789,14 +764,47 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                 ))}
               </ul>
               <button
-                onClick={() => onStartTrial(premiumInterval === 'annual' ? 'premium_annual' : 'premium')}
+                onClick={() => onStartTrial('premium')}
                 className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors"
               >
                 Start free trial →
               </button>
-              <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">
-                {premiumInterval === 'annual' ? 'Free for 7 days, then $509.90/year.' : 'Free for 7 days, then $49.99/month.'}
-              </p>
+              <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">Free for 7 days, then $49.99/month.</p>
+            </div>
+
+            {/* Premium — Annual */}
+            <div className="relative bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col overflow-hidden">
+              <span className="absolute top-4 -right-8 rotate-45 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-widest px-9 py-1">
+                Save 15%
+              </span>
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Premium</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Billed annually</p>
+              <div className="mb-1 flex items-end gap-1">
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">$509.90</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/year</span>
+              </div>
+              <p className="text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-6">7-day free trial · equivalent to $42.49/mo</p>
+              <ul className="space-y-3 mb-8 flex-1">
+                {[
+                  'Everything in monthly Premium',
+                  'Save $89.98/year vs. paying monthly',
+                  'One annual charge — nothing to renew mid-year',
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
+                    <svg className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => onStartTrial('premium_annual')}
+                className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 rounded-full font-semibold text-sm transition-colors"
+              >
+                Start free trial →
+              </button>
+              <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">Free for 7 days, then $509.90/year.</p>
             </div>
 
             {/* Professional */}
