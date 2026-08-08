@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
-import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getCaseNotes, addCaseNote, deleteCaseNote, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, updateUserStripeInfo, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
+import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getCaseNotes, addCaseNote, deleteCaseNote, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, claimStripeCustomerId, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
 import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName, getWatchlistCount, addToWatchlist, getWatchlist, removeFromWatchlist, refreshWatchlistChecks } from './sanctions.js';
 
 const app = express();
@@ -38,6 +38,23 @@ app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (r
     console.error('Stripe webhook signature verification failed:', err.message)
     return res.status(400).send(`Webhook Error: ${err.message}`)
   }
+  // Fires the Professional-subscriber notification only on a genuine
+  // transition into that plan (previousPlan wasn't already 'professional')
+  // — covers both a fresh Checkout and someone switching plans on an
+  // existing subscription via Stripe's billing portal, without re-notifying
+  // on every later renewal/update event for an already-Professional subscriber.
+  // Never lets a notification failure fail the webhook itself — Stripe
+  // retries non-2xx responses, and premium access is already granted
+  // by the time this runs regardless of this email's outcome.
+  async function notifyIfNewlyProfessional(user, plan) {
+    if (!user || plan !== 'professional' || user.previousPlan === 'professional') return
+    try {
+      await sendProfessionalSubscriberEmail({ name: user.name, email: user.email })
+    } catch (err) {
+      console.error('[billing] Professional-subscriber notification failed:', err.message)
+    }
+  }
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -56,26 +73,24 @@ app.post('/billing/webhook', express.raw({ type: 'application/json' }), async (r
             }
           }
           const user = await setPremiumByStripeCustomerId(session.customer, true, session.subscription, plan)
-          if (user && plan === 'professional') {
-            try {
-              await sendProfessionalSubscriberEmail({ name: user.name, email: user.email })
-            } catch (err) {
-              // Never let a notification failure fail the webhook itself —
-              // Stripe retries non-2xx responses, and premium access is
-              // already granted above regardless of this email's outcome.
-              console.error('[billing] Professional-subscriber notification failed:', err.message)
-            }
-          }
+          await notifyIfNewlyProfessional(user, plan)
         }
         break
       }
-      case 'customer.subscription.updated':
-      case 'customer.subscription.deleted': {
+      case 'customer.subscription.updated': {
         const sub = event.data.object
         const active = ['active', 'trialing'].includes(sub.status)
         const priceId = sub.items?.data?.[0]?.price?.id
         const plan = priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL ? 'professional' : 'premium'
-        await setPremiumByStripeCustomerId(sub.customer, active, sub.id, plan)
+        const user = await setPremiumByStripeCustomerId(sub.customer, active, sub.id, plan)
+        await notifyIfNewlyProfessional(user, plan)
+        break
+      }
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object
+        const priceId = sub.items?.data?.[0]?.price?.id
+        const plan = priceId && priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL ? 'professional' : 'premium'
+        await setPremiumByStripeCustomerId(sub.customer, false, sub.id, plan)
         break
       }
     }
@@ -496,8 +511,10 @@ app.post('/billing/create-checkout-session', billingLimiter, asyncRoute(async (r
   let customerId = user.stripeCustomerId
   if (!customerId) {
     const customer = await stripe.customers.create({ email: user.email, name: user.name, metadata: { userId: user.id } })
-    customerId = customer.id
-    await updateUserStripeInfo(user.email, { stripeCustomerId: customerId, stripeSubscriptionId: user.stripeSubscriptionId })
+    // Atomic claim so two near-simultaneous requests (double-click, two tabs)
+    // can't each create a Stripe customer and have the second silently
+    // overwrite the first in the DB — both end up using whichever one won.
+    customerId = await claimStripeCustomerId(user.email, customer.id)
   }
 
   const session = await stripe.checkout.sessions.create({

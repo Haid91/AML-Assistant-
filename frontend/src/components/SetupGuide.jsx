@@ -110,6 +110,7 @@ export default function SetupGuide({ user, onGoHome, onNavigateSection, onStart,
         onOpenCost={onOpenCost}
         onOpenEligibility={onOpenEligibility}
         onOpenProgramBuilder={onOpenProgramBuilder}
+        onOpenAustracEnrolment={onOpenAustracEnrolment}
         onOpenSmrGuide={onOpenSmrGuide}
         onOpenComplianceOfficer={onOpenComplianceOfficer}
         onOpenRiskAssessment={onOpenRiskAssessment}

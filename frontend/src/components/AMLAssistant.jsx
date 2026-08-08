@@ -250,7 +250,6 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
     }
   }
 
-  const roleLabel = user?.role === 'mlro' ? 'MLRO Mode' : 'Analyst Mode'
   const { today, yesterday, older } = groupSessions(sessions)
 
   return (
@@ -357,7 +356,7 @@ export default function AMLAssistant({ user, onGoHome, onNavigateSection, onStar
           </div>
 
           <span className="text-sm text-slate-700 dark:text-slate-300 font-medium border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1 rounded-full">
-            {roleLabel}
+            Analyst Mode
           </span>
         </header>
 

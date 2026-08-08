@@ -356,16 +356,29 @@ export async function getAiUsageSummary({ since } = {}) {
   }
 }
 
-export async function updateUserStripeInfo(email, { stripeCustomerId, stripeSubscriptionId }) {
-  await pool.query(
-    'UPDATE users SET stripe_customer_id = $1, stripe_subscription_id = $2 WHERE email = $3',
-    [stripeCustomerId, stripeSubscriptionId ?? null, email]
+// Guards against two concurrent checkout requests for the same not-yet-billed
+// user each creating their own Stripe customer — the WHERE clause means only
+// the first write actually lands, and the loser gets told whose id won so
+// both requests end up using the same customer for their checkout session.
+export async function claimStripeCustomerId(email, customerId) {
+  const { rows } = await pool.query(
+    `UPDATE users SET stripe_customer_id = $1 WHERE email = $2 AND stripe_customer_id IS NULL RETURNING stripe_customer_id AS "stripeCustomerId"`,
+    [customerId, email]
   )
+  if (rows[0]) return rows[0].stripeCustomerId
+  const existing = await pool.query('SELECT stripe_customer_id AS "stripeCustomerId" FROM users WHERE email = $1', [email])
+  return existing.rows[0]?.stripeCustomerId ?? customerId
 }
 
+// previousPlan lets the webhook tell "just became Professional" (fire the
+// notification) apart from "already Professional, this is just a renewal or
+// unrelated subscription update" (don't re-notify every time the webhook fires).
 export async function setPremiumByStripeCustomerId(stripeCustomerId, premium, stripeSubscriptionId, plan) {
   const { rows } = await pool.query(
-    'UPDATE users SET premium = $1, stripe_subscription_id = $2, plan = COALESCE($4, plan) WHERE stripe_customer_id = $3 RETURNING email, name',
+    `WITH previous AS (SELECT plan FROM users WHERE stripe_customer_id = $3)
+     UPDATE users SET premium = $1, stripe_subscription_id = $2, plan = COALESCE($4, plan)
+     WHERE stripe_customer_id = $3
+     RETURNING email, name, plan AS "newPlan", (SELECT plan FROM previous) AS "previousPlan"`,
     [premium, stripeSubscriptionId ?? null, stripeCustomerId, plan ?? null]
   )
   return rows[0] || null
