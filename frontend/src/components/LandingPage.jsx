@@ -680,7 +680,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
           </div>
 
           <div className="text-center mt-8">
-            <button onClick={onStartTrial} className="px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm">
+            <button onClick={() => onStartTrial('premium')} className="px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold transition-colors text-sm">
               Try free trial →
             </button>
           </div>
@@ -763,7 +763,7 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                 ))}
               </ul>
               <button
-                onClick={onStartTrial}
+                onClick={() => onStartTrial('premium')}
                 className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white rounded-full font-semibold text-sm transition-colors"
               >
                 Start free trial →
@@ -771,21 +771,21 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
               <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">Free for 7 days, then $49.99/month.</p>
             </div>
 
-            {/* Team */}
-            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col opacity-60">
-              <div className="flex items-center gap-2 mb-1">
-                <p className="font-bold text-slate-900 dark:text-white text-lg">Team</p>
-                <span className="text-[10px] font-bold uppercase tracking-wide text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-600 rounded-full px-2 py-0.5">Coming soon</span>
+            {/* Professional */}
+            <div className="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl p-8 flex flex-col">
+              <p className="font-bold text-slate-900 dark:text-white text-lg mb-1">Professional</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Hands-on support alongside the software</p>
+              <div className="mb-1 flex items-end gap-1">
+                <span className="text-4xl font-bold text-slate-900 dark:text-white">$69.99</span>
+                <span className="text-slate-500 dark:text-slate-400 text-sm mb-1">/month</span>
               </div>
-              <p className="text-slate-500 dark:text-slate-400 text-xs mb-5">Multi-office / large teams</p>
-              <p className="text-4xl font-bold text-slate-900 dark:text-white mb-7">Custom</p>
+              <p className="text-blue-600 dark:text-blue-400 text-xs font-semibold mb-6">7-day free trial · cancel anytime</p>
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   'Everything in Premium',
-                  'Team admin dashboard',
-                  'Custom onboarding & training sessions',
-                  'Dedicated compliance advisor',
-                  'Volume licensing',
+                  'Professional consultancy available',
+                  'Independent reviews of Part A program',
+                  '1 on 1 sessions with a dedicated advisor',
                 ].map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-600 dark:text-slate-300">
                     <svg className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -796,10 +796,10 @@ export default function LandingPage({ user, onStart, onStartTrial, onSignIn, onS
                 ))}
               </ul>
               <button
-                disabled
-                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-400 dark:text-slate-400 font-semibold text-sm cursor-not-allowed"
+                onClick={() => onStartTrial('professional')}
+                className="w-full py-3 border border-slate-300 dark:border-slate-500 rounded-full text-slate-800 dark:text-white font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
               >
-                Coming soon
+                Start free trial →
               </button>
             </div>
 

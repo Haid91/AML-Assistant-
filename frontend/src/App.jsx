@@ -235,6 +235,7 @@ function App() {
   const [privacyPackPrefill, setPrivacyPackPrefill] = useState(null)
   const [resetToken, setResetToken] = useState(null)
   const [scrollTarget, setScrollTarget] = useState(null)
+  const [checkoutPlan, setCheckoutPlan] = useState('premium')
 
   useEffect(() => {
     const stored = localStorage.getItem('aml_user')
@@ -357,7 +358,9 @@ function App() {
     goHome(updated)
   }
 
-  const handleUpgrade = () => setView('checkout')
+  // Feature-gate "Upgrade" prompts inside the app always mean Premium — only
+  // the pricing-section cards (via onStartTrial) can select Professional.
+  const handleUpgrade = () => { setCheckoutPlan('premium'); setView('checkout') }
 
   const handleManageBilling = async () => {
     const token = localStorage.getItem('aml_token')
@@ -409,7 +412,7 @@ function App() {
     onGoHome: () => setView('landing'),
     onNavigateSection: navigateToSection,
     onStart: () => user ? enterApp(user) : setView('signup'),
-    onStartTrial: () => user ? handleUpgrade() : setView('signup'),
+    onStartTrial: (plan = 'premium') => { setCheckoutPlan(plan); user ? setView('checkout') : setView('signup') },
     onSignIn: () => setView('signin'),
     onSignUp: () => setView('signup'),
     onOpenChat: () => enterChat(user),
@@ -721,6 +724,7 @@ function App() {
     return (
       <Checkout
         user={user}
+        plan={checkoutPlan}
         onBack={() => setView(isPremium(user) ? 'chat' : 'training')}
       />
     )

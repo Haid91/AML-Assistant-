@@ -425,8 +425,15 @@ app.get('/auth/me', asyncRoute(async (req, res) => {
 }))
 
 // ── Billing (Stripe) ────────────────────────────────────────────────────────
+// Both plans grant the same `premium` boolean (Professional is a superset of
+// Premium's software features — the consultancy/advisor parts are delivered
+// by the business directly, not gated in-app) — only the Stripe price differs.
+const PLAN_PRICE_ENV = { premium: 'STRIPE_PRICE_ID', professional: 'STRIPE_PRICE_ID_PROFESSIONAL' }
+
 app.post('/billing/create-checkout-session', billingLimiter, asyncRoute(async (req, res) => {
-  if (!stripe || !process.env.STRIPE_PRICE_ID) return res.status(503).json({ error: 'Billing is not configured yet' })
+  const plan = PLAN_PRICE_ENV[req.body?.plan] ? req.body.plan : 'premium'
+  const priceId = process.env[PLAN_PRICE_ENV[plan]]
+  if (!stripe || !priceId) return res.status(503).json({ error: 'Billing is not configured yet' })
   const user = await getUserFromAuth(req)
   if (!user) return res.status(401).json({ error: 'Not authenticated' })
 
@@ -440,7 +447,7 @@ app.post('/billing/create-checkout-session', billingLimiter, asyncRoute(async (r
   const session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     customer: customerId,
-    line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+    line_items: [{ price: priceId, quantity: 1 }],
     subscription_data: { trial_period_days: 7 },
     allow_promotion_codes: true,
     success_url: `${FRONTEND_URL}/?checkout=success`,
