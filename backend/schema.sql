@@ -65,6 +65,17 @@ create table if not exists compliance_checklist (
   updated_at timestamptz not null default now()
 );
 
+-- Tracks which computed due date a reminder was last sent for, per item —
+-- not just "was a reminder ever sent" — so a reminder correctly fires again
+-- the next time that same recurring item comes due, but never twice for the
+-- same occurrence. acr_reminded_year mirrors acr_lodged_year's shape since
+-- the ACR deadline is identified by financial year rather than a stored date.
+alter table compliance_checklist add column if not exists program_review_reminded_due date;
+alter table compliance_checklist add column if not exists independent_eval_reminded_due date;
+alter table compliance_checklist add column if not exists staff_training_reminded_due date;
+alter table compliance_checklist add column if not exists privacy_review_reminded_due date;
+alter table compliance_checklist add column if not exists acr_reminded_year integer;
+
 -- Multiple rows per user — an ongoing client risk-tracking register.
 -- Deliberately metadata-only: no fields for names, DOB, ID numbers, or
 -- addresses, so AmlIntel never becomes a holder of its subscribers'

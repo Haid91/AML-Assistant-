@@ -10,6 +10,7 @@ import Stripe from 'stripe';
 import rateLimit from 'express-rate-limit';
 import { getUserByEmail, createUser, updateUserName, updateUserPassword, getProgramDraft, saveProgramDraft, getPrivacyDraft, savePrivacyDraft, saveMockExamAttempt, getMockExamAttempts, getComplianceChecklist, saveComplianceChecklist, getClientRiskEntries, createClientRiskEntry, updateClientRiskEntry, deleteClientRiskEntry, getCaseNotes, addCaseNote, deleteCaseNote, getChatSessions, createChatSession, updateChatSession, deleteChatSession, createDocumentVersion, getDocumentVersions, createSession, getSessionEmail, deleteSession, claimStripeCustomerId, setPremiumByStripeCustomerId, logAiUsage, getAiUsageSummary } from './db.js';
 import { refreshAllSanctionsLists, getSanctionsListsStatus, screenName, getWatchlistCount, addToWatchlist, getWatchlist, removeFromWatchlist, refreshWatchlistChecks } from './sanctions.js';
+import { runComplianceReminderCycle } from './complianceReminders.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -336,6 +337,43 @@ async function sendSanctionsAlertEmail(toEmail, { name, matches }) {
         <p style="margin:0 0 24px;color:#94a3b8;font-size:13px">This is a screening aid against a periodically-refreshed copy of public sanctions lists, not a live regulator query. Verify directly against the official DFAT and OFAC lists before acting on it.</p>
         <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
         <p style="margin:0;color:#94a3b8;font-size:12px">AmlIntel Sanctions Screening</p>
+      </div>
+    `,
+  })
+}
+
+function formatReminderDate(date) {
+  return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
+async function sendComplianceReminderEmail(toEmail, { name, items }) {
+  const summary = items.map((i) => `${i.title} — due ${formatReminderDate(i.dueDate)}${i.overdue ? ' (overdue)' : ''}`).join('; ')
+  if (!resend) {
+    console.log(`\n📧 Compliance reminder (configure RESEND_API_KEY in .env to send real emails):\n   To: ${toEmail}\n   ${summary}\n`)
+    return
+  }
+  const itemRows = items.map((i) => `
+        <div style="padding:10px 0;border-top:1px solid #e2e8f0">
+          <p style="margin:0;color:#0f172a;font-size:14px;font-weight:600">${escapeHtml(i.title)}</p>
+          <p style="margin:2px 0 0;color:${i.overdue ? '#dc2626' : '#64748b'};font-size:12px">${i.overdue ? 'Overdue — ' : 'Due '}${escapeHtml(formatReminderDate(i.dueDate))}</p>
+        </div>`).join('')
+  await resend.emails.send({
+    from: RESEND_FROM,
+    to: toEmail,
+    subject: items.length === 1 ? `Reminder: ${items[0].title} is due soon` : `Reminder: ${items.length} compliance items due soon`,
+    html: `
+      <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:560px;margin:0 auto;padding:32px 24px;background:#ffffff">
+        <div style="margin-bottom:24px">
+          <span style="display:inline-block;width:36px;height:36px;background:#2563eb;border-radius:8px;line-height:36px;text-align:center;color:#fff;font-weight:700;font-size:13px">AML</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:22px;color:#0f172a">Compliance items due soon</h2>
+        <p style="margin:0 0 20px;color:#475569;font-size:15px">Hi ${escapeHtml(name)}, the following items on your Compliance Calendar are due soon or overdue:</p>
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin-bottom:24px">
+          ${itemRows}
+        </div>
+        <p style="margin:0 0 24px;color:#94a3b8;font-size:13px">Update these dates any time from your Compliance Calendar once actioned.</p>
+        <hr style="margin:28px 0;border:none;border-top:1px solid #e2e8f0"/>
+        <p style="margin:0;color:#94a3b8;font-size:12px">AmlIntel Compliance Calendar</p>
       </div>
     `,
   })
@@ -1575,6 +1613,20 @@ async function runSanctionsRefreshCycle() {
   }
 }
 
+const COMPLIANCE_REMINDER_INTERVAL_MS = 24 * 60 * 60 * 1000
+
+async function runComplianceReminders() {
+  const toNotify = await runComplianceReminderCycle()
+  for (const { email, name, items } of toNotify) {
+    try {
+      await sendComplianceReminderEmail(email, { name, items })
+    } catch (err) {
+      console.error('[compliance-reminders] failed to send reminder email:', err.message)
+    }
+  }
+  if (toNotify.length > 0) console.log(`[compliance-reminders] sent ${toNotify.length} reminder email(s)`)
+}
+
 app.listen(PORT, () => {
   console.log(`AmlIntel API running on http://localhost:${PORT}`)
   if (anthropic) {
@@ -1592,4 +1644,9 @@ app.listen(PORT, () => {
   }, SANCTIONS_REFRESH_INTERVAL_MS)
 
   setInterval(sweepExpiredResetTokens, RESET_TOKEN_SWEEP_INTERVAL_MS)
+
+  runComplianceReminders().catch((err) => console.error('[compliance-reminders] initial reminder cycle failed:', err.message))
+  setInterval(() => {
+    runComplianceReminders().catch((err) => console.error('[compliance-reminders] scheduled reminder cycle failed:', err.message))
+  }, COMPLIANCE_REMINDER_INTERVAL_MS)
 })
