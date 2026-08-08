@@ -30,7 +30,7 @@ const OBLIGATIONS = [
   'Keep records for 7 years',
 ]
 
-export default function EligibilityCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
+export default function EligibilityCheck({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onOpenOwnershipCalculator }) {
   const [step, setStep] = useState(0)
   const [industry, setIndustry] = useState(null)
   const [services, setServices] = useState([])
@@ -94,6 +94,7 @@ export default function EligibilityCheck({ user, onGoHome, onNavigateSection, on
         onOpenComplianceDashboard={onOpenComplianceDashboard}
         onOpenSmrDraft={onOpenSmrDraft}
         onOpenSanctionsScreening={onOpenSanctionsScreening}
+        onOpenOwnershipCalculator={onOpenOwnershipCalculator}
       />
 
       <div className="max-w-2xl mx-auto px-6 pt-14 pb-20">

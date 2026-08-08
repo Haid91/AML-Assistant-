@@ -27,6 +27,7 @@ import ClientRiskRegister from './components/ClientRiskRegister'
 import ComplianceDashboard from './components/ComplianceDashboard'
 import SmrDraft from './components/SmrDraft'
 import SanctionsScreening from './components/SanctionsScreening'
+import OwnershipCalculator from './components/OwnershipCalculator'
 import TermsOfService from './components/TermsOfService'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SectorGuide from './components/SectorGuide'
@@ -70,6 +71,7 @@ const ROUTED_VIEWS = {
   settings: '/settings',
   smrDraft: '/smr-draft',
   sanctionsScreening: '/sanctions-screening',
+  ownershipCalculator: '/ownership-calculator',
 }
 const PATH_TO_VIEW = Object.fromEntries(Object.entries(ROUTED_VIEWS).map(([v, p]) => [p, v]))
 
@@ -167,6 +169,10 @@ const SEO_META = {
   sanctionsScreening: {
     title: 'Sanctions Screening — DFAT & OFAC Lists | AmlIntel',
     description: "Screen customer names against Australia's DFAT Consolidated List and the US OFAC SDN List, fuzzy-matched against aliases.",
+  },
+  ownershipCalculator: {
+    title: 'Beneficial Ownership Calculator | AmlIntel',
+    description: 'Map a client\'s real ownership structure — individuals, holding entities, multiple layers — and get an instant effective-ownership and UBO determination.',
   },
 }
 
@@ -411,6 +417,7 @@ function App() {
     onOpenComplianceDashboard: () => setView('dashboard'),
     onOpenSmrDraft: () => setView('smrDraft'),
     onOpenSanctionsScreening: () => setView('sanctionsScreening'),
+    onOpenOwnershipCalculator: () => setView('ownershipCalculator'),
     onOpenTermsOfService: () => setView('termsOfService'),
     onOpenPrivacyPolicy: () => setView('privacyPolicy'),
   }
@@ -647,6 +654,16 @@ function App() {
   if (view === 'sanctionsScreening') {
     return (
       <SanctionsScreening
+        {...navProps}
+        user={user ? { ...user, premium: isPremium(user) } : user}
+        onUpgrade={handleUpgrade}
+      />
+    )
+  }
+
+  if (view === 'ownershipCalculator') {
+    return (
+      <OwnershipCalculator
         {...navProps}
         user={user ? { ...user, premium: isPremium(user) } : user}
         onUpgrade={handleUpgrade}

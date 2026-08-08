@@ -71,6 +71,7 @@ const TRANCHE2_GROUPS = [
       ['Suspicious Activity Indicators', 'onOpenSuspiciousIndicators'],
       ['Reportable Transaction Check', 'onOpenReportableTransactionCheck'],
       ['Sanctions Screening', 'onOpenSanctionsScreening'],
+      ['Ownership Calculator', 'onOpenOwnershipCalculator'],
     ],
   },
   {
@@ -137,8 +138,8 @@ function Tranche2Menu({ handlers, onSelect, dense, columns }) {
   )
 }
 
-export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening }) {
-  const tranche2Handlers = { onOpenEligibility, onOpenSetupGuide, onOpenCost, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenProgramBuilder, onOpenPrivacyCheck, onOpenClientRiskRegister, onOpenComplianceCalendar, onOpenSuspiciousIndicators, onOpenReportableTransactionCheck, onOpenSanctionsScreening, onOpenSmrGuide, onOpenSmrDraft }
+export default function Navbar({ user, onGoHome, onNavigateSection, onStart, onSignIn, onSignUp, onOpenChat, onOpenTraining, onSignOut, onOpenSettings, onOpenAbout, onOpenContact, onOpenCost, onOpenSetupGuide, onOpenEligibility, onOpenProgramBuilder, onOpenAustracEnrolment, onOpenSmrGuide, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenSuspiciousIndicators, onOpenPrivacyCheck, onOpenComplianceCalendar, onOpenClientRiskRegister, onOpenReportableTransactionCheck, onOpenComplianceDashboard, onOpenSmrDraft, onOpenSanctionsScreening, onOpenOwnershipCalculator }) {
+  const tranche2Handlers = { onOpenEligibility, onOpenSetupGuide, onOpenCost, onOpenAustracEnrolment, onOpenComplianceOfficer, onOpenRiskAssessment, onOpenProgramBuilder, onOpenPrivacyCheck, onOpenClientRiskRegister, onOpenComplianceCalendar, onOpenSuspiciousIndicators, onOpenReportableTransactionCheck, onOpenSanctionsScreening, onOpenOwnershipCalculator, onOpenSmrGuide, onOpenSmrDraft }
 
   const [topicsOpen, setTopicsOpen] = useState(false)
   const [moreInfoOpen, setMoreInfoOpen] = useState(false)
