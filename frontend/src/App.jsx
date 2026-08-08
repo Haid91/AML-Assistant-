@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react'
 import LandingPage from './components/LandingPage'
 import AMLAssistant from './components/AMLAssistant'
 import Training from './components/Training'
-import RoleSelect from './components/RoleSelect'
-import IndustrySelect from './components/IndustrySelect'
-import SimulationSelect from './components/SimulationSelect'
 import Checkout from './components/Checkout'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
@@ -42,11 +39,9 @@ function isPremium(u) {
 }
 
 // Every "destination" page a user might reasonably land on and refresh (or
-// bookmark/share) gets a real URL. Deliberately excluded: onboarding-wizard
-// steps that depend on transient state (industryselect/simulationselect/
-// roleselect, checkout) — refreshing mid-flow reasonably restarts it, same
-// as most multi-step signup flows — and resetpassword, which already has
-// its own separate /?action=reset&token=... mechanism, untouched here.
+// bookmark/share) gets a real URL. Deliberately excluded: checkout (transient
+// state, refreshing mid-flow reasonably restarts it) and resetpassword, which
+// already has its own separate /?action=reset&token=... mechanism, untouched here.
 const ROUTED_VIEWS = {
   termsOfService: '/terms',
   privacyPolicy: '/privacy',
@@ -230,7 +225,6 @@ function App() {
   const [previousView, setPreviousView] = useState('landing')
   const [settingsTab, setSettingsTab] = useState('profile')
   const [user, setUser] = useState(null)
-  const [selectedIndustry, setSelectedIndustry] = useState(null)
   const [selectedSectorGuide, setSelectedSectorGuide] = useState(() => resolveSectorFromPath(window.location.pathname))
   const [privacyPackPrefill, setPrivacyPackPrefill] = useState(null)
   const [resetToken, setResetToken] = useState(null)
@@ -310,14 +304,10 @@ function App() {
 
   const goHome = (u) => setView(isPremium(u) ? 'dashboard' : 'training')
 
-  // Users without a role/industry set yet need to go through onboarding
-  // before reaching Training or the Assistant — triggered on demand (e.g.
-  // "Go to Training") rather than forced immediately on sign-in. Signed-out
-  // visitors are sent to sign up first, since onboarding requires a real
-  // account (it's saved against the signed-in user).
+  // Signed-out visitors are sent to sign up first, since entering the app
+  // requires a real account.
   const enterApp = (u) => {
     if (!u) { setView('signup'); return }
-    if (!u.role) { setView('industryselect'); return }
     goHome(u)
   }
 
@@ -327,35 +317,17 @@ function App() {
   // what they asked for.
   const enterChat = (u) => {
     if (!u) { setView('signup'); return }
-    if (!u.role) { setView('industryselect'); return }
     setView(isPremium(u) ? 'chat' : 'checkout')
   }
 
   const enterTraining = (u) => {
     if (!u) { setView('signup'); return }
-    if (!u.role) { setView('industryselect'); return }
     setView('training')
   }
 
   const handleSignIn = (userData) => {
     setUser(userData)
     setView('landing')
-  }
-
-  const handleIndustrySelect = (industry) => {
-    setSelectedIndustry(industry)
-    setView('simulationselect')
-  }
-
-  const handleSimulationContinue = () => {
-    setView('roleselect')
-  }
-
-  const handleRoleSelect = (role) => {
-    const updated = { ...user, role, industry: selectedIndustry }
-    setUser(updated)
-    localStorage.setItem('aml_user', JSON.stringify(updated))
-    goHome(updated)
   }
 
   // Feature-gate "Upgrade" prompts inside the app always mean Premium — only
@@ -688,34 +660,6 @@ function App() {
         onGoHome={() => setView('landing')}
         onOpenTermsOfService={() => setView('termsOfService')}
         onOpenPrivacyPolicy={() => setView('privacyPolicy')}
-      />
-    )
-  }
-
-  if (view === 'industryselect') {
-    return (
-      <IndustrySelect
-        user={user}
-        onSelect={handleIndustrySelect}
-      />
-    )
-  }
-
-  if (view === 'simulationselect') {
-    return (
-      <SimulationSelect
-        user={user}
-        industry={selectedIndustry}
-        onContinue={handleSimulationContinue}
-      />
-    )
-  }
-
-  if (view === 'roleselect') {
-    return (
-      <RoleSelect
-        user={user}
-        onSelectRole={handleRoleSelect}
       />
     )
   }
